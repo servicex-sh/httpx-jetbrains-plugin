@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<!--suppress PluginXmlValidity -->
+<idea-plugin>
+    <id>org.mvnsearch.jetbrains.plugins.httpx-jetbrains-plugin</id>
+    <name>Httpx Requests</name>
+    <category>Microservices</category>
+    <vendor email="libing.chen@gmail.com">linux_china</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <dependencies>
+        <plugin id="com.jetbrains.restClient"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService preload="true" serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestManager"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
+        <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.CloudEventsJsonSchemaProviderFactory"/>
+    </extensions>
+
+</idea-plugin>
