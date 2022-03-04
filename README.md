@@ -13,7 +13,7 @@ The following features are available for Dubbo:
 
 <!-- Plugin description end -->
 
-# send kafka message
+# Pub/Sub message
 
 ```
 ### send kafka message
@@ -26,6 +26,14 @@ Content-Type: application/json
   "name": "Jackie"
 }
 ```
+
+* Apache Kafka: `kafka://localhost:9092/`
+* Apache Pulsar: `pulsar://localhost:6650`
+* Apache RocketMQ: `rocketmq://localhost:9876`
+* RabbitMQ: `amqp://localhost:5672`
+* Nats:  `nats://localhost:4222`
+* MQTT: `mqtt://localhost:1883`
+* Redis Channel: `redis://localhost:6379`
 
 # Send email
 
