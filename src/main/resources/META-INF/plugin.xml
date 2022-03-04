@@ -23,6 +23,8 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
+        <spellchecker.bundledDictionaryProvider
+            implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
