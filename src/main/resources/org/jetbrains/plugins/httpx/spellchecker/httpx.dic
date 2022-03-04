@@ -1,5 +1,9 @@
+httpx
 jbang
 reqwest
 deno
 squareup
 httpcomponents
+rsocket
+graphqlws
+graphqlwss
