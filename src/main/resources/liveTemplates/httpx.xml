@@ -1,0 +1,8 @@
+<templateSet group="HTTPX">
+    <template name="pub-kafka" value="PUB topic1&#10;Host: kafka://localhost:9092&#10;Content-Type: application/json&#10;&#10;1$END$"
+              description="Pub Kafka Message" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="REQUEST" value="true"/>
+        </context>
+    </template>
+</templateSet>
