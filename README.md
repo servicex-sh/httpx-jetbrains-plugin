@@ -1,4 +1,4 @@
-Dubbo plugin for JetBrains IDEs
+httpx plugin for JetBrains IDEs
 ==============================
 
 <!-- Plugin description -->
