@@ -7,3 +7,9 @@ httpcomponents
 rsocket
 graphqlws
 graphqlwss
+amqps
+datacontenttype
+rocketmq
+eventbridge
+aliyuncs
+htx
