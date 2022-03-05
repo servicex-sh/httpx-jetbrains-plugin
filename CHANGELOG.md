@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# RSocket plugin Changelog
+# httpx plugin Changelog
 
 ## [0.1.0]
 
