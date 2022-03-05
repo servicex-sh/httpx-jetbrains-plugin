@@ -8,8 +8,8 @@ import com.intellij.httpClient.execution.common.RunContext
 class MailRequestHandler : RequestHandler<MailRequest> {
 
     override fun execute(request: MailRequest, runContext: RunContext): CommonClientResponse {
-        val rsocketRequestManager = runContext.project.getService(MailRequestManager::class.java)
-        return rsocketRequestManager.requestResponse(request)
+        val mailRequestManager = runContext.project.getService(MailRequestManager::class.java)
+        return mailRequestManager.requestResponse(request)
     }
 
     override fun prepareExecutionEnvironment(request: MailRequest, runContext: RunContext) {
