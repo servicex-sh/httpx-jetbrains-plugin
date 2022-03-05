@@ -63,6 +63,7 @@ dependencies {
         exclude(group = "io.netty", module = "netty-tcnative-boringssl-static")
         exclude(group = "javax.ws.rs", module = "javax.ws.rs-api")
         exclude(group = "org.apache.pulsar", module = "bouncy-castle-bc")
+        exclude(group = "org.eclipse.jetty", module = "jetty-util")
     }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.0")
