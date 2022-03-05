@@ -7,7 +7,7 @@
 ### Added
 
 - GraphQL request
-- Pub/Sub for Kafka, NATS, MQTT etc
+- Pub/Sub for Kafka, RabbitMQ, NATS, Redis, MQTT etc
 - Email
 - Live templates: graphql, kafka, email
 - CloudEvents JSON Schema support
