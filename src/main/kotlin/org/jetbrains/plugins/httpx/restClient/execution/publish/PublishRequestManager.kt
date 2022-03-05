@@ -60,7 +60,6 @@ class PublishRequestManager(private val project: Project) : Disposable {
         if (port <= 0) {
             port = 9092
         }
-        val topic = kafkaURI.path.substring(1)
         var partition: Int? = null
         var key: String? = null
         val params: Map<String, String> = kafkaURI.queryParameters
@@ -77,7 +76,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
         return sender.send(
             Mono.just(
                 SenderRecord.create<String?, String, Any?>(
-                    topic, partition, System.currentTimeMillis(),
+                    request.topic, partition, System.currentTimeMillis(),
                     key, request.textToSend, null
                 )
             )

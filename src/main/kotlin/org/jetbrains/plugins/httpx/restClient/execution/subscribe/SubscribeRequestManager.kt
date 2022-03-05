@@ -142,7 +142,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         val disposeConnection = Disposable {
             receiver?.close()
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("redis-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("rabbitmq-result.txt")).withConnectionDisposable(disposeConnection)
         try {
             val connectionFactory = ConnectionFactory()
             connectionFactory.setUri(request.uri)
@@ -181,9 +181,8 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         if (port <= 0) {
             port = 9092
         }
-        val topic: String = kafkaURI.getPath().substring(1)
         val params: Map<String, String> = kafkaURI.queryParameters
-        var groupId: String? = "httpx-" + UUID.randomUUID()
+        var groupId: String? = "httpx-plugin-" + UUID.randomUUID()
         if (params.containsKey("group")) {
             groupId = params["group"]
         }
@@ -192,7 +191,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "true"
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java.name
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java.name
-        val receiverOptions = reactor.kafka.receiver.ReceiverOptions.create<String, String>(props).subscription(setOf(topic))
+        val receiverOptions = reactor.kafka.receiver.ReceiverOptions.create<String, String>(props).subscription(setOf(request.topic))
         try {
             val kafkaReceiver: KafkaReceiver<String, String> = KafkaReceiver.create(receiverOptions)
             fluxDisposable = kafkaReceiver.receive()
