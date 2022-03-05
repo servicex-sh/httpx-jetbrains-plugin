@@ -37,20 +37,34 @@ dependencies {
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
+    implementation("org.apache.kafka:kafka-clients:3.1.0") {
+        exclude(group = "com.github.luben", module = "zstd-jni")
+        exclude(group = "org.lz4", module = "lz4-java")
+    }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
+    implementation("com.rabbitmq:amqp-client:5.14.2")
     implementation("io.nats:jnats:2.13.2")
+    implementation("redis.clients:jedis:4.1.1") {
+        exclude(group = "org.apache.commons", module = "commons-pool2")
+    }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
-    
+
 }
 
 configurations.implementation {
+    exclude(group = "org.jetbrains", module = "annotations")
     exclude(group = "org.slf4j", module = "slf4j-api")
     exclude(group = "io.netty", module = "netty-resolver-dns-native-macos")
+    exclude(group = "io.netty", module = "netty-transport-native-epoll")
     exclude(group = "io.projectreactor.netty.incubator", module = "reactor-netty-incubator-quic")
     exclude(group = "io.projectreactor.netty", module = "reactor-netty-http-brave")
-    exclude(group = "com.google.guava:guava", module = "guava")
-    exclude(group = "com.google.code.gson:guava", module = "gson")
+    exclude(group = "com.google.guava", module = "guava")
+    exclude(group = "com.google.code.gson", module = "gson")
+    exclude(group = "com.github.luben", module = "zstd-jni")
+    exclude(group = "org.lz4", module = "lz4-java")
+    exclude(group = "org.xerial.snappy", module = "snappy-java")
+    exclude(group = "javax.activation", module = "activation")
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
