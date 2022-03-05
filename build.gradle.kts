@@ -48,6 +48,23 @@ dependencies {
     implementation("redis.clients:jedis:4.1.1") {
         exclude(group = "org.apache.commons", module = "commons-pool2")
     }
+    implementation("org.apache.rocketmq:rocketmq-client:4.9.2") {
+        exclude(group = "com.alibaba", module = "fastjson")
+        exclude(group = "io.netty", module = "netty-all")
+    }
+    implementation("org.apache.pulsar:pulsar-client-original:2.9.1") {
+        exclude(group = "com.beust", module = "jcommander")
+        exclude(group = "org.asynchttpclient", module = "async-http-client")
+        exclude(group = "org.apache.avro", module = "avro")
+        exclude(group = "org.apache.avro", module = "avro-protobuf")
+        exclude(group = "io.netty", module = "netty-tcnative-boringssl-static")
+        exclude(group = "javax.ws.rs", module = "javax.ws.rs-api")
+        exclude(group = "org.apache.pulsar", module = "bouncy-castle-bc")
+        exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
+        exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
+        exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
+        exclude(group = "org.bouncycastle", module = "bcprov-ext-jdk15on")
+    }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
 
 }
@@ -65,6 +82,18 @@ configurations.implementation {
     exclude(group = "org.lz4", module = "lz4-java")
     exclude(group = "org.xerial.snappy", module = "snappy-java")
     exclude(group = "javax.activation", module = "activation")
+    exclude(group = "com.fasterxml.jackson.core", module = "jackson-databind")
+    exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
+    exclude(group = "com.fasterxml.jackson.dataformat", module = "jackson-dataformat-yaml")
+    exclude(group = "com.fasterxml.jackson.module", module = "jackson-module-jsonSchema")
+    exclude(group = "commons-lang", module = "commons-lang")
+    exclude(group = "commons-io", module = "commons-io")
+    exclude(group = "commons-codec", module = "commons-codec")
+    exclude(group = "commons-logging", module = "commons-logging")
+    exclude(group = "commons-collections", module = "commons-collections")
+    exclude(group = "commons-beanutils", module = "commons-beanutils")
+    exclude(group = "org.apache.commons", module = "commons-lang3")
+    exclude(group = "net.jcip", module = "jcip-annotations")
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
