@@ -34,6 +34,7 @@ intellij {
 
 dependencies {
     implementation(platform("io.projectreactor:reactor-bom:2020.0.16"))
+    implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
@@ -52,6 +53,8 @@ dependencies {
         exclude(group = "com.alibaba", module = "fastjson")
         exclude(group = "io.netty", module = "netty-all")
     }
+    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.4")
+    implementation("org.apache.bookkeeper:circe-checksum:4.14.4@jar")
     implementation("org.apache.pulsar:pulsar-client-original:2.9.1") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
@@ -60,13 +63,14 @@ dependencies {
         exclude(group = "io.netty", module = "netty-tcnative-boringssl-static")
         exclude(group = "javax.ws.rs", module = "javax.ws.rs-api")
         exclude(group = "org.apache.pulsar", module = "bouncy-castle-bc")
-        exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
-        exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
-        exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
-        exclude(group = "org.bouncycastle", module = "bcprov-ext-jdk15on")
     }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
-
+    implementation("com.aliyun:aliyun-java-sdk-core:4.6.0")
+    implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
+    implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.1") {
+        exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
+    }
+    implementation("com.aliyun:eventbridge-client:1.3.2")
 }
 
 configurations.implementation {
@@ -94,6 +98,21 @@ configurations.implementation {
     exclude(group = "commons-beanutils", module = "commons-beanutils")
     exclude(group = "org.apache.commons", module = "commons-lang3")
     exclude(group = "net.jcip", module = "jcip-annotations")
+    exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
+    exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
+    exclude(group = "org.bouncycastle", module = "bcprov-jdk15on")
+    exclude(group = "org.bouncycastle", module = "bcprov-ext-jdk15on")
+    exclude(group = "org.jacoco", module = "org.jacoco.agent")
+    exclude(group = "io.opentracing", module = "opentracing-api")
+    exclude(group = "io.opentracing", module = "opentracing-util")
+    exclude(group = "javax.xml.bind", module = "jaxb-api")
+    exclude(group = "com.sun.xml.bind", module = "jaxb-core")
+    exclude(group = "com.sun.xml.bind", module = "jaxb-impl")
+    exclude(group = "org.glassfish.jaxb", module = "jaxb-runtime")
+    exclude(group = "org.apache.httpcomponents", module = "httpcore")
+    exclude(group = "org.apache.httpcomponents", module = "httpcore-nio")
+    exclude(group = "org.apache.httpcomponents", module = "httpclient")
+    exclude(group = "org.apache.bookkeeper", module = "cpu-affinity")
 }
 
 // Configure Gradle Changelog Plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
