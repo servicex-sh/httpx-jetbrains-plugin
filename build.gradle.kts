@@ -49,8 +49,7 @@ dependencies {
     implementation("redis.clients:jedis:4.1.1") {
         exclude(group = "org.apache.commons", module = "commons-pool2")
     }
-    implementation("org.apache.rocketmq:rocketmq-client:4.9.2") {
-        exclude(group = "com.alibaba", module = "fastjson")
+    implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
     implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.4")
@@ -98,6 +97,7 @@ configurations.implementation {
     exclude(group = "commons-collections", module = "commons-collections")
     exclude(group = "commons-beanutils", module = "commons-beanutils")
     exclude(group = "org.apache.commons", module = "commons-lang3")
+    exclude(group = "org.ini4j", module = "ini4j")
     exclude(group = "net.jcip", module = "jcip-annotations")
     exclude(group = "org.bouncycastle", module = "bcpkix-jdk15on")
     exclude(group = "org.bouncycastle", module = "bcutil-jdk15on")
