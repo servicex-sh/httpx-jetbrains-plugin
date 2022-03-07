@@ -13,3 +13,6 @@ rocketmq
 eventbridge
 aliyuncs
 htx
+zeromq
+jeromq
+zeroreq
