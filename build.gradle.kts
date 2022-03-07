@@ -46,6 +46,7 @@ dependencies {
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.14.2")
     implementation("io.nats:jnats:2.13.2")
+    implementation("org.zeromq:jeromq:0.5.2")
     implementation("redis.clients:jedis:4.1.1") {
         exclude(group = "org.apache.commons", module = "commons-pool2")
     }
