@@ -8,8 +8,12 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class GraphqlRequestExecutionSupport : RequestExecutionSupport<GraphqlRequest> {
 
+    companion object {
+        val GRAPHQL_METHODS = listOf("GRAPHQL", "GRAPHQLWS", "GRAPHQLWSS")
+    }
+
     override fun canProcess(requestContext: RequestContext): Boolean {
-        return requestContext.method.startsWith("GRAPHQL")
+        return GRAPHQL_METHODS.contains(requestContext.method)
     }
 
     override fun getRequestConverter(): RequestConverter<GraphqlRequest> {
@@ -21,6 +25,6 @@ class GraphqlRequestExecutionSupport : RequestExecutionSupport<GraphqlRequest> {
     }
 
     override fun supportedMethods(): Collection<String> {
-        return listOf("GRAPHQL", "GRAPHQLWS", "GRAPHQLWSS")
+        return GRAPHQL_METHODS
     }
 }
