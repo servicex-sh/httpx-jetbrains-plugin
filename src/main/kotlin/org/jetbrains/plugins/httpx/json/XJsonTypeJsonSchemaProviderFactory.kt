@@ -55,7 +55,10 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             jsonSchema["items"] = convertArray(jsonType)
         } else if (jsonType.startsWith('{') && jsonType.endsWith('}')) {
             jsonSchema["type"] = "object"
-            jsonSchema["properties"] = convertObject(jsonType)
+            val jsonObject = convertObject(jsonType)
+            if (jsonObject.isNotEmpty()) {
+                jsonSchema["properties"] = jsonObject
+            }
         } else if (jsonType.endsWith("[]")) { //array: string[]
             jsonSchema["type"] = "array"
             jsonSchema["items"] = mapOf("type" to jsonType.substring(0, jsonType.indexOf('[')))
@@ -75,7 +78,12 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         while (plainText.contains('{') && plainText.contains('}')) {
             val subType = plainText.substring(plainText.indexOf('{'), plainText.lastIndexOf('}') + 1)
             val subElementId = "object@${subType.hashCode()}"
-            subElements.put(subElementId, mapOf("type" to "object", "properties" to convertObject(subType)))
+            val jsonObject = convertObject(subType)
+            if (jsonObject.isNotEmpty()) {
+                subElements.put(subElementId, mapOf("type" to "object", "properties" to jsonObject))
+            } else {
+                subElements.put(subElementId, mapOf("type" to "object"))
+            }
             plainText = plainText.replace(subType, subElementId)
         }
         while (plainText.contains('[') && plainText.contains(']')) {
@@ -122,7 +130,12 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         while (plainText.contains('{') && plainText.contains('}')) {
             val subType = plainText.substring(plainText.indexOf('{'), plainText.lastIndexOf('}') + 1)
             val subElementId = "object@${subType.hashCode()}"
-            subElements.put(subElementId, mapOf("type" to "object", "properties" to convertObject(subType)))
+            val jsonObject = convertObject(subType)
+            if (jsonObject.isNotEmpty()) {
+                subElements.put(subElementId, mapOf("type" to "object", "properties" to jsonObject))
+            } else {
+                subElements.put(subElementId, mapOf("type" to "object"))
+            }
             plainText = plainText.replace(subType, subElementId)
         }
         while (plainText.contains('[') && plainText.contains(']')) {
