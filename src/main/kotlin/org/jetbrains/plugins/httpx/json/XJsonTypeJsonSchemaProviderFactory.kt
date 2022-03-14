@@ -94,12 +94,13 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         }
         val types = plainText.split(",")
         for (type in types) {
-            val typeName = type.trim()
+            val typeName = type.trim().lowercase()
             if (typeName.isNotEmpty()) {
                 if (typeName.endsWith("#array")) {
                     val arrayType = mutableMapOf<String, Any>()
                     arrayType["type"] = "array"
-                    arrayType["items"] = mapOf("type" to type.substring(0, type.indexOf('#')))
+                    val itemType = type.substring(0, type.indexOf('#'))
+                    arrayType["items"] = mapOf("type" to itemType)
                     items.add(arrayType)
                 } else {
                     items.add(mutableMapOf("type" to typeName))
@@ -108,7 +109,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         }
         for (item in items) {
             val type = item["type"].toString()
-            if (type.contains("@") && subElements.contains(type)) {
+            if (type.contains("@") && subElements.contains(type)) { // refer other type
                 item.clear()
                 @Suppress("UNCHECKED_CAST")
                 item.putAll(subElements[type] as MutableMap<String, Any>)
@@ -149,7 +150,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             if (pair.contains(":")) {
                 val parts = pair.trim().split("[:\\s]+".toRegex())
                 val name = parts[0].trim()
-                val type = parts[1].trim()
+                val type = parts[1].trim().lowercase()
                 properties[name] = mutableMapOf("type" to type)
             }
         }
@@ -162,11 +163,11 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 properties[entry.key] = subElements[type] as MutableMap<String, Any>
             } else if (type.endsWith("#array")) {
                 obj["type"] = "array"
-                val itemType = type.substring(0, type.indexOf('#'))
+                val itemType = type.substring(0, type.indexOf('#')).lowercase()
                 obj["items"] = mapOf("type" to itemType)
             } else if (type.startsWith("Set<") && type.endsWith(">")) { // Set<string>
                 obj["type"] = "array"
-                val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>'))
+                val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).lowercase()
                 obj["items"] = mapOf("type" to itemType)
             }
         }
