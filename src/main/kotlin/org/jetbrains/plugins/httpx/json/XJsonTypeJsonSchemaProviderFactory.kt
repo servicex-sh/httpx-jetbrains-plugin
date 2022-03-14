@@ -162,7 +162,12 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 properties[entry.key] = subElements[type] as MutableMap<String, Any>
             } else if (type.endsWith("#array")) {
                 obj["type"] = "array"
-                obj["items"] = mapOf("type" to type.substring(0, type.indexOf('#')))
+                val itemType = type.substring(0, type.indexOf('#'))
+                obj["items"] = mapOf("type" to itemType)
+            } else if (type.startsWith("Set<") && type.endsWith(">")) { // Set<string>
+                obj["type"] = "array"
+                val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>'))
+                obj["items"] = mapOf("type" to itemType)
             }
         }
         return properties
