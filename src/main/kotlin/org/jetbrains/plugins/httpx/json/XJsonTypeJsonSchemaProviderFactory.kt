@@ -56,6 +56,9 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         } else if (jsonType.startsWith('{') && jsonType.endsWith('}')) {
             jsonSchema["type"] = "object"
             jsonSchema["properties"] = convertObject(jsonType)
+        } else if (jsonType.endsWith("[]")) { //array: string[]
+            jsonSchema["type"] = "array"
+            jsonSchema["items"] = mapOf("type" to jsonType.substring(0, jsonType.indexOf('[')))
         } else {
             jsonSchema["type"] = "object"
         }
@@ -85,7 +88,14 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         for (type in types) {
             val typeName = type.trim()
             if (typeName.isNotEmpty()) {
-                items.add(mutableMapOf("type" to typeName))
+                if (typeName.endsWith("#array")) {
+                    val arrayType = mutableMapOf<String, Any>()
+                    arrayType["type"] = "array"
+                    arrayType["items"] = mapOf("type" to type.substring(0, type.indexOf('#')))
+                    items.add(arrayType)
+                } else {
+                    items.add(mutableMapOf("type" to typeName))
+                }
             }
         }
         for (item in items) {
@@ -101,6 +111,9 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
 
     private fun convertObject(jsonObjectType: String): Map<String, MutableMap<String, Any>> {
         var plainText = jsonObjectType
+        if (plainText.contains("[]")) {
+            plainText = plainText.replace("\\[]".toRegex(), "#array")
+        }
         if (plainText.startsWith("{")) {
             plainText = plainText.substring(1, plainText.length - 1)
         }
@@ -134,6 +147,9 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             if (type.contains("@") && subElements.contains(type)) {
                 @Suppress("UNCHECKED_CAST")
                 properties[entry.key] = subElements[type] as MutableMap<String, Any>
+            } else if (type.endsWith("#array")) {
+                obj["type"] = "array"
+                obj["items"] = mapOf("type" to type.substring(0, type.indexOf('#')))
             }
         }
         return properties
