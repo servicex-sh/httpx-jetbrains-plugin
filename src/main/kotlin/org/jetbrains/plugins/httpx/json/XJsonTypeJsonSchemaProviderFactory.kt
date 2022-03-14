@@ -63,7 +63,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             jsonSchema["type"] = "array"
             jsonSchema["items"] = mapOf("type" to jsonType.substring(0, jsonType.indexOf('[')))
         } else {
-            jsonSchema["type"] = "object"
+            jsonSchema["type"] = jsonType
         }
         return ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
