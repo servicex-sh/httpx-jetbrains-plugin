@@ -65,10 +65,36 @@ Content-Type: application/graphql
 subscription { greetings }
 ```
 
+# JSON Schema support
+
+* JSON Schema URL:
+
+```
+
+X-JSON-Schema: https://json.schemastore.org/vsconfig.json
+```
+
+* JSON type
+
+```
+X-JSON-Type: {name: string, age:number}
+X-JSON-Type: [ { name: string, age: number, email?: string }, string]
+```
+
+* object: {id:number, name:string}
+* tuple: [string, number]
+* array: string[]
+* set: Set<string>
+* normal type: string, object, number, boolean, date-time, time, date, email, hostname, ipv4, ipv6, uuid, uri
+
+if property name ends with `?`, and it means property not required.
+
 # References
 
 * httpx: https://httpx.sh
 * JetBrains HTTP client: https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html
+* JSON Schema Store: https://www.schemastore.org/json/
+
 
 
 
