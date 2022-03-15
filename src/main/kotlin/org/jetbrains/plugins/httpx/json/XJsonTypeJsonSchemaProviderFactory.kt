@@ -51,14 +51,9 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         val jsonSchema = mutableMapOf<String, Any>()
         jsonSchema["\$schema"] = "http://json-schema.org/draft-07/schema#"
         if (jsonType.startsWith('[') && jsonType.endsWith(']')) {
-            jsonSchema["type"] = "array"
-            jsonSchema["items"] = convertArray(jsonType)
+            jsonSchema.putAll(convertArray(jsonType))
         } else if (jsonType.startsWith('{') && jsonType.endsWith('}')) {
-            jsonSchema["type"] = "object"
-            val jsonObject = convertObject(jsonType)
-            if (jsonObject.isNotEmpty()) {
-                jsonSchema["properties"] = jsonObject
-            }
+            jsonSchema.putAll(convertObject(jsonType))
         } else if (jsonType.endsWith("[]")) { //array: string[]
             jsonSchema["type"] = "array"
             jsonSchema["items"] = mapOf("type" to jsonType.substring(0, jsonType.indexOf('[')))
@@ -68,7 +63,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         return ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
 
-    private fun convertArray(jsonArrayType: String): List<MutableMap<String, Any>> {
+    private fun convertArray(jsonArrayType: String): Map<String, Any> {
+        val schemaObject = mutableMapOf<String, Any>()
         var plainText = jsonArrayType
         if (plainText.startsWith("[")) {
             plainText = plainText.substring(1, plainText.length - 1)
@@ -78,18 +74,13 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         while (plainText.contains('{') && plainText.contains('}')) {
             val subType = plainText.substring(plainText.indexOf('{'), plainText.lastIndexOf('}') + 1)
             val subElementId = "object@${subType.hashCode()}"
-            val jsonObject = convertObject(subType)
-            if (jsonObject.isNotEmpty()) {
-                subElements.put(subElementId, mapOf("type" to "object", "properties" to jsonObject))
-            } else {
-                subElements.put(subElementId, mapOf("type" to "object"))
-            }
+            subElements.put(subElementId, convertObject(subType))
             plainText = plainText.replace(subType, subElementId)
         }
         while (plainText.contains('[') && plainText.contains(']')) {
             val subType = plainText.substring(plainText.indexOf('['), plainText.lastIndexOf(']') + 1)
             val subElementId = "array@${subType.hashCode()}"
-            subElements.put(subElementId, mapOf("type" to "array", "items" to convertArray(subType)))
+            subElements.put(subElementId, convertArray(subType))
             plainText = plainText.replace(subType, subElementId)
         }
         val types = plainText.split(",")
@@ -115,10 +106,15 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 item.putAll(subElements[type] as MutableMap<String, Any>)
             }
         }
-        return items
+        schemaObject["type"] = "array"
+        if (items.isNotEmpty()) {
+            schemaObject["items"] = items
+        }
+        return schemaObject;
     }
 
-    private fun convertObject(jsonObjectType: String): Map<String, MutableMap<String, Any>> {
+    private fun convertObject(jsonObjectType: String): Map<String, Any> {
+        val schemaObject = mutableMapOf<String, Any>()
         var plainText = jsonObjectType
         if (plainText.contains("[]")) {
             plainText = plainText.replace("\\[]".toRegex(), "#array")
@@ -131,12 +127,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         while (plainText.contains('{') && plainText.contains('}')) {
             val subType = plainText.substring(plainText.indexOf('{'), plainText.lastIndexOf('}') + 1)
             val subElementId = "object@${subType.hashCode()}"
-            val jsonObject = convertObject(subType)
-            if (jsonObject.isNotEmpty()) {
-                subElements.put(subElementId, mapOf("type" to "object", "properties" to jsonObject))
-            } else {
-                subElements.put(subElementId, mapOf("type" to "object"))
-            }
+            subElements.put(subElementId, convertObject(subType))
             plainText = plainText.replace(subType, subElementId)
         }
         while (plainText.contains('[') && plainText.contains(']')) {
@@ -146,15 +137,23 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             plainText = plainText.replace(subType, subElementId)
         }
         val pairs = plainText.split(",")
+        val requiredProperties = mutableListOf<String>()
         for (pair in pairs) {
             if (pair.contains(":")) {
                 val parts = pair.trim().split("[:\\s]+".toRegex())
-                val name = parts[0].trim()
+                var name = parts[0].trim()
+                if (name.endsWith("?")) {
+                    name = name.substring(0, name.length - 1)
+                } else {
+                    requiredProperties.add(name);
+                }
                 val type = parts[1].trim().lowercase()
                 properties[name] = mutableMapOf("type" to type)
             }
         }
-
+        if (requiredProperties.isNotEmpty()) {
+            schemaObject["required"] = requiredProperties
+        }
         for (entry in properties) {
             val obj = entry.value;
             val type = obj["type"] as String
@@ -165,13 +164,17 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 obj["type"] = "array"
                 val itemType = type.substring(0, type.indexOf('#')).lowercase()
                 obj["items"] = mapOf("type" to itemType)
-            } else if (type.startsWith("Set<") && type.endsWith(">")) { // Set<string>
+            } else if (type.startsWith("set<") && type.endsWith(">")) { // Set<string>
                 obj["type"] = "array"
                 val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).lowercase()
                 obj["items"] = mapOf("type" to itemType)
             }
         }
-        return properties
+        schemaObject["type"] = "object"
+        if (properties.isNotEmpty()) {
+            schemaObject["properties"] = properties
+        }
+        return schemaObject
     }
 
 }
