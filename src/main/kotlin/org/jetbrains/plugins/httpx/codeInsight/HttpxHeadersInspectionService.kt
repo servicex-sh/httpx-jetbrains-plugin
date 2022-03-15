@@ -12,6 +12,7 @@ class HttpxHeadersInspectionService(project: Project) {
         val customHeaders = httpHeaderInspection.getCustomHeaders()
         customHeaders.add("Subject")
         customHeaders.add("Reply-To")
-        customHeaders.add("From")
+        customHeaders.add("X-JSON-Schema")
+        customHeaders.add("X-JSON-Type")
     }
 }
