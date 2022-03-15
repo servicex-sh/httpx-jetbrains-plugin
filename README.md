@@ -85,7 +85,7 @@ X-JSON-Type: [ { name: string, age: number, email?: string }, string]
 * tuple: [string, number]
 * array: string[]
 * set: Set<string>
-* normal type: string, object, number, boolean, date-time, time, date, email, hostname, ipv4, ipv6, uuid, uri
+* normal type: string, object, integer, number, 1..100(range), boolean, date-time, time, date, email, hostname, ipv4, ipv6, uuid, uri
 
 if property name ends with `?`, and it means property not required.
 
