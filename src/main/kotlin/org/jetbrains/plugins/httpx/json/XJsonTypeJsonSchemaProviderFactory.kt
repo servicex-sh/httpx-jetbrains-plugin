@@ -12,6 +12,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.LightVirtualFile
 import com.jetbrains.jsonSchema.extension.ContentAwareJsonSchemaFileProvider
+import org.apache.commons.codec.binary.Hex
 
 @Suppress("UnstableApiUsage")
 class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
@@ -50,15 +51,23 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
     fun convertTypeToSchema(jsonType: String): String {
         val jsonSchema = mutableMapOf<String, Any>()
         jsonSchema["\$schema"] = "http://json-schema.org/draft-07/schema#"
-        if (jsonType.startsWith('[') && jsonType.endsWith(']')) {
-            jsonSchema.putAll(convertArray(jsonType))
-        } else if (jsonType.startsWith('{') && jsonType.endsWith('}')) {
-            jsonSchema.putAll(convertObject(jsonType))
-        } else if (jsonType.endsWith("[]")) { //array: string[]
+        var jsonCleanedType = jsonType
+        while (jsonCleanedType.contains(": /")) {
+            val offset = jsonCleanedType.indexOf(": /")
+            val endOffset = jsonCleanedType.indexOf("/ ", offset + 3)
+            val pattern = jsonCleanedType.substring(offset + 1, endOffset + 1).trim()
+            val encodeRegex = Hex.encodeHexString(pattern.toByteArray())
+            jsonCleanedType = jsonCleanedType.substring(0, offset + 2) + encodeRegex + "#regex " + jsonCleanedType.substring(endOffset + 1)
+        }
+        if (jsonCleanedType.startsWith('[') && jsonCleanedType.endsWith(']')) {
+            jsonSchema.putAll(convertArray(jsonCleanedType))
+        } else if (jsonCleanedType.startsWith('{') && jsonCleanedType.endsWith('}')) {
+            jsonSchema.putAll(convertObject(jsonCleanedType))
+        } else if (jsonCleanedType.endsWith("[]")) { //array: string[]
             jsonSchema["type"] = "array"
-            jsonSchema["items"] = mapOf("type" to jsonType.substring(0, jsonType.indexOf('[')))
+            jsonSchema["items"] = mapOf("type" to jsonCleanedType.substring(0, jsonCleanedType.indexOf('[')))
         } else {
-            jsonSchema["type"] = jsonType
+            jsonSchema["type"] = jsonCleanedType
         }
         return ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
@@ -88,11 +97,9 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             val typeName = type.trim().lowercase()
             if (typeName.isNotEmpty()) {
                 if (typeName.endsWith("#array")) {
-                    val arrayType = mutableMapOf<String, Any>()
-                    arrayType["type"] = "array"
-                    val itemType = type.substring(0, type.indexOf('#'))
-                    arrayType["items"] = mapOf("type" to itemType)
-                    items.add(arrayType)
+                    items.add(convertTypedArray(typeName))
+                } else if (typeName.endsWith("#regex")) {
+                    items.add(convertRegex(typeName))
                 } else if (typeName.contains("|")) {
                     items.add(convertUnionToEnum(typeName))
                 } else if (typeName.contains("..")) {
@@ -165,9 +172,10 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 @Suppress("UNCHECKED_CAST")
                 properties[entry.key] = subElements[type] as MutableMap<String, Any>
             } else if (type.endsWith("#array")) {
-                obj["type"] = "array"
-                val itemType = type.substring(0, type.indexOf('#')).lowercase()
-                obj["items"] = mapOf("type" to itemType)
+                obj.putAll(convertTypedArray(type))
+            } else if (type.endsWith("#regex")) {
+                obj.putAll(convertRegex(type))
+                obj.putAll(convertRegex(type))
             } else if (type.startsWith("set<") && type.endsWith(">")) { // Set<string>
                 obj["type"] = "array"
                 val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).lowercase()
@@ -221,6 +229,22 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         }
         rangeType["exclusiveMaximum"] = true
         return rangeType;
+    }
+
+    private fun convertRegex(regexText: String): MutableMap<String, Any> {
+        val regexObj = mutableMapOf<String, Any>()
+        val pattern = String(Hex.decodeHex(regexText.substring(0, regexText.indexOf('#'))))
+        regexObj["type"] = "string"
+        regexObj["pattern"] = pattern.trim('/')
+        return regexObj
+    }
+
+    private fun convertTypedArray(type: String): MutableMap<String, Any> {
+        val arrayType = mutableMapOf<String, Any>()
+        arrayType["type"] = "array"
+        val itemType = type.substring(0, type.indexOf('#'))
+        arrayType["items"] = mapOf("type" to itemType)
+        return arrayType
     }
 
 }
