@@ -93,6 +93,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                     val itemType = type.substring(0, type.indexOf('#'))
                     arrayType["items"] = mapOf("type" to itemType)
                     items.add(arrayType)
+                } else if (typeName.contains("|")) {
+                    items.add(convertUnionToEnum(typeName))
                 } else {
                     items.add(mutableMapOf("type" to typeName))
                 }
@@ -139,8 +141,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         val pairs = plainText.split(",")
         val requiredProperties = mutableListOf<String>()
         for (pair in pairs) {
-            if (pair.contains(":")) {
-                val parts = pair.trim().split("[:\\s]+".toRegex())
+            if (pair.contains(':')) {
+                val parts = pair.trim().split(':')
                 var name = parts[0].trim()
                 if (name.endsWith("?")) {
                     name = name.substring(0, name.length - 1)
@@ -168,6 +170,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 obj["type"] = "array"
                 val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).lowercase()
                 obj["items"] = mapOf("type" to itemType)
+            } else if (type.contains("|")) {
+                obj.putAll(convertUnionToEnum(type))
             }
         }
         schemaObject["type"] = "object"
@@ -175,6 +179,25 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             schemaObject["properties"] = properties
         }
         return schemaObject
+    }
+
+    private fun convertUnionToEnum(unionTypes: String): MutableMap<String, Any> {
+        val enumType = mutableMapOf<String, Any>()
+        enumType["type"] = if (unionTypes.contains("\"") || unionTypes.contains("'")) {
+            "string"
+        } else {
+            "number"
+        }
+        enumType["enum"] = unionTypes.split("|").map { it.trim() }.map {
+            if (it.startsWith('\'') || it.startsWith('"')) {
+                it.substring(1, it.length - 1)
+            } else if (it.contains('.')) {
+                it.toDouble()
+            } else {
+                it.toLong()
+            }
+        }
+        return enumType;
     }
 
 }
