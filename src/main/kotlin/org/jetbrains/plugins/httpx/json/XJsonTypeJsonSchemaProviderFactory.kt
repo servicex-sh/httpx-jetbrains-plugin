@@ -95,6 +95,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                     items.add(arrayType)
                 } else if (typeName.contains("|")) {
                     items.add(convertUnionToEnum(typeName))
+                } else if (typeName.contains("..")) {
+                    items.add(convertRange(typeName))
                 } else {
                     items.add(mutableMapOf("type" to typeName))
                 }
@@ -172,6 +174,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 obj["items"] = mapOf("type" to itemType)
             } else if (type.contains("|")) {
                 obj.putAll(convertUnionToEnum(type))
+            } else if (type.contains("..")) {
+                obj.putAll(convertRange(type));
             }
         }
         schemaObject["type"] = "object"
@@ -198,6 +202,25 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
             }
         }
         return enumType;
+    }
+
+    private fun convertRange(rangeNumbers: String): MutableMap<String, Any> {
+        val rangeType = mutableMapOf<String, Any>()
+        rangeType["type"] = "number"
+        val minimum = rangeNumbers.substring(0, rangeNumbers.indexOf(".."))
+        if (minimum.contains('.')) {
+            rangeType["minimum"] = minimum.toDouble()
+        } else {
+            rangeType["minimum"] = minimum.toInt()
+        }
+        val maximum = rangeNumbers.substring(rangeNumbers.lastIndexOf("..") + 2).trim()
+        if (maximum.contains('.')) {
+            rangeType["maximum"] = maximum.toDouble()
+        } else {
+            rangeType["maximum"] = maximum.toLong()
+        }
+        rangeType["exclusiveMaximum"] = true
+        return rangeType;
     }
 
 }
