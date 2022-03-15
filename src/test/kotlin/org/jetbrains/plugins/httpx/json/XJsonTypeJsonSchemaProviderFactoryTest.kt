@@ -14,14 +14,21 @@ class XJsonTypeJsonSchemaProviderFactoryTest {
     @Test
     fun convertJsonArrayToSchema() {
         val factory = XJsonTypeJsonSchemaProviderFactory();
-        val jsonType = "[number, [number, string], {id:number, nick:string, alias: [string, string]} ]"
+        val jsonType = "['vip'|'guest', [number, string], {id:number, nick:string, alias: [string, string]} ]"
         println(factory.convertTypeToSchema(jsonType))
     }
 
     @Test
-    fun testArray() {
+    fun testComplex() {
         val factory = XJsonTypeJsonSchemaProviderFactory()
-        val jsonType = "{names: Set<string>}"
+        val jsonType = "{ names: Set<string>, type: 'vip' | 'normal', flag: 100 | 200, age: 1..200 }"
+        println(factory.convertTypeToSchema(jsonType))
+    }
+
+    @Test
+    fun testRegex() {
+        val factory = XJsonTypeJsonSchemaProviderFactory()
+        val jsonType = "{ id: string, name: String, phone: /\\d{13}/ }"
         println(factory.convertTypeToSchema(jsonType))
     }
 
