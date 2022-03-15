@@ -100,6 +100,8 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                     items.add(convertTypedArray(typeName))
                 } else if (typeName.endsWith("#regex")) {
                     items.add(convertRegex(typeName))
+                } else if (typeName.startsWith("/") && typeName.endsWith("/")) {
+                    items.add(convertRegex(typeName))
                 } else if (typeName.contains("|")) {
                     items.add(convertUnionToEnum(typeName))
                 } else if (typeName.contains("..")) {
@@ -175,6 +177,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 obj.putAll(convertTypedArray(type))
             } else if (type.endsWith("#regex")) {
                 obj.putAll(convertRegex(type))
+            } else if (type.startsWith("/") && type.endsWith("/")) {
                 obj.putAll(convertRegex(type))
             } else if (type.startsWith("set<") && type.endsWith(">")) { // Set<string>
                 obj["type"] = "array"
@@ -233,9 +236,13 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
 
     private fun convertRegex(regexText: String): MutableMap<String, Any> {
         val regexObj = mutableMapOf<String, Any>()
-        val pattern = String(Hex.decodeHex(regexText.substring(0, regexText.indexOf('#'))))
         regexObj["type"] = "string"
-        regexObj["pattern"] = pattern.trim('/')
+        if (regexText.startsWith("/")) {
+            regexObj["pattern"] = regexText.trim('/')
+        } else {
+            val pattern = String(Hex.decodeHex(regexText.substring(0, regexText.indexOf('#'))))
+            regexObj["pattern"] = pattern.trim('/')
+        }
         return regexObj
     }
 
