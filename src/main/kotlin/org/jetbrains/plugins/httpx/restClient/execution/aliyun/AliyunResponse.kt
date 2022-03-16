@@ -8,7 +8,7 @@ import io.netty.handler.codec.http.HttpHeaders
 
 @Suppress("UnstableApiUsage")
 class AliyunResponse(
-    private val headers: HttpHeaders?,
+    private val headers: Map<String,String>?,
     private val responseBody: CommonClientResponseBody = CommonClientResponseBody.Empty(),
     private val status: String = "OK",
     private val error: String? = null,
@@ -27,9 +27,9 @@ class AliyunResponse(
     override val presentationHeader: String
         get() {
             val hint = if (status.contains("OK")) {
-                "GRAPHQL ${status}"
+                "ALIYUN ${status}"
             } else {
-                "GRAPHQL ERROR\n${(error ?: "")}"
+                "ALIYUN ERROR\n${(error ?: "")}"
             }
             val lines = mutableListOf(hint)
             headers?.forEach {
