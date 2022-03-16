@@ -12,6 +12,8 @@
         <plugin id="com.jetbrains.restClient"/>
     </dependencies>
 
+    <depends optional="true" config-file="httpx-withJava.xml">com.intellij.java</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <projectService preload="true" serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestManager"/>
