@@ -3,6 +3,8 @@ package org.jetbrains.plugins.httpx.restClient.execution.aliyun
 import com.intellij.httpClient.execution.common.CommonClientRequest
 import com.intellij.util.queryParameters
 import java.net.URI
+import java.nio.charset.StandardCharsets
+import java.util.*
 
 
 @Suppress("UnstableApiUsage")
@@ -42,4 +44,17 @@ class AliyunRequest(override val URL: String?, override val httpMethod: String, 
     fun bodyBytes(): ByteArray {
         return textToSend?.encodeToByteArray() ?: byteArrayOf()
     }
+
+    fun getBasicAuthorization(): List<String>? {
+        val header = headers["Authorization"]
+        if (header != null && header.startsWith("Basic ")) {
+            var clearText = header.substring(6).trim()
+            if (!(clearText.contains(' ') || clearText.contains(':'))) {
+                clearText = String(Base64.getDecoder().decode(clearText), StandardCharsets.UTF_8)
+            }
+            return clearText.split("[:\\s]".toRegex())
+        }
+        return null
+    }
+
 }
