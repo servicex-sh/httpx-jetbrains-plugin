@@ -1,0 +1,8 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.directNavigationProvider implementation="org.jetbrains.plugins.httpx.navigation.XJavaTypeNavigation"/>
+    </extensions>
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJavaTypeJsonSchemaProviderFactory"/>
+    </extensions>
+</idea-plugin>
