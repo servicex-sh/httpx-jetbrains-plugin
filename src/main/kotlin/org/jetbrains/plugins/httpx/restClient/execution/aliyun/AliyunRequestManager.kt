@@ -20,7 +20,7 @@ class AliyunRequestManager(private val project: Project) : Disposable {
     }
 
     fun execute(aliyunRequest: AliyunRequest): CommonClientResponse {
-        val keyIdAndSecret: List<String>? = Aliyun.readAliyunAccessToken(aliyunRequest)
+        val keyIdAndSecret: List<String>? = Aliyun.readAliyunAccessToken(aliyunRequest.getBasicAuthorization())
         if (keyIdAndSecret == null) {
             return AliyunResponse(null, CommonClientResponseBody.Empty(), "Error", "No Aliyun AK found!")
         }
