@@ -33,6 +33,13 @@ import java.util.*
 @Suppress("UnstableApiUsage")
 class SubscribeRequestManager(private val project: Project) : Disposable {
 
+    companion object {
+        fun formatReceivedMessage(body: String): String {
+            val timestamp = LocalTime.now().format(DateTimeFormatter.ISO_TIME)
+            return "=====${timestamp}=========\n${body}\n\n"
+        }
+    }
+
     override fun dispose() {
     }
 
@@ -44,8 +51,10 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             )
         }
         val schema = request.uri!!.scheme
-        if (schema.startsWith("mqtt")) {
-            return subscribeMqtt(request)
+        if (schema.startsWith("mqtt5")) {
+            return subscribeMqtt5(request)
+        } else if (schema.startsWith("mqtt")) {
+            return Mqtt3SubscribeManager.subscribeMqtt(request)
         } else if (schema.startsWith("nats")) {
             return subscribeNats(request)
         } else if (schema.startsWith("amqp")) {
@@ -58,7 +67,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         return SubscribeResponse(CommonClientResponseBody.Text("Schema not support!"), "401", "Unknown schema")
     }
 
-    private fun subscribeMqtt(request: SubscribeRequest): CommonClientResponse {
+    private fun subscribeMqtt5(request: SubscribeRequest): CommonClientResponse {
         try {
             val shared = MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
                 replay = 1000,
@@ -68,7 +77,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             val disposeConnection = Disposable {
                 mqttClient?.disconnect()
             }
-            val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("nats-result.txt")).withConnectionDisposable(disposeConnection)
+            val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("mqtt5-result.txt")).withConnectionDisposable(disposeConnection)
             val uri = getMqttUri(request.uri!!)
             val clientId = "httpx-plugin-" + UUID.randomUUID()
             mqttClient = MqttClient(uri, clientId, MemoryPersistence())
@@ -210,10 +219,6 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         return SubscribeResponse(textStream)
     }
 
-    private fun formatReceivedMessage(body: String): String {
-        val timestamp = LocalTime.now().format(DateTimeFormatter.ISO_TIME)
-        return "=====${timestamp}=========\n${body}\n\n"
-    }
 
 }
 
