@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.GraphqlInjectionContributor"/>
+    </extensions>
+</idea-plugin>
