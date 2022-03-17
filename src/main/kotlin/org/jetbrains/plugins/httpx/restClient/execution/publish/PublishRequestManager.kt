@@ -39,8 +39,10 @@ class PublishRequestManager(private val project: Project) : Disposable {
             )
         }
         val schema = request.uri!!.scheme
-        if (schema.startsWith("mqtt")) {
-            return sendMqttMessage(request)
+        if (schema.startsWith("mqtt5")) {
+            return sendMqtt5Message(request)
+        } else if (schema.startsWith("mqtt")) {
+            return Mqtt3PublisherManager.sendMqtt3Message(request)
         } else if (schema.startsWith("redis")) {
             return sendRedisMessage(request)
         } else if (schema.startsWith("nats")) {
@@ -128,7 +130,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
         return PublishResponse()
     }
 
-    private fun sendMqttMessage(request: PublishRequest): CommonClientResponse {
+    private fun sendMqtt5Message(request: PublishRequest): CommonClientResponse {
         var mqttClient: MqttClient? = null
         try {
             val uri = getMqttUri(request.uri!!)
