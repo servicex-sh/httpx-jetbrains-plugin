@@ -1,5 +1,6 @@
 package org.jetbrains.plugins.httpx.restClient.execution.publish
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
@@ -23,6 +24,13 @@ import reactor.kafka.sender.SenderRecord
 import reactor.rabbitmq.OutboundMessage
 import reactor.rabbitmq.RabbitFlux
 import redis.clients.jedis.Jedis
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.eventbridge.EventBridgeClient
+import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest
+import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry
+import software.amazon.awssdk.services.sns.SnsClient
+import software.amazon.awssdk.services.sqs.SqsClient
+import software.amazon.awssdk.services.sqs.model.SendMessageRequest
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -51,6 +59,15 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return sendKafka(request)
         } else if (schema.startsWith("amqp")) {
             return sendRabbitMQ(request)
+        } else if (schema.startsWith("arn")) {
+            val awsUri = request.uri.toString()
+            if (awsUri.startsWith("arn:aws:sqs:")) {
+                return sendAwsSqsMessage(request)
+            } else if (awsUri.startsWith("arn:aws:event:")) {
+                return sendAwsEventBridgeMessage(request)
+            } else if (awsUri.startsWith("arn:aws:sns:")) {
+                return sendAwsSnsMessage(request)
+            }
         }
         return PublishResponse(CommonClientResponseBody.Text("Schema not support!"), "401", "Unknown schema")
     }
@@ -146,6 +163,129 @@ class PublishRequestManager(private val project: Project) : Disposable {
             mqttClient?.disconnect()
         }
         return PublishResponse()
+    }
+
+    fun sendAwsSnsMessage(request: PublishRequest): CommonClientResponse {
+        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        if (awsBasicCredentials == null) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
+        }
+        val topicArn: String = request.uri.toString()
+        val regionId = getAwsRegionId(request, topicArn)
+        SnsClient.builder()
+            .region(Region.of(regionId))
+            .credentialsProvider { awsBasicCredentials }
+            .build().use { snsClient ->
+                val snsRequest = software.amazon.awssdk.services.sns.model.PublishRequest.builder()
+                    .message(request.textToSend)
+                    .topicArn(topicArn)
+                    .build()
+                val result = snsClient.publish(snsRequest)
+                val response = result.sdkHttpResponse()
+                if (!response.isSuccessful) {
+                    return PublishResponse(CommonClientResponseBody.Empty(), "Error", response.statusText().get())
+                }
+            }
+        return PublishResponse()
+    }
+
+    fun sendAwsEventBridgeMessage(request: PublishRequest): CommonClientResponse {
+        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        if (awsBasicCredentials == null) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
+        }
+        val eventBusArn: String = request.uri.toString()
+        val regionId = getAwsRegionId(request, eventBusArn)
+        try {
+            EventBridgeClient.builder()
+                .region(Region.of(regionId))
+                .credentialsProvider { awsBasicCredentials }
+                .build().use { eventBrClient ->
+                    val objectMapper = ObjectMapper()
+                    val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
+                    //validate cloudEvent
+                    val source = cloudEvent["source"] as String?
+                    if (source == null) {
+                        return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply source field in json body!")
+                    }
+                    val datacontenttype = cloudEvent["datacontenttype"] as String?
+                    if (datacontenttype != null && !datacontenttype.startsWith("application/json")) {
+                        System.err.println("datacontenttype value should be 'application/json'!")
+                        return PublishResponse(CommonClientResponseBody.Empty(), "Error", "acontenttype value should be 'application/json'!")
+                    }
+                    val data = cloudEvent["data"]
+                    if (data == null) {
+                        System.err.println("data field should be supplied in json body!")
+                        return PublishResponse(CommonClientResponseBody.Empty(), "Error", "data field should be supplied in json body!")
+                    }
+                    val jsonData: String
+                    jsonData = if (data is Map<*, *> || data is List<*>) {
+                        objectMapper.writeValueAsString(data)
+                    } else {
+                        data.toString()
+                    }
+                    val reqEntry = PutEventsRequestEntry.builder()
+                        .resources(eventBusArn)
+                        .source(source)
+                        .detailType(datacontenttype)
+                        .detail(jsonData)
+                        .build()
+                    val eventsRequest = PutEventsRequest.builder()
+                        .entries(reqEntry)
+                        .build()
+                    val result = eventBrClient.putEvents(eventsRequest)
+                    for (resultEntry in result.entries()) {
+                        if (resultEntry.eventId() != null) {
+                            return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, resultEntry.eventId())
+                        } else {
+                            return PublishResponse(CommonClientResponseBody.Empty(), "Error", resultEntry.errorCode())
+                        }
+                    }
+                }
+        } catch (e: Exception) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        }
+        return PublishResponse()
+    }
+
+    fun sendAwsSqsMessage(request: PublishRequest): CommonClientResponse {
+        val queue: String = request.topic!!
+        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        if (awsBasicCredentials == null) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
+        }
+        val queueArn: String = request.uri.toString()
+        val regionId = getAwsRegionId(request, queueArn)
+        val parts = queueArn.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val sqsRegionId = parts[3]
+        val sqsQueueId = parts[4]
+        val sqsName = parts[5]
+        val queueUrl = "https://sqs.$sqsRegionId.amazonaws.com/$sqsQueueId/$sqsName"
+        SqsClient.builder()
+            .region(Region.of(regionId))
+            .credentialsProvider { awsBasicCredentials }
+            .build().use { sqsClient ->
+                val sendMsgRequest = SendMessageRequest.builder()
+                    .queueUrl(queueUrl)
+                    .messageBody(request.textToSend)
+                    .build()
+                val response = sqsClient.sendMessage(sendMsgRequest)
+                return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, response.messageId())
+            }
+    }
+
+    private fun getAwsRegionId(httpRequest: PublishRequest, resourceArn: String?): String? {
+        var regionId: String? = httpRequest.getHeader("X-Region-Id")
+        if (regionId == null && resourceArn != null) {
+            val parts = resourceArn.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            if (parts.size > 3) {
+                regionId = parts[3]
+            }
+        }
+        if (regionId == null) {
+            regionId = Region.US_EAST_1.id()
+        }
+        return regionId
     }
 
 }
