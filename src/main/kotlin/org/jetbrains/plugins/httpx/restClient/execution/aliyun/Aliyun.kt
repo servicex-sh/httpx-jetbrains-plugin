@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import java.nio.file.Path
 
 object Aliyun {
-    val API_VERSIONS: Map<String, String> = HashMap()
+    private val API_VERSIONS = mutableMapOf<String, String>()
 
     fun getApiVersion(productCode: String?): String? {
         if (API_VERSIONS.isEmpty()) {
