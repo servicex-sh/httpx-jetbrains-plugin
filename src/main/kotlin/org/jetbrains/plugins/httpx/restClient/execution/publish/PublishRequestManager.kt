@@ -1,5 +1,10 @@
 package org.jetbrains.plugins.httpx.restClient.execution.publish
 
+import com.aliyun.eventbridge.EventBridge
+import com.aliyun.eventbridge.models.Config
+import com.aliyun.eventbridge.util.EventBuilder
+import com.aliyun.mns.client.CloudAccount
+import com.aliyun.mns.model.Message
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
@@ -15,6 +20,7 @@ import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
+import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun.readAliyunAccessToken
 import org.jetbrains.plugins.httpx.restClient.execution.common.getMqttUri
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
@@ -31,6 +37,7 @@ import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry
 import software.amazon.awssdk.services.sns.SnsClient
 import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest
+import java.net.URI
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -59,6 +66,13 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return sendKafka(request)
         } else if (schema.startsWith("amqp")) {
             return sendRabbitMQ(request)
+        } else if (schema.startsWith("mns")) {
+            return sendMnsMessage(request)
+        } else if (schema.startsWith("eventbridge")) {
+            val host = request.uri!!.host
+            if (host.contains("aliyuncs.com")) {
+                return publishAliyunEventBridge(request)
+            }
         } else if (schema.startsWith("arn")) {
             val awsUri = request.uri.toString()
             if (awsUri.startsWith("arn:aws:sqs:")) {
@@ -286,6 +300,78 @@ class PublishRequestManager(private val project: Project) : Disposable {
             regionId = Region.US_EAST_1.id()
         }
         return regionId
+    }
+
+    fun sendMnsMessage(request: PublishRequest): CommonClientResponse {
+        val keyIdAndSecret = readAliyunAccessToken(request.getBasicAuthorization())
+        if (keyIdAndSecret == null) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
+        }
+        try {
+            val mnsClient = CloudAccount(keyIdAndSecret[0], keyIdAndSecret[1], "https://" + request.uri!!.host).mnsClient
+            val queueRef = mnsClient.getQueueRef(request.topic)
+            val message = queueRef.putMessage(Message(request.bodyBytes()))
+            return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, message.messageId)
+        } catch (e: java.lang.Exception) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        }
+    }
+
+    fun publishAliyunEventBridge(request: PublishRequest): CommonClientResponse {
+        val keyIdAndSecret = readAliyunAccessToken(request.getBasicAuthorization())
+        if (keyIdAndSecret == null) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
+        }
+        try {
+            val objectMapper = ObjectMapper()
+            val eventBus = request.topic
+            val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
+            //validate cloudEvent
+            val source = cloudEvent["source"] as String?
+            if (source == null) {
+                System.err.println("Please supply source field in json body!")
+                return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply source field in json body!")
+
+            }
+            val datacontenttype = cloudEvent["datacontenttype"] as String?
+            if (datacontenttype != null && !datacontenttype.startsWith("application/json")) {
+                return PublishResponse(CommonClientResponseBody.Empty(), "Error", "datacontenttype value should be 'application/json'!")
+            }
+            val data = cloudEvent["data"]
+            if (data == null) {
+                System.err.println("data field should be supplied in json body!")
+                return PublishResponse(CommonClientResponseBody.Empty(), "Error", "data field should be supplied in json body!")
+            }
+            val jsonData: String
+            jsonData = if (data is Map<*, *> || data is List<*>) {
+                objectMapper.writeValueAsString(data)
+            } else {
+                data.toString()
+            }
+            var eventId = cloudEvent["id"] as String?
+            if (eventId == null) {
+                eventId = UUID.randomUUID().toString()
+            }
+            val authConfig = Config()
+            authConfig.accessKeyId = keyIdAndSecret[0]
+            authConfig.accessKeySecret = keyIdAndSecret[1]
+            authConfig.endpoint = request.uri!!.host
+            val eventBridgeClient: EventBridge = com.aliyun.eventbridge.EventBridgeClient(authConfig)
+            val event = EventBuilder.builder()
+                .withId(eventId)
+                .withSource(URI.create(source))
+                .withType(cloudEvent["type"] as String?)
+                .withSubject(cloudEvent["subject"] as String?)
+                .withTime(Date())
+                .withJsonStringData(jsonData)
+                .withAliyunEventBus(eventBus)
+                .build()
+            val putEventsResponse = eventBridgeClient.putEvents(java.util.List.of(event))
+            val resultJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(putEventsResponse)
+            return PublishResponse(CommonClientResponseBody.Text(resultJson), "OK", null, eventId)
+        } catch (e: java.lang.Exception) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        }
     }
 
 }
