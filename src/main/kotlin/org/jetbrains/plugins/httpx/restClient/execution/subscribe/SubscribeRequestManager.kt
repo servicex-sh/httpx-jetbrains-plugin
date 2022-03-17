@@ -64,7 +64,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             )
             var mqttClient: MqttClient? = null
             val disposeConnection = Disposable {
-                mqttClient?.disconnectForcibly()
+                mqttClient?.disconnect()
             }
             val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("nats-result.txt")).withConnectionDisposable(disposeConnection)
             val uri = getMqttUri(request.uri!!)
