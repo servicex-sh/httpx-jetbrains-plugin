@@ -21,7 +21,7 @@ class GraphqlRequestConverter : RequestConverter<GraphqlRequest>() {
             val httpRequest = requestPsiPointer.element!!
             val httpMethod = httpRequest.httpMethod
             val schema = if (httpMethod.length > 7) {
-                httpMethod.substring(7).lowercase()
+                httpMethod.substring(7).toLowerCase()
             } else {
                 httpRequest.requestTarget?.scheme?.text ?: "http"
             }
