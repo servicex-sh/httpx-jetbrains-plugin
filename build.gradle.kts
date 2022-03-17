@@ -66,6 +66,7 @@ dependencies {
         exclude(group = "org.eclipse.jetty", module = "jetty-util")
     }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
+    implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.0")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.1") {
