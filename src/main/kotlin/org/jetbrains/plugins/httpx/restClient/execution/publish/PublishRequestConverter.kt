@@ -13,18 +13,24 @@ class PublishRequestConverter : RequestConverter<PublishRequest>() {
     override val requestType: Class<PublishRequest> get() = PublishRequest::class.java
 
     override fun psiToCommonRequest(requestPsiPointer: SmartPsiElementPointer<HttpRequest>, substitutor: HttpRequestVariableSubstitutor): PublishRequest {
-        var url = ""
+        var topic = ""
         var requestType = "PUB"
         var requestBody: String? = null
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
-            url = httpRequest.getHttpUrl(substitutor)!!
+            topic = httpRequest.getHttpUrl(substitutor)!!
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
             requestType = httpRequest.httpMethod
             requestBody = httpRequest.requestBody?.text
         }
-        return PublishRequest(url, requestType, requestBody, headers)
+        val uri = if (headers.containsKey("URI")) {
+            headers["URI"]
+        } else {
+            headers["Host"]
+        }
+        val requestLine = "${uri}/${topic}"
+        return PublishRequest(requestLine, requestType, requestBody, topic, headers)
     }
 
     override fun toExternalFormInner(request: PublishRequest, fileName: String?): String {

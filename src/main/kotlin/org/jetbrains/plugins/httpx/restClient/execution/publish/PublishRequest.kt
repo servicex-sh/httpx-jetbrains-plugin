@@ -6,17 +6,25 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 
 @Suppress("UnstableApiUsage")
-class PublishRequest(override val URL: String?, override val httpMethod: String?, override val textToSend: String?, private val headers: Map<String, String>) :
+class PublishRequest(
+    override val URL: String?,
+    override val httpMethod: String?,
+    override val textToSend: String?,
+    private val topicText: String?,
+    private val headers: Map<String, String>
+) :
     CommonClientRequest {
     var topic: String? = null
     var uri: URI? = null
     var contentType: String? = null
 
     init {
-        topic = URL?.trim()?.trim('/')
+        topic = topicText?.trim()?.trim('/')
         contentType = headers.getOrDefault("Content-Type", "text/plain")
-        uri = headers["Host"]?.let {
-            URI.create(it)
+        uri = if (headers.containsKey("URI")) {
+            URI.create(headers["URI"]!!)
+        } else {
+            URI.create(headers["Host"]!!)
         }
     }
 
