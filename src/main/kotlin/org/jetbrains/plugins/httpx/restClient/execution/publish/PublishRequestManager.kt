@@ -16,6 +16,7 @@ import io.nats.client.Nats
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
+import org.apache.pulsar.client.api.PulsarClient
 import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
@@ -64,6 +65,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return sendNatsMessage(request)
         } else if (schema.startsWith("kafka")) {
             return sendKafka(request)
+        } else if (schema.startsWith("pulsar")) {
+            return sendPulsarMessage(request)
         } else if (schema.startsWith("amqp")) {
             return sendRabbitMQ(request)
         } else if (schema.startsWith("mns")) {
@@ -369,7 +372,20 @@ class PublishRequestManager(private val project: Project) : Disposable {
             val putEventsResponse = eventBridgeClient.putEvents(java.util.List.of(event))
             val resultJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(putEventsResponse)
             return PublishResponse(CommonClientResponseBody.Text(resultJson), "OK", null, eventId)
-        } catch (e: java.lang.Exception) {
+        } catch (e: Exception) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        }
+    }
+
+    private fun sendPulsarMessage(request: PublishRequest): CommonClientResponse {
+        try {
+            PulsarClient.builder().serviceUrl(request.uri!!.toString()).build().use { client ->
+                client.newProducer().topic(request.topic).create().use { producer ->
+                    val msgId = producer.send(request.bodyBytes())
+                    return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, msgId.toString())
+                }
+            }
+        } catch (e: Exception) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
         }
     }
