@@ -11,6 +11,9 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.pulsar.client.api.Consumer
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.PulsarClient
 import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
@@ -61,6 +64,8 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             return subscribeRabbitmq(request)
         } else if (schema.startsWith("kafka")) {
             return subscribeKafka(request)
+        } else if (schema.startsWith("pulsar")) {
+            return subscribePulsar(request)
         } else if (schema.startsWith("redis")) {
             return subscribeRedis(request)
         }
@@ -170,6 +175,38 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                     val data = String(it.body, StandardCharsets.UTF_8)
                     shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(data)))
                 }
+        } catch (e: Exception) {
+            shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
+        }
+        return SubscribeResponse(textStream)
+    }
+
+    private fun subscribePulsar(request: SubscribeRequest): CommonClientResponse {
+        val shared = MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
+            replay = 1000,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST
+        )
+        var pulsarClient: PulsarClient? = null
+        val disposeConnection = Disposable {
+            pulsarClient?.close()
+        }
+        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("pulsar-result.txt")).withConnectionDisposable(disposeConnection)
+        try {
+            pulsarClient = PulsarClient.builder().serviceUrl(request.uri.toString()).build()
+            pulsarClient.newConsumer()
+                .topic(request.topic)
+                .subscriptionName("httpx-cli-${UUID.randomUUID()}")
+                .messageListener { consumer: Consumer<ByteArray?>, msg: Message<ByteArray?> ->
+                    try {
+                        val data = String(msg.data, StandardCharsets.UTF_8)
+                        consumer.acknowledge(msg)
+                        shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(data)))
+                    } catch (e: Exception) {
+                        consumer.negativeAcknowledge(msg)
+                        shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
+                    }
+                }
+                .subscribe()
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
         }
