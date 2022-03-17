@@ -155,14 +155,14 @@ object Aliyun {
         } else serviceName
     }
 
-    fun readAliyunAccessToken(aliyunRequest: AliyunRequest): List<String>? {
-        var keyIdAndSecret: List<String>? = aliyunRequest.getBasicAuthorization()
-        if (keyIdAndSecret == null) { // read default profile
-            keyIdAndSecret = readAccessFromAliyunCli(null)
-        } else if (keyIdAndSecret.size == 2 && keyIdAndSecret[1].length <= 4) { // id match
-            keyIdAndSecret = readAccessFromAliyunCli(keyIdAndSecret[0])
+    fun readAliyunAccessToken(keyIdAndSecret: List<String>?): List<String>? {
+        var keyIdAndSecret2: List<String>? = keyIdAndSecret
+        if (keyIdAndSecret2 == null) { // read default profile
+            keyIdAndSecret2 = readAccessFromAliyunCli(null)
+        } else if (keyIdAndSecret2.size == 2 && keyIdAndSecret2[1].length <= 4) { // id match
+            keyIdAndSecret2 = readAccessFromAliyunCli(keyIdAndSecret2[0])
         }
-        return keyIdAndSecret
+        return keyIdAndSecret2
     }
 
 
