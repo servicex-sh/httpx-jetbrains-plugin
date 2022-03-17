@@ -33,6 +33,10 @@ class SubscribeResponse(
 
     override val presentationFooter: String
         get() {
-            return "Execution time: $executionTime ms"
+            return if (status == "OK") {
+                "Subscribed successfully: $executionTime ms, and receiving messages: "
+            } else {
+                ""
+            }
         }
 }
