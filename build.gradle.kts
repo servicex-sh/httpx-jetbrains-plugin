@@ -72,6 +72,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.2")
+    implementation("software.amazon.awssdk:aws-core:2.17.150")
+    implementation("software.amazon.awssdk:sns:2.17.150")
+    implementation("software.amazon.awssdk:sqs:2.17.150")
+    implementation("software.amazon.awssdk:eventbridge:2.17.150")
 }
 
 configurations.implementation {
