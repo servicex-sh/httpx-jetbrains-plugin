@@ -63,7 +63,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
             val awsUri = request.uri.toString()
             if (awsUri.startsWith("arn:aws:sqs:")) {
                 return sendAwsSqsMessage(request)
-            } else if (awsUri.startsWith("arn:aws:event:")) {
+            } else if (awsUri.startsWith("arn:aws:events:")) {
                 return sendAwsEventBridgeMessage(request)
             } else if (awsUri.startsWith("arn:aws:sns:")) {
                 return sendAwsSnsMessage(request)
