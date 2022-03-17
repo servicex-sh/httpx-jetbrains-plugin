@@ -112,7 +112,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             nc = Nats.connect(request.uri.toString())
             val dispatcher = nc.createDispatcher {
                 val body = it.data.toString(StandardCharsets.UTF_8)
-                shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(body + "\n\n"))
+                shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
             }
             dispatcher.subscribe(request.topic!!)
         } catch (e: java.lang.Exception) {
@@ -135,7 +135,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             jedis = Jedis(request.uri.toString())
             jedis.subscribe(object : JedisPubSub() {
                 override fun onMessage(channel: String, message: String) {
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(message + "\n\n"))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(message)))
                 }
             }, request.topic)
         } catch (e: Exception) {
@@ -168,7 +168,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                 }
                 .subscribe {
                     val data = String(it.body, StandardCharsets.UTF_8)
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(data + "\n\n"))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(data)))
                 }
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
@@ -211,7 +211,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                     fluxDisposable?.dispose()
                 }
                 .subscribe {
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(it.value() + "\n\n"))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(it.value())))
                 }
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
