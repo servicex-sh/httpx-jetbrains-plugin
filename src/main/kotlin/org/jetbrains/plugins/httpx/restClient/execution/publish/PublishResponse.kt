@@ -10,6 +10,7 @@ class PublishResponse(
     private val responseBody: CommonClientResponseBody = CommonClientResponseBody.Empty(),
     private val status: String = "OK",
     private val error: String? = null,
+    private val msgId: String? = null,
     override var executionTime: Long? = 0
 ) : CommonClientResponse {
     override val body: CommonClientResponseBody
@@ -25,7 +26,11 @@ class PublishResponse(
     override val presentationHeader: String
         get() {
             return if (status == "OK") {
-                "PUB 200 OK\n"
+                if (msgId == null) {
+                    "PUB 200 OK\n"
+                } else {
+                    "PUB 200 OK with ID ${msgId}\n"
+                }
             } else {
                 "PUB ERROR\n${(error ?: "")}\n"
             }
