@@ -26,6 +26,8 @@ import reactor.rabbitmq.ReceiverOptions
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPubSub
 import java.nio.charset.StandardCharsets
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Suppress("UnstableApiUsage")
@@ -73,7 +75,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             mqttClient.setCallback(object : AbstractMqttCallback() {
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     val body = String(message.payload, StandardCharsets.UTF_8)
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(body + "\n\n"))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
                 }
             })
             val connOpts = MqttConnectionOptions().apply {
@@ -206,6 +208,11 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
         }
         return SubscribeResponse(textStream)
+    }
+
+    private fun formatReceivedMessage(body: String): String {
+        val timestamp = LocalTime.now().format(DateTimeFormatter.ISO_TIME)
+        return "=====${timestamp}=========\n${body}\n\n"
     }
 
 }
