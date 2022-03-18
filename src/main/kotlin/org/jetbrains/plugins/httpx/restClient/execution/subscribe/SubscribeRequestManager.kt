@@ -170,7 +170,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             connectionFactory.setUri(request.uri)
             val receiverOptions = ReceiverOptions()
                 .connectionFactory(connectionFactory)
-                .connectionSubscriptionScheduler(Schedulers.boundedElastic())
+                .connectionSubscriptionScheduler(Schedulers.immediate())
             receiver = RabbitFlux.createReceiver(receiverOptions)
             receiver.consumeAutoAck(request.topic!!)
                 .doOnError {

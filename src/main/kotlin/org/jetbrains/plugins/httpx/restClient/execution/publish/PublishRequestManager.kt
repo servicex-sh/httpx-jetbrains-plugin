@@ -137,7 +137,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
         connectionFactory.setUri(request.uri)
         val senderOptions = reactor.rabbitmq.SenderOptions()
             .connectionFactory(connectionFactory)
-            .resourceManagementScheduler(Schedulers.boundedElastic())
+            .resourceManagementScheduler(Schedulers.immediate())
         val rabbitSender = RabbitFlux.createSender(senderOptions)
         return rabbitSender
             .send(Mono.just(OutboundMessage("", request.topic!!, request.bodyBytes())))
