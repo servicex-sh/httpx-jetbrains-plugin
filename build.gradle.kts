@@ -47,9 +47,7 @@ dependencies {
     implementation("com.rabbitmq:amqp-client:5.14.2")
     implementation("io.nats:jnats:2.13.2")
     implementation("org.zeromq:jeromq:0.5.2")
-    implementation("redis.clients:jedis:4.1.1") {
-        exclude(group = "org.apache.commons", module = "commons-pool2")
-    }
+    implementation("io.lettuce:lettuce-core:6.1.6.RELEASE") 
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
