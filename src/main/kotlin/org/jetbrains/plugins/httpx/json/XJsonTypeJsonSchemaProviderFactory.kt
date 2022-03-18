@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Hex
 class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
     companion object {
         val schemaStore = HashMap<String, VirtualFile>()
+        val formats = listOf("date-time", "time", "date", "duration", "email", "idn-email", "hostname", "ipv4", "ipv6", "uuid", "uri")
     }
 
     override fun getSchemaFile(psiFile: PsiFile): VirtualFile? {
@@ -107,7 +108,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 } else if (typeName.contains("..")) {
                     items.add(convertRange(typeName))
                 } else {
-                    items.add(mutableMapOf("type" to typeName))
+                    items.add(convertBasicType(typeName))
                 }
             }
         }
@@ -161,7 +162,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                     requiredProperties.add(name);
                 }
                 val type = parts[1].trim().toLowerCase()
-                properties[name] = mutableMapOf("type" to type)
+                properties[name] = convertBasicType(type)
             }
         }
         if (requiredProperties.isNotEmpty()) {
@@ -252,6 +253,17 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         val itemType = type.substring(0, type.indexOf('#'))
         arrayType["items"] = mapOf("type" to itemType)
         return arrayType
+    }
+
+    private fun convertBasicType(type: String): MutableMap<String, Any> {
+        val basicType = mutableMapOf<String, Any>()
+        if (formats.contains(type)) {
+            basicType["type"] = "string"
+            basicType["format"] = type
+        } else {
+            basicType["type"] = type
+        }
+        return basicType;
     }
 
 }
