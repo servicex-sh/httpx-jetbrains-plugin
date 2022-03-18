@@ -2,6 +2,9 @@
 
 # build plugin with changelog
 build-plugin:
+   rm -rf build/distributions
+   rm -rf build/classes
+   rm -rf build/resources
    ./gradlew -x test patchPluginXml buildPlugin
 
 # publish plugin
