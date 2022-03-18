@@ -12,6 +12,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.util.queryParameters
 import com.rabbitmq.client.ConnectionFactory
+import io.lettuce.core.RedisClient
 import io.nats.client.Nats
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
@@ -30,7 +31,6 @@ import reactor.kafka.sender.SenderOptions
 import reactor.kafka.sender.SenderRecord
 import reactor.rabbitmq.OutboundMessage
 import reactor.rabbitmq.RabbitFlux
-import redis.clients.jedis.Jedis
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.eventbridge.EventBridgeClient
 import software.amazon.awssdk.services.eventbridge.model.PutEventsRequest
@@ -40,6 +40,7 @@ import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest
 import java.net.URI
 import java.util.*
+
 
 @Suppress("UnstableApiUsage")
 class PublishRequestManager(private val project: Project) : Disposable {
@@ -142,7 +143,9 @@ class PublishRequestManager(private val project: Project) : Disposable {
             .send(Mono.just(OutboundMessage("", request.topic!!, request.bodyBytes())))
             .map {
                 PublishResponse()
-            }.onErrorReturn(PublishResponse(CommonClientResponseBody.Empty(), "Error"))
+            }.onErrorResume {
+                Mono.just(PublishResponse(CommonClientResponseBody.Empty(), "Error", it.message))
+            }
             .doFinally {
                 rabbitSender.close()
             }.block()!!
@@ -150,8 +153,9 @@ class PublishRequestManager(private val project: Project) : Disposable {
 
     private fun sendRedisMessage(request: PublishRequest): CommonClientResponse {
         try {
-            Jedis(request.uri).use { jedis ->
-                jedis.publish(request.topic, request.textToSend)
+            val redisClient = RedisClient.create(request.uri.toString())
+            redisClient.connectPubSub().use {
+                it.sync().publish(request.topic, request.textToSend)
             }
         } catch (e: Exception) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
