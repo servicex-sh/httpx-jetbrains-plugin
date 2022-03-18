@@ -94,7 +94,7 @@ class XJavaTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 "time"
             } else if (typeName == "java.lang.String") {
                 "string"
-            } else if (name.lowercase().contains("email")) {
+            } else if (name.toLowerCase().contains("email")) {
                 "email"
             } else if (typeName.contains("List<")) {
                 "array"
