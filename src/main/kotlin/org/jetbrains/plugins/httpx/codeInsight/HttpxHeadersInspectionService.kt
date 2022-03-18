@@ -14,5 +14,6 @@ class HttpxHeadersInspectionService(project: Project) {
         customHeaders.add("Reply-To")
         customHeaders.add("X-JSON-Schema")
         customHeaders.add("X-JSON-Type")
+        customHeaders.add("X-Java-Type")
     }
 }
