@@ -4,12 +4,48 @@ httpx plugin for JetBrains IDEs
 <!-- Plugin description -->
 **httpx plugin** is a plugin for JetBrains IDE to execute httpx requests in HTTP file.
 
-The following features are available for Dubbo:
+The following features are available for httpx plugin:
 
-* GraphQL Request
-* Email
-* Pub/Sub - Kafka, RabbitMQ, Nats, Redis, RocketMQ, MQTT
-* Code completion for CloudEvents json format
+- GraphQL: application/graphql with Language injection, HTTP/WebSocket transport
+- Pub/Sub for Kafka, Pulsar, RabbitMQ, NATS, Redis, MQTT3/5, AWS SNS/SQN/EventBridge, Aliyun MNS/EventBridge etc
+- Email: send email by SMTP
+- Cloud OpenAPI: AWS and Aliyun
+- Apache Thrift: TJSON support now
+- Live templates: graphql, kafka, email
+- JSON Schema support:
+    * Content-Type: application/cloudevents+json
+    * HTTP Headers:  X-JSON-Schema, X-JSON-Type, X-Java-Type
+
+How to use?
+
+* GitHub GraphQL API test
+
+```
+### GitHub API test
+GRAPHQL https://api.github.com/graphql
+Authorization: token {{GITHUB_TOKEN}}
+Content-Type: application/graphql
+
+query {
+    viewer { login }
+}
+```
+
+* Publish Apache Kafka Message
+
+```
+### Publish kafka message
+//@name kafka-pub
+PUB testTopic
+Host: kafka://localhost:9092
+Content-Type: application/json
+
+{
+  "name": "Jackie"
+}
+```
+
+For more please visit https://httpx.sh or [httpx cheat sheet](https://cheatography.com/linux-china/cheat-sheets/httpx/)
 
 <!-- Plugin description end -->
 
