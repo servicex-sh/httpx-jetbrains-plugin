@@ -29,7 +29,8 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestExecutionSupport"/>
-        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
+        <!-- <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>-->
+        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
         <spellchecker.bundledDictionaryProvider
                 implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
