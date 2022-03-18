@@ -20,7 +20,6 @@ import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
-import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.getMqttUri
 import org.jetbrains.plugins.httpx.restClient.execution.publish.AbstractMqttCallback
 import reactor.core.scheduler.Schedulers
@@ -39,7 +38,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
     companion object {
         fun formatReceivedMessage(body: String): String {
             val timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-            return "=====${timestamp}=========\n${body}\n\n"
+            return "//=====${timestamp}=========\n${body}\n\n"
         }
     }
 
@@ -82,7 +81,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             val disposeConnection = Disposable {
                 mqttClient?.disconnect()
             }
-            val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("mqtt5-result.txt")).withConnectionDisposable(disposeConnection)
+            val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("mqtt5-messages")).withConnectionDisposable(disposeConnection)
             val uri = getMqttUri(request.uri!!)
             val clientId = "httpx-plugin-" + UUID.randomUUID()
             mqttClient = MqttClient(uri, clientId, MemoryPersistence())
@@ -112,7 +111,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         val disposeConnection = Disposable {
             nc?.close()
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("nats-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("nats-messages")).withConnectionDisposable(disposeConnection)
         try {
             nc = Nats.connect(request.uri.toString())
             val dispatcher = nc.createDispatcher {
@@ -135,7 +134,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         val disposeConnection = Disposable {
             pubSubConnection?.close()
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("redis-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("redis-messages")).withConnectionDisposable(disposeConnection)
         try {
             val redisClient = RedisClient.create(request.uri.toString())
             pubSubConnection = redisClient.connectPubSub()
@@ -164,7 +163,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         val disposeConnection = Disposable {
             receiver?.close()
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("rabbitmq-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("amqp-messages")).withConnectionDisposable(disposeConnection)
         try {
             val connectionFactory = ConnectionFactory()
             connectionFactory.setUri(request.uri)
@@ -196,7 +195,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         val disposeConnection = Disposable {
             pulsarClient?.close()
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("pulsar-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("pulsar-messages")).withConnectionDisposable(disposeConnection)
         try {
             pulsarClient = PulsarClient.builder().serviceUrl(request.uri.toString()).build()
             pulsarClient.newConsumer()
@@ -232,7 +231,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
 
             }
         }
-        val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("kafka-result.txt")).withConnectionDisposable(disposeConnection)
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("kafka-messages")).withConnectionDisposable(disposeConnection)
         val props = Properties()
         val kafkaURI = request.uri!!
         var port: Int = kafkaURI.port
