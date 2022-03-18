@@ -148,7 +148,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
             }
             .doFinally {
                 rabbitSender.close()
-            }.block()!!
+            }.defaultIfEmpty(PublishResponse())
+            .block()!!
     }
 
     private fun sendRedisMessage(request: PublishRequest): CommonClientResponse {
