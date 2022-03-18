@@ -38,10 +38,15 @@
       "type": "object",
       "properties": {
         "str": {
-          "type": "string"
+          "type": "string type or base64 text for binary"
         },
-        "bool": {
-          "type": "boolean"
+        "tf": {
+          "type": "integer",
+          "description": "bool type",
+          "enum": [
+            0,
+            1
+          ]
         },
         "i8": {
           "type": "integer"
@@ -55,11 +60,13 @@
         "i64": {
           "type": "number"
         },
-        "double": {
-          "type": "number"
+        "dbl": {
+          "type": "number",
+          "description": "Double type"
         },
-        "list": {
-          "type": "array"
+        "lst": {
+          "type": "array",
+          "description": "List type"
         },
         "set": {
           "type": "array"
@@ -69,6 +76,7 @@
         },
         "rec": {
           "type": "object",
+          "description": "Struct type",
           "properties": {
             "1": {
               "$ref": "#/$defs/thriftParam"
@@ -97,17 +105,6 @@
             "9": {
               "$ref": "#/$defs/thriftParam"
             }
-          },
-          "binary": {
-            "type": "string"
-          },
-          "union": {
-            "type": [
-              "boolean",
-              "integer",
-              "number",
-              "string"
-            ]
           }
         }
       }
