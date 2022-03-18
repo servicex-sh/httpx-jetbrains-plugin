@@ -108,6 +108,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
         props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = kafkaURI.host + ":" + port
         props[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java.name
         props[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java.name
+        // kafka client use Class.forName(trimmed, true, Utils.getContextOrKafkaClassLoader()) to get the Class object
+        Thread.currentThread().contextClassLoader = null;
         val sender = KafkaSender.create(SenderOptions.create<String?, String>(props))
         return sender.send(
             Mono.just(
@@ -116,9 +118,13 @@ class PublishRequestManager(private val project: Project) : Disposable {
                     key, request.textToSend, null
                 )
             )
-        ).map {
-            PublishResponse()
-        }.onErrorReturn(PublishResponse(CommonClientResponseBody.Empty(), "Error"))
+        )
+            .map {
+                PublishResponse()
+            }
+            .onErrorResume {
+                Mono.just(PublishResponse(CommonClientResponseBody.Empty(), "Error", it.message))
+            }
             .doFinally {
                 sender.close()
             }.blockLast()!!
