@@ -33,6 +33,7 @@ intellij {
 }
 
 dependencies {
+    implementation(platform("io.netty:netty-bom:4.1.75.Final"))
     implementation(platform("io.projectreactor:reactor-bom:2020.0.16"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
