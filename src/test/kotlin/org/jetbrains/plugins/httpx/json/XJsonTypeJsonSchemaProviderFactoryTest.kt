@@ -28,7 +28,7 @@ class XJsonTypeJsonSchemaProviderFactoryTest {
     @Test
     fun testRegex() {
         val factory = XJsonTypeJsonSchemaProviderFactory()
-        val jsonType = "{ id: string, name: String, phone: /\\d{13}/ }"
+        val jsonType = "{ id: string, name: String, email:email, phone: /\\d{13}/ }"
         println(factory.convertTypeToSchema(jsonType))
     }
 
