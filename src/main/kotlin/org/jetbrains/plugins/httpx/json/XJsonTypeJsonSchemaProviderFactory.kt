@@ -94,7 +94,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         }
         val types = plainText.split(",")
         for (type in types) {
-            val typeName = type.trim().lowercase()
+            val typeName = type.trim().toLowerCase()
             if (typeName.isNotEmpty()) {
                 if (typeName.endsWith("#array")) {
                     items.add(convertTypedArray(typeName))
@@ -160,7 +160,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 } else {
                     requiredProperties.add(name);
                 }
-                val type = parts[1].trim().lowercase()
+                val type = parts[1].trim().toLowerCase()
                 properties[name] = mutableMapOf("type" to type)
             }
         }
@@ -181,7 +181,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 obj.putAll(convertRegex(type))
             } else if (type.startsWith("set<") && type.endsWith(">")) { // Set<string>
                 obj["type"] = "array"
-                val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).lowercase()
+                val itemType = type.substring(type.indexOf('<') + 1, type.indexOf('>')).toLowerCase()
                 obj["items"] = mapOf("type" to itemType)
             } else if (type.contains("|")) {
                 obj.putAll(convertUnionToEnum(type))
