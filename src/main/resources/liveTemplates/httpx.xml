@@ -1,6 +1,31 @@
 <templateSet group="HTTPX">
-    <template name="pub-kafka" value="PUB topic1&#10;Host: kafka://localhost:9092&#10;Content-Type: application/json&#10;&#10;1$END$"
-              description="Pub Kafka Message" toReformat="false" toShortenFQNames="true">
+    <template name="pub-kafka" value="PUB topic1&#10;URI: kafka://localhost:9092&#10;Content-Type: application/json&#10;&#10;1$END$" description="Pub Kafka Message"
+              toReformat="false" toShortenFQNames="true">
+        <context/>
+    </template>
+    <template name="thrift"
+              value="### thrift request&#10;THRIFT 127.0.0.1:9090/getUser&#10;Content-Type: application/json&#10;&#10;{&#10;  &quot;1&quot;: {&#10;    &quot;i32&quot;: 1&#10;  }&#10;}&#10;$END$"
+              description="Apache Thrift Call" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="REQUEST" value="true"/>
+        </context>
+    </template>
+    <template name="pub-rabbitmq" value="PUB topic1&#10;URI: amqp://localhost:5672&#10;Content-Type: application/json&#10;&#10;1$END$" description="Publish RabbitMQ message"
+              toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="REQUEST" value="true"/>
+        </context>
+    </template>
+    <template name="gmail"
+              value="### send an email&#10;MAIL mailto:dave@example.com&#10;Host: ssl://smtp.gmail.com:465&#10;Authorization: Basic zombie@gmail.com:xuxuxoxo&#10;From: zombie@gmail.com&#10;Subject: e-nice to meet you&#10;Content-Type: text/plain&#10;                                &#10;Hi Dave:&#10;   Nice to you!&#10;                                &#10;Best regards&#10;Zombie"
+              description="Send email by Gmail" toReformat="false" toShortenFQNames="true">
+        <context>
+            <option name="REQUEST" value="true"/>
+        </context>
+    </template>
+    <template name="graphql"
+              value="### github graphql&#10;GRAPHQL https://api.github.com/graphql&#10;Authorization: token your_token_here&#10;Content-Type: application/graphql&#10;&#10;query {&#10;    viewer { login }&#10;}"
+              description="GitHub graphql test" toReformat="false" toShortenFQNames="true">
         <context>
             <option name="REQUEST" value="true"/>
         </context>
