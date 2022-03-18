@@ -6,6 +6,8 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.util.queryParameters
 import com.rabbitmq.client.ConnectionFactory
+import io.lettuce.core.RedisClient
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection
 import io.nats.client.Nats
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -26,8 +28,6 @@ import reactor.kafka.receiver.KafkaReceiver
 import reactor.rabbitmq.RabbitFlux
 import reactor.rabbitmq.Receiver
 import reactor.rabbitmq.ReceiverOptions
-import redis.clients.jedis.Jedis
-import redis.clients.jedis.JedisPubSub
 import java.nio.charset.StandardCharsets
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -131,18 +131,24 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             replay = 1000,
             onBufferOverflow = BufferOverflow.DROP_OLDEST
         )
-        var jedis: Jedis? = null
+        var pubSubConnection: StatefulRedisPubSubConnection<String, String>? = null
         val disposeConnection = Disposable {
-            jedis?.close()
+            pubSubConnection?.close()
         }
         val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("redis-result.txt")).withConnectionDisposable(disposeConnection)
         try {
-            jedis = Jedis(request.uri.toString())
-            jedis.subscribe(object : JedisPubSub() {
-                override fun onMessage(channel: String, message: String) {
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(message)))
+            val redisClient = RedisClient.create(request.uri.toString())
+            pubSubConnection = redisClient.connectPubSub()
+            val reactiveSubscriber = pubSubConnection.reactive()
+            reactiveSubscriber.subscribe(request.topic).subscribe()
+            reactiveSubscriber.observeChannels()
+                .doOnNext {
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(it.message)))
                 }
-            }, request.topic)
+                .doOnError {
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(it))
+                }
+                .subscribe()
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
         }
