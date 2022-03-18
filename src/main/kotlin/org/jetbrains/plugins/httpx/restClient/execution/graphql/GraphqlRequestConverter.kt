@@ -14,7 +14,7 @@ class GraphqlRequestConverter : RequestConverter<GraphqlRequest>() {
 
     override fun psiToCommonRequest(requestPsiPointer: SmartPsiElementPointer<HttpRequest>, substitutor: HttpRequestVariableSubstitutor): GraphqlRequest {
         var url = ""
-        var requestType = "GRAPHQL"
+        var requestType = "GRAPHQL" //7 chars
         var requestBody: String? = null
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
