@@ -38,7 +38,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
 
     companion object {
         fun formatReceivedMessage(body: String): String {
-            val timestamp = LocalTime.now().format(DateTimeFormatter.ISO_TIME)
+            val timestamp = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
             return "=====${timestamp}=========\n${body}\n\n"
         }
     }
@@ -220,7 +220,11 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         )
         var fluxDisposable: reactor.core.Disposable? = null
         val disposeConnection = Disposable {
-            fluxDisposable?.dispose();
+            try {
+                fluxDisposable?.dispose()
+            } catch (ignore: Exception) {
+
+            }
         }
         val textStream = CommonClientResponseBody.TextStream(shared, TextBodyFileHint.textBodyFileHint("kafka-result.txt")).withConnectionDisposable(disposeConnection)
         val props = Properties()
@@ -234,11 +238,13 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         if (params.containsKey("group")) {
             groupId = params["group"]
         }
-        props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = kafkaURI.getHost() + ":" + port
+        props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = "${kafkaURI.host}:${port}"
         props[ConsumerConfig.GROUP_ID_CONFIG] = groupId
         props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "true"
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java.name
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java.name
+        // kafka client use Class.forName(trimmed, true, Utils.getContextOrKafkaClassLoader()) to get the Class object
+        Thread.currentThread().contextClassLoader = null
         val receiverOptions = reactor.kafka.receiver.ReceiverOptions.create<String, String>(props).subscription(setOf(request.topic))
         try {
             val kafkaReceiver: KafkaReceiver<String, String> = KafkaReceiver.create(receiverOptions)
