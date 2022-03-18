@@ -115,7 +115,6 @@ configurations.implementation {
     exclude(group = "com.sun.xml.bind", module = "jaxb-impl")
     exclude(group = "org.glassfish.jaxb", module = "jaxb-runtime")
     exclude(group = "org.apache.httpcomponents", module = "httpcore")
-    exclude(group = "org.apache.httpcomponents", module = "httpcore-nio")
     exclude(group = "org.apache.httpcomponents", module = "httpclient")
     exclude(group = "org.apache.bookkeeper", module = "cpu-affinity")
 }
