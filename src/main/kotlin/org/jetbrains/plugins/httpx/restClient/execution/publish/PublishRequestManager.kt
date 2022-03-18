@@ -56,6 +56,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
             )
         }
         val schema = request.uri!!.scheme
+        val host = request.uri!!.host
         if (schema.startsWith("mqtt5")) {
             return sendMqtt5Message(request)
         } else if (schema.startsWith("mqtt")) {
@@ -70,11 +71,10 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return sendPulsarMessage(request)
         } else if (schema.startsWith("amqp")) {
             return sendRabbitMQ(request)
-        } else if (schema.startsWith("mns")) {
+        } else if (schema.startsWith("mns") || (host.contains(".mns.") && host.endsWith(".aliyuncs.com"))) {
             return sendMnsMessage(request)
         } else if (schema.startsWith("eventbridge")) {
-            val host = request.uri!!.host
-            if (host.contains("aliyuncs.com")) {
+            if (host.endsWith(".aliyuncs.com")) {
                 return publishAliyunEventBridge(request)
             }
         } else if (schema.startsWith("arn")) {
