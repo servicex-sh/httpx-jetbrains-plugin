@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "JSON Schema for Apache Thrift TJSON",
+  "type": "object",
+  "properties": {
+    "1": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "2": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "3": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "4": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "5": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "6": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "7": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "8": {
+      "$ref": "#/$defs/thriftParam"
+    },
+    "9": {
+      "$ref": "#/$defs/thriftParam"
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "thriftParam": {
+      "description": "Thrift Position Param",
+      "type": "object",
+      "properties": {
+        "str": {
+          "type": "string"
+        },
+        "bool": {
+          "type": "boolean"
+        },
+        "i8": {
+          "type": "integer"
+        },
+        "i16": {
+          "type": "integer"
+        },
+        "i32": {
+          "type": "integer"
+        },
+        "i64": {
+          "type": "number"
+        },
+        "double": {
+          "type": "number"
+        },
+        "list": {
+          "type": "array"
+        },
+        "set": {
+          "type": "array"
+        },
+        "map": {
+          "type": "object"
+        },
+        "rec": {
+          "type": "object",
+          "properties": {
+            "1": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "2": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "3": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "4": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "5": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "6": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "7": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "8": {
+              "$ref": "#/$defs/thriftParam"
+            },
+            "9": {
+              "$ref": "#/$defs/thriftParam"
+            }
+          },
+          "binary": {
+            "type": "string"
+          },
+          "union": {
+            "type": [
+              "boolean",
+              "integer",
+              "number",
+              "string"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
