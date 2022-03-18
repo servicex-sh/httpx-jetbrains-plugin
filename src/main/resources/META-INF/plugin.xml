@@ -22,11 +22,13 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestManager"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
         <spellchecker.bundledDictionaryProvider
@@ -37,6 +39,7 @@
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.CloudEventsJsonSchemaProviderFactory"/>
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJsonTypeJsonSchemaProviderFactory"/>
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.ThriftJsonSchemaProviderFactory"/>
     </extensions>
 
 </idea-plugin>
