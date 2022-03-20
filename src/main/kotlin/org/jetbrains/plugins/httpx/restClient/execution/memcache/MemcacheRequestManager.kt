@@ -4,6 +4,7 @@ import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
+import com.spotify.folsom.AsciiMemcacheClient
 import com.spotify.folsom.BinaryMemcacheClient
 import com.spotify.folsom.ConnectFuture
 import com.spotify.folsom.MemcacheClientBuilder
@@ -15,7 +16,7 @@ class MemcacheRequestManager(private val project: Project) : Disposable {
     }
 
     fun requestResponse(request: MemcacheRequest): CommonClientResponse {
-        var client: BinaryMemcacheClient<ByteArray>? = null
+        var client: AsciiMemcacheClient<ByteArray>? = null
         try {
             val memcacheURI = request.uri!!
             val key = request.key!!
@@ -25,7 +26,7 @@ class MemcacheRequestManager(private val project: Project) : Disposable {
             }
             client = MemcacheClientBuilder.newByteArrayClient()
                 .withAddress(memcacheURI.host, port)
-                .connectBinary()
+                .connectAscii()
             ConnectFuture.connectFuture(client).toCompletableFuture().get()
             val bodyBytes = request.bodyBytes()
             if (bodyBytes.isNotEmpty()) {  //set
