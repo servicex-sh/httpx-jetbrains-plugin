@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.2.0]
+
+### Added
+
+- Memcache: set/get/delete support
+
 ## [0.1.0]
 
 ### Added
