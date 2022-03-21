@@ -5,9 +5,10 @@ import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.spotify.folsom.AsciiMemcacheClient
-import com.spotify.folsom.BinaryMemcacheClient
 import com.spotify.folsom.ConnectFuture
 import com.spotify.folsom.MemcacheClientBuilder
+import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
+import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
 
 @Suppress("UnstableApiUsage")
 class MemcacheRequestManager(private val project: Project) : Disposable {
@@ -37,9 +38,15 @@ class MemcacheRequestManager(private val project: Project) : Disposable {
             } else {  //get
                 val content = client.get(key).toCompletableFuture().get()
                 return if (content.isNotEmpty()) {
-                    MemcacheResponse(CommonClientResponseBody.Text(String(content)))
+                    val text = String(content).trim()
+                    val acceptContentType = request.getHeader("Accept", "text/plain")
+                    if (acceptContentType.contains("json") || (text.startsWith("{") && text.endsWith("}"))) {
+                        MemcacheResponse(CommonClientResponseBody.Text(text, JsonBodyFileHint.jsonBodyFileHint("memcache-result.json")))
+                    } else {
+                        MemcacheResponse(CommonClientResponseBody.Text(text, TextBodyFileHint.textBodyFileHint("memcache-result.txt")))
+                    }
                 } else {
-                    MemcacheResponse(CommonClientResponseBody.Empty(), "OK", "Cache not found: " + key)
+                    MemcacheResponse(CommonClientResponseBody.Empty(), "OK", "Cache not found: $key")
                 }
             }
             return MemcacheResponse()
