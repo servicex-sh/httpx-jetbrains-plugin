@@ -17,7 +17,7 @@ class HttpxHeadersCompletionContributor : CompletionContributor() {
             result.addElement(LookupElementBuilder.create("Reply-To"))
             result.addElement(LookupElementBuilder.create("X-JSON-Schema"))
             result.addElement(LookupElementBuilder.create("X-JSON-Type"))
-            result.addElement(LookupElementBuilder.create("X-Java-Type"))
+            result.addElement(LookupElementBuilder.create("X-JSON-Path"))
         }
     }
 }
