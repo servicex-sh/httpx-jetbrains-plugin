@@ -24,6 +24,7 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestManager"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
@@ -31,6 +32,7 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestExecutionSupport"/>
         <!-- <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>-->
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
