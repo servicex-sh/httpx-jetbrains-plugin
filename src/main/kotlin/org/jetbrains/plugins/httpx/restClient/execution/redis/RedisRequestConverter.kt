@@ -5,7 +5,6 @@ import com.intellij.httpClient.http.request.HttpRequestVariableSubstitutor
 import com.intellij.httpClient.http.request.psi.HttpRequest
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.SmartPsiElementPointer
-import org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequest
 
 
 @Suppress("UnstableApiUsage")
