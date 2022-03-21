@@ -11,6 +11,8 @@ The following features are available for httpx plugin:
 - Email: send email by SMTP
 - Cloud OpenAPI: AWS and Aliyun
 - Apache Thrift: TJSON support now
+- Memcache: set/get/delete
+- Redis: rset/hmset/eval, and Pub/Sub
 - Live templates: graphql, kafka, email
 - JSON Schema support:
     * Content-Type: application/cloudevents+json
