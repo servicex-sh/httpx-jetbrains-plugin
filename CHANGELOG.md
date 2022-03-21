@@ -7,6 +7,7 @@
 ### Added
 
 - Memcache: set/get/delete support
+- Redis: rset/hmset/eval 
 
 ## [0.1.0]
 
