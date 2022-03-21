@@ -6,8 +6,8 @@
 
 ### Added
 
-- Memcache: set/get/delete support
-- Redis: rset/hmset/eval 
+- Memcache: set/get/delete https://httpx.sh/docs/tutorial-basics/memcache-testing 
+- Redis: rset/hmset/eval https://httpx.sh/docs/tutorial-basics/redis-testing
 
 ## [0.1.0]
 
