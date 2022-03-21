@@ -26,7 +26,7 @@ class MemcacheRequest(
         } else {
             "memcache://localhost:11211"
         }
-        if (memcacheURI.startsWith("memcache://")) {
+        if (!memcacheURI.startsWith("memcache://")) {
             memcacheURI = "memcache://${memcacheURI}"
         }
         this.uri = URI.create(memcacheURI)
@@ -40,8 +40,8 @@ class MemcacheRequest(
         return textToSend?.encodeToByteArray() ?: ByteArray(0)
     }
 
-    fun getHeader(name: String): String? {
-        return headers[name]
+    fun getHeader(name: String, defaultValue: String): String {
+        return headers.getOrDefault(name, defaultValue)
     }
 
 }
