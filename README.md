@@ -16,7 +16,7 @@ The following features are available for httpx plugin:
 - Live templates: graphql, kafka, email
 - JSON Schema support:
     * Content-Type: application/cloudevents+json
-    * HTTP Headers:  X-JSON-Schema, X-JSON-Type, X-Java-Type
+    * HTTP Headers:  X-JSON-Schema, X-JSON-Type, X-JSON-Path
 
 How to use?
 
