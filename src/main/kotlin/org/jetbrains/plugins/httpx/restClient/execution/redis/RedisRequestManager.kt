@@ -10,7 +10,6 @@ import io.lettuce.core.RedisClient
 import io.lettuce.core.ScriptOutputType
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
-import org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheResponse
 
 @Suppress("UnstableApiUsage")
 class RedisRequestManager(private val project: Project) : Disposable {
@@ -62,9 +61,9 @@ class RedisRequestManager(private val project: Project) : Disposable {
             return if (result != null) {
                 val acceptContentType = request.getHeader("Accept", "text/plain")
                 if (acceptContentType.contains("json") || (result.startsWith("{") && result.endsWith("}"))) {
-                    MemcacheResponse(CommonClientResponseBody.Text(result, JsonBodyFileHint.jsonBodyFileHint("redis-result.json")))
+                    RedisResponse(CommonClientResponseBody.Text(result, JsonBodyFileHint.jsonBodyFileHint("redis-result.json")))
                 } else {
-                    MemcacheResponse(CommonClientResponseBody.Text(result, TextBodyFileHint.textBodyFileHint("redis-result.txt")))
+                    RedisResponse(CommonClientResponseBody.Text(result, TextBodyFileHint.textBodyFileHint("redis-result.txt")))
                 }
             } else {
                 RedisResponse()
