@@ -22,3 +22,6 @@ aliyuncs
 hongkong
 hangzhou
 shanghai
+memcache
+rset
+hmset
