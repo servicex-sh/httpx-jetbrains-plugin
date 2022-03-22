@@ -19,20 +19,23 @@ class GraphqlRequest(override val URL: String?, override val httpMethod: String,
         body = textToSend ?: "{}"
     }
 
+    fun getHeadValue(name: String): String? {
+        for (header in headers) {
+            if (header.key.toLowerCase() == name) {
+                return header.value
+            }
+        }
+        return null
+    }
+
     fun bodyBytes(): ByteArray {
         return if (contentType.startsWith("application/graphql")) {  // convert graphql code into json object
-            if (body.startsWith("#variables") && body.contains('\n')) {
+            val variablesHeader = getHeadValue("x-graphql-variables")
+            if (variablesHeader != null && variablesHeader.startsWith("{")) {
                 val objectMapper = ObjectMapper()
                 val jsonRequest = mutableMapOf<String, Any>()
-                val lineBreakOffset = body.indexOf('\n')
-                //query
-                val query = body.substring(lineBreakOffset + 1)
-                jsonRequest["query"] = query
-                //variables
-                val variablesJson = body.substring(body.indexOf(' ') + 1, lineBreakOffset).trim()
-                if (variablesJson.startsWith("{")) {
-                    jsonRequest["variables"] = objectMapper.readValue(variablesJson, Map::class.java)
-                }
+                jsonRequest["query"] = body
+                jsonRequest["variables"] = objectMapper.readValue(variablesHeader, Map::class.java)
                 objectMapper.writeValueAsBytes(jsonRequest)
             } else {
                 ObjectMapper().writeValueAsBytes(Collections.singletonMap<String, Any>("query", body))
