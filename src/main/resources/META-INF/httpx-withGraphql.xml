@@ -2,4 +2,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.GraphqlInjectionContributor"/>
     </extensions>
+
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.GraphqlRequestJsonSchemaProviderFactory"/>
+    </extensions>
 </idea-plugin>
