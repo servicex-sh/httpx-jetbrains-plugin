@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "GraphQL Request JSON Schema",
+  "required": [
+    "query"
+  ],
+  "type": "object",
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "A Document containing GraphQL Operations and Fragments to execute",
+      "x-intellij-language-injection": {
+        "language": "GraphQL"
+      }
+    },
+    "operationName": {
+      "type": "string",
+      "description": "The name of the Operation in the Document to execute",
+      "enum": [
+        "query",
+        "mutation",
+        "subscription"
+      ]
+    },
+    "variables": {
+      "type": "object",
+      "description": "Values for any Variables defined by the Operation"
+    }
+  }
+}
