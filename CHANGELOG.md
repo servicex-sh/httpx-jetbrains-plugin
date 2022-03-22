@@ -7,6 +7,15 @@
 ### Added
 
 - JSON Schema and GraphQL language injection for `application/graphql+json`
+- X-GraphQL-Variables header introduced for variables:
+
+```
+GRAPHQL https://httpbin.org/post
+Content-Type: application/graphql
+X-GraphQL-Variables:  {"id": 1}
+
+query { user($id: ID) { id name } }
+```
 
 ## [0.2.0]
 
