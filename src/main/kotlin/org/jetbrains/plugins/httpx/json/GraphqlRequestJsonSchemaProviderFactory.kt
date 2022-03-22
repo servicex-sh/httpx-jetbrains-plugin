@@ -20,8 +20,11 @@ class GraphqlRequestJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvid
                 val httpMessageBody: HttpMessageBody = psiLanguageInjectionHost
                 val httpRequest = PsiTreeUtil.getParentOfType(httpMessageBody, HttpRequest::class.java)!!
                 val headerField = httpRequest.getHeaderField("Content-Type")
-                if (headerField != null && headerField.headerFieldValue?.text == "application/graphql+json") {
-                    return VfsUtil.findFileByURL(this.javaClass.getResource("/graphql-request-schema.json")!!)
+                if (headerField != null) {
+                    val contentType = headerField.headerFieldValue?.text
+                    if (contentType != null && contentType.contains("application/graphql+json")) {
+                        return VfsUtil.findFileByURL(this.javaClass.getResource("/graphql-request-schema.json")!!)
+                    }
                 }
             }
         }
