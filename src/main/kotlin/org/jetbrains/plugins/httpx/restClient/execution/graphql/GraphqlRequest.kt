@@ -21,7 +21,22 @@ class GraphqlRequest(override val URL: String?, override val httpMethod: String,
 
     fun bodyBytes(): ByteArray {
         return if (contentType.startsWith("application/graphql")) {  // convert graphql code into json object
-            ObjectMapper().writeValueAsBytes(Collections.singletonMap<String, Any>("query", body))
+            if (body.startsWith("#variables") && body.contains('\n')) {
+                val objectMapper = ObjectMapper()
+                val jsonRequest = mutableMapOf<String, Any>()
+                val lineBreakOffset = body.indexOf('\n')
+                //query
+                val query = body.substring(lineBreakOffset + 1)
+                jsonRequest["query"] = query
+                //variables
+                val variablesJson = body.substring(body.indexOf(' ') + 1, lineBreakOffset).trim()
+                if (variablesJson.startsWith("{")) {
+                    jsonRequest["variables"] = objectMapper.readValue(variablesJson, Map::class.java)
+                }
+                objectMapper.writeValueAsBytes(jsonRequest)
+            } else {
+                ObjectMapper().writeValueAsBytes(Collections.singletonMap<String, Any>("query", body))
+            }
         } else {
             body.encodeToByteArray()
         }
