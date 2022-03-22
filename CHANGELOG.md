@@ -2,11 +2,17 @@
 
 # httpx plugin Changelog
 
+## [0.3.0]
+
+### Added
+
+- JSON Schema and GraphQL language injection for `application/graphql+json`
+
 ## [0.2.0]
 
 ### Added
 
-- Memcache: set/get/delete https://httpx.sh/docs/tutorial-basics/memcache-testing 
+- Memcache: set/get/delete https://httpx.sh/docs/tutorial-basics/memcache-testing
 - Redis: rset/hmset/eval https://httpx.sh/docs/tutorial-basics/redis-testing
 
 ## [0.1.0]
