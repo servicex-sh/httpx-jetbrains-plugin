@@ -6,7 +6,7 @@ httpx plugin for JetBrains IDEs
 
 The following features are available for httpx plugin:
 
-- GraphQL: application/graphql with Language injection, HTTP/WebSocket transport
+- GraphQL: application/graphql with Language injection(GraphQL plugin required), HTTP/WebSocket transport
 - Pub/Sub for Kafka, Pulsar, RabbitMQ, NATS, Redis, MQTT3/5, AWS SNS/SQN/EventBridge, Aliyun MNS/EventBridge etc
 - Email: send email by SMTP
 - Cloud OpenAPI: AWS and Aliyun
