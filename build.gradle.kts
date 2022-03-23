@@ -47,6 +47,7 @@ dependencies {
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.14.2")
     implementation("io.nats:jnats:2.13.2")
+    implementation("com.jcraft:jsch:0.1.55")
     implementation("com.spotify:folsom:1.13.1")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("io.lettuce:lettuce-core:6.1.8.RELEASE")
