@@ -13,14 +13,13 @@ class SSHRequestConverter : RequestConverter<SSHRequest>() {
 
     override fun psiToCommonRequest(requestPsiPointer: SmartPsiElementPointer<HttpRequest>, substitutor: HttpRequestVariableSubstitutor): SSHRequest {
         var url = ""
-        var requestType = "SSH" // 6 chars
+        val requestType = "SSH" // 6 chars
         var requestBody: String? = null
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
             url = "ssh://" + httpRequest.getHttpUrl(substitutor)!!
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
-            requestType = httpRequest.httpMethod
             requestBody = httpRequest.requestBody?.text
         }
         return SSHRequest(url, requestType, requestBody, headers)
@@ -29,7 +28,7 @@ class SSHRequestConverter : RequestConverter<SSHRequest>() {
     override fun toExternalFormInner(request: SSHRequest, fileName: String?): String {
         val builder = StringBuilder()
         builder.append("### SSH request").append("\n")
-        builder.append("SSH ${request.URL}").append("\n")
+        builder.append("SSH ${request.uri.host}").append("\n")
         builder.append("\n");
         builder.append(request.textToSend ?: "")
         return builder.toString()
