@@ -18,5 +18,6 @@ class HttpxHeadersInspectionService(project: Project) {
         customHeaders.add("X-Java-Type")
         customHeaders.add("X-Region-Id")
         customHeaders.add("X-GraphQL-Variables")
+        customHeaders.add("X-SSH-Private-Key")
     }
 }

@@ -19,6 +19,7 @@ class HttpxHeadersCompletionContributor : CompletionContributor() {
             result.addElement(LookupElementBuilder.create("X-JSON-Type"))
             result.addElement(LookupElementBuilder.create("X-JSON-Path"))
             result.addElement(LookupElementBuilder.create("X-GraphQL-Variables"))
+            result.addElement(LookupElementBuilder.create("X-SSH-Private-Key"))
         }
     }
 }
