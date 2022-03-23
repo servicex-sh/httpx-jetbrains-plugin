@@ -13,6 +13,7 @@ The following features are available for httpx plugin:
 - Apache Thrift: TJSON support now
 - Memcache: set/get/delete
 - Redis: rset/hmset/eval, and Pub/Sub
+- SSH: execute script on remote host
 - Live templates: graphql, kafka, email
 - JSON Schema support:
     * Content-Type: application/cloudevents+json
