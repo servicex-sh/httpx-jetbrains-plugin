@@ -2,6 +2,31 @@
 
 # httpx plugin Changelog
 
+## [0.4.0]
+
+### Added
+
+- SSH support: https://httpx.sh/docs/tutorial-basics/ssh-testing 
+
+```http request
+### ssh with user name and password
+SSH username:password@remote_host
+
+cd /
+ls -al
+
+### ssh with known host
+SSH ubuntu@known_host
+
+ls -al
+
+### ssh with private key
+SSH root@host.example.com
+X-SSH-Private-Key: /path-to-private-key
+
+ls -al
+```
+
 ## [0.3.0]
 
 ### Added
