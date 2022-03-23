@@ -4,7 +4,6 @@ import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.json.JsonFileType
 import com.intellij.openapi.fileTypes.FileType
-import com.intellij.openapi.fileTypes.PlainTextFileType
 
 @Suppress("UnstableApiUsage")
 class ThriftResponse(
@@ -16,8 +15,8 @@ class ThriftResponse(
     override val body: CommonClientResponseBody
         get() = responseBody
 
-    override fun suggestFileTypeForPresentation(): FileType? {
-        return PlainTextFileType.INSTANCE
+    override fun suggestFileTypeForPresentation(): FileType {
+        return JsonFileType.INSTANCE
     }
 
     override val statusPresentation: String
