@@ -1,6 +1,5 @@
 package org.jetbrains.plugins.httpx.restClient.execution.redis
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
@@ -8,6 +7,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import io.lettuce.core.RedisClient
 import io.lettuce.core.ScriptOutputType
+import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
 
@@ -28,7 +28,6 @@ class RedisRequestManager(private val project: Project) : Disposable {
                         commands.set(request.key, request.bodyText())
                     }
                     "HMSET" -> {
-                        val objectMapper = ObjectMapper()
                         val params = objectMapper.readValue<Map<String, Any>>(request.bodyText())
                         val redisParams = mutableMapOf<String, String>()
                         params.forEach { entry ->

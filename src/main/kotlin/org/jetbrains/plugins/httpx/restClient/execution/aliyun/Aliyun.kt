@@ -1,6 +1,6 @@
 package org.jetbrains.plugins.httpx.restClient.execution.aliyun
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.jetbrains.plugins.httpx.json.JsonUtils
 import java.nio.file.Path
 
 object Aliyun {
@@ -169,7 +169,7 @@ object Aliyun {
     private fun readAccessFromAliyunCli(partOfId: String?): List<String>? {
         val aliyunConfigJsonFile = Path.of(System.getProperty("user.home")).resolve(".aliyun").resolve("config.json").toAbsolutePath().toFile()
         if (aliyunConfigJsonFile.exists()) {
-            val config = ObjectMapper().readValue(aliyunConfigJsonFile, MutableMap::class.java)
+            val config = JsonUtils.objectMapper.readValue(aliyunConfigJsonFile, MutableMap::class.java)
             val profileName = config["current"] as String?
             val profiles = config["profiles"] as List<Map<String, Any>>?
             if (profileName != null && profiles != null) {

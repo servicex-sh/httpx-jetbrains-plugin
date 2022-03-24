@@ -5,6 +5,7 @@ import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
+import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
@@ -20,7 +21,6 @@ class ThriftRequestManager(private val project: Project) : Disposable {
 
     fun requestResponse(request: ThriftRequest): CommonClientResponse {
         try {
-            val objectMapper = ObjectMapper();
             val thriftUri = request.uri
             var serviceName: String = thriftUri.path.substring(1)
             if (serviceName.contains("/")) { //convert '/' to ':'

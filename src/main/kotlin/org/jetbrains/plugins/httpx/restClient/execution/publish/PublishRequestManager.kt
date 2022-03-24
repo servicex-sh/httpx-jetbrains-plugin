@@ -5,7 +5,6 @@ import com.aliyun.eventbridge.models.Config
 import com.aliyun.eventbridge.util.EventBuilder
 import com.aliyun.mns.client.CloudAccount
 import com.aliyun.mns.model.Message
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
@@ -22,6 +21,7 @@ import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
+import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun.readAliyunAccessToken
 import org.jetbrains.plugins.httpx.restClient.execution.common.getMqttUri
 import reactor.core.publisher.Mono
@@ -229,7 +229,6 @@ class PublishRequestManager(private val project: Project) : Disposable {
                 .region(Region.of(regionId))
                 .credentialsProvider { awsBasicCredentials }
                 .build().use { eventBrClient ->
-                    val objectMapper = ObjectMapper()
                     val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
                     //validate cloudEvent
                     val source = cloudEvent["source"] as String?
@@ -337,7 +336,6 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
         }
         try {
-            val objectMapper = ObjectMapper()
             val eventBus = request.topic
             val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
             //validate cloudEvent

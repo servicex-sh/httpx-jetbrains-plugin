@@ -1,7 +1,7 @@
 package org.jetbrains.plugins.httpx.restClient.execution.graphql
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.execution.common.CommonClientRequest
+import org.jetbrains.plugins.httpx.json.JsonUtils
 import java.net.URI
 import java.util.*
 
@@ -32,13 +32,12 @@ class GraphqlRequest(override val URL: String?, override val httpMethod: String,
         return if (contentType.startsWith("application/graphql")) {  // convert graphql code into json object
             val variablesHeader = getHeadValue("x-graphql-variables")
             if (variablesHeader != null && variablesHeader.startsWith("{")) {
-                val objectMapper = ObjectMapper()
                 val jsonRequest = mutableMapOf<String, Any>()
                 jsonRequest["query"] = body
-                jsonRequest["variables"] = objectMapper.readValue(variablesHeader, Map::class.java)
-                objectMapper.writeValueAsBytes(jsonRequest)
+                jsonRequest["variables"] = JsonUtils.objectMapper.readValue(variablesHeader, Map::class.java)
+                JsonUtils.objectMapper.writeValueAsBytes(jsonRequest)
             } else {
-                ObjectMapper().writeValueAsBytes(Collections.singletonMap<String, Any>("query", body))
+                JsonUtils.objectMapper.writeValueAsBytes(Collections.singletonMap<String, Any>("query", body))
             }
         } else {
             body.encodeToByteArray()

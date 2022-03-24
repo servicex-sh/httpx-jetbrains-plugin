@@ -10,6 +10,7 @@ import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import reactor.core.publisher.Flux
 import reactor.core.publisher.FluxSink
@@ -80,7 +81,6 @@ class GraphqlRequestManager(private val project: Project) : Disposable {
                 reactiveWebSocket?.dispose()
         }
         val textStream = CommonClientResponseBody.TextStream(shared, JsonBodyFileHint.jsonBodyFileHint("graphql-result.json")).withConnectionDisposable(disposeWebSocket)
-        val objectMapper = ObjectMapper()
         val id = UUID.randomUUID().toString()
         reactiveWebSocket = httpClient
             .websocket(WebsocketClientSpec.builder().protocols("graphql-transport-ws").build())

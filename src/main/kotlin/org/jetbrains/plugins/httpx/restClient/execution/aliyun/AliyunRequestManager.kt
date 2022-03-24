@@ -4,12 +4,12 @@ import com.aliyuncs.CommonRequest
 import com.aliyuncs.DefaultAcsClient
 import com.aliyuncs.IAcsClient
 import com.aliyuncs.profile.DefaultProfile
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.util.queryParameters
+import org.jetbrains.plugins.httpx.json.JsonUtils
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.XmlBodyFileHint
 
@@ -54,7 +54,7 @@ class AliyunRequestManager(private val project: Project) : Disposable {
         request.putQueryParameter("Format", format)
         val bodyBytes: ByteArray = aliyunRequest.bodyBytes()
         if (bodyBytes.isNotEmpty()) {
-            val requestData = ObjectMapper().readValue(bodyBytes, Map::class.java)
+            val requestData = JsonUtils.objectMapper.readValue(bodyBytes, Map::class.java)
             for ((key, value) in requestData) {
                 request.putQueryParameter(key.toString(), value.toString())
             }

@@ -1,6 +1,5 @@
 package org.jetbrains.plugins.httpx.json
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.intellij.httpClient.http.request.HttpRequestVariableSubstitutor
 import com.intellij.httpClient.http.request.psi.HttpMessageBody
 import com.intellij.httpClient.http.request.psi.HttpRequest
@@ -70,7 +69,7 @@ class XJsonTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         } else {
             jsonSchema["type"] = jsonCleanedType
         }
-        return ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
+        return JsonUtils.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
 
     private fun convertArray(jsonArrayType: String): Map<String, Any> {
