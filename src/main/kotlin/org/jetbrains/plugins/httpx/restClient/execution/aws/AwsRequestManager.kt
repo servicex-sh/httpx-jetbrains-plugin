@@ -85,7 +85,7 @@ class AwsRequestManager(private val project: Project) : Disposable {
             } else {
                 XmlBodyFileHint.xmlBodyFileHint("aws-result.xml")
             }
-            return AwsResponse(responseHeaders, CommonClientResponseBody.Text(response.body().toString(), bodyFileHint))
+            return AwsResponse(responseHeaders, CommonClientResponseBody.Text(response.body()!!.string(), bodyFileHint))
         }
     }
 }
