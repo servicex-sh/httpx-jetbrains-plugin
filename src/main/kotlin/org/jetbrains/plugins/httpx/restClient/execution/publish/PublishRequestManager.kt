@@ -194,7 +194,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
     }
 
     fun sendAwsSnsMessage(request: PublishRequest): CommonClientResponse {
-        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
         if (awsBasicCredentials == null) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         }
@@ -218,7 +218,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
     }
 
     fun sendAwsEventBridgeMessage(request: PublishRequest): CommonClientResponse {
-        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
         if (awsBasicCredentials == null) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         }
@@ -277,7 +277,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
 
     fun sendAwsSqsMessage(request: PublishRequest): CommonClientResponse {
         val queue: String = request.topic!!
-        val awsBasicCredentials = AWS.awsBasicCredentials(request)
+        val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
         if (awsBasicCredentials == null) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         }
