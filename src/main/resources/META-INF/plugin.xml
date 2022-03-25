@@ -26,6 +26,7 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestManager"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
@@ -35,6 +36,7 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestExecutionSupport"/>
         <!-- <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>-->
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
