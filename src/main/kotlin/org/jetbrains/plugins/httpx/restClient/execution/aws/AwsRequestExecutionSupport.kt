@@ -8,7 +8,7 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class AwsRequestExecutionSupport : RequestExecutionSupport<AwsRequest> {
     companion object {
-        val AWS_METHODS = listOf("AWS")
+        val AWS_METHODS = listOf("AWS","AWSPUT","AWSDELETE","AWSPOST")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
