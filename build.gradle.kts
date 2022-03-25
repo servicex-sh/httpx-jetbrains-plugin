@@ -82,7 +82,6 @@ dependencies {
 
 configurations.implementation {
     exclude(group = "org.jetbrains", module = "annotations")
-    exclude(group = "org.slf4j", module = "slf4j-api")
     exclude(group = "io.netty", module = "netty-resolver-dns-native-macos")
     exclude(group = "io.netty", module = "netty-transport-native-epoll")
     exclude(group = "io.projectreactor.netty.incubator", module = "reactor-netty-incubator-quic")
