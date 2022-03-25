@@ -23,6 +23,7 @@ import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
 import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun.readAliyunAccessToken
+import org.jetbrains.plugins.httpx.restClient.execution.aws.AWS
 import org.jetbrains.plugins.httpx.restClient.execution.common.getMqttUri
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
