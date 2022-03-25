@@ -80,4 +80,21 @@ object AWS {
             java.util.List.of(profile["aws_access_key_id"], profile["aws_secret_access_key"])
         } else null
     }
+
+    fun readDefaultRegionFromCLI(): String? {
+        val awsConfigFile = Path.of(System.getProperty("user.home")).resolve(".aws").resolve("config").toAbsolutePath()
+        if (awsConfigFile.toFile().exists()) {
+            try {
+                val lines = Files.readAllLines(awsConfigFile)
+                for (i in lines.indices) {
+                    if (lines[i].contains("[default]")) {
+                        return lines[i + 1].trim { it <= ' ' }
+                    }
+                }
+            } catch (ignore: java.lang.Exception) {
+            }
+        }
+        return null
+    }
+
 }
