@@ -18,11 +18,13 @@ class AwsRequest(override val URL: String?, override val httpMethod: String, ove
             tempRegionId = uri.host.replace(".amazonaws.com", "")
             if (tempRegionId.contains('.')) {
                 tempRegionId = tempRegionId.substring(tempRegionId.indexOf('.') + 1)
-            } else if (tempRegionId.contains('-')) {
-                tempRegionId = tempRegionId.substring(tempRegionId.indexOf('-') + 1)
             }
         }
-        regionId = tempRegionId
+        regionId = if (tempRegionId.contains('-')) {
+            tempRegionId
+        } else {
+            "us-east-1"
+        }
     }
 
     fun bodyBytes(): ByteArray {
