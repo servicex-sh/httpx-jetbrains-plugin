@@ -32,10 +32,10 @@ class AwsRequest(override val URL: String?, override val httpMethod: String, ove
     }
 
     fun getHttpRequestMethod(): String {
-        return if (textToSend == null || textToSend.isEmpty()) {
+        return if (httpMethod == "AWS") {
             "GET"
         } else {
-            "POST"
+            return httpMethod.substring(3)
         }
     }
 
