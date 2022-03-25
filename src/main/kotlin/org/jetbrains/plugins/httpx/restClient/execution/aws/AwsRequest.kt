@@ -19,8 +19,11 @@ class AwsRequest(override val URL: String?, override val httpMethod: String, ove
             if (tempRegionId.contains('.')) {
                 tempRegionId = tempRegionId.substring(tempRegionId.indexOf('.') + 1)
             }
+            if (!tempRegionId.contains('-')) { // illegal regionId, read from default CLI config
+                tempRegionId = AWS.readDefaultRegionFromCLI()
+            }
         }
-        regionId = if (tempRegionId.contains('-')) {
+        regionId = if (tempRegionId != null && tempRegionId.contains('-')) {
             tempRegionId
         } else {
             "us-east-1"
