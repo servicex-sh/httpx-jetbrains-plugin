@@ -25,3 +25,6 @@ shanghai
 memcache
 rset
 hmset
+awsput
+awsdelete
+awspost
