@@ -5,6 +5,7 @@ import com.intellij.httpClient.http.request.HttpRequestVariableSubstitutor
 import com.intellij.httpClient.http.request.psi.HttpRequest
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.psi.SmartPsiElementPointer
+import org.jetbrains.plugins.httpx.restClient.execution.common.getRequestURL
 
 
 @Suppress("UnstableApiUsage")
@@ -20,7 +21,7 @@ class AliyunRequestConverter : RequestConverter<AliyunRequest>() {
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
             val httpMethod = httpRequest.httpMethod
-            url = httpRequest.getHttpUrl(substitutor)!!
+            url = getRequestURL(httpRequest, substitutor, "https")
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
             requestType = httpMethod
             requestBody = httpRequest.requestBody?.text
