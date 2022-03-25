@@ -8,7 +8,7 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class AliyunRequestExecutionSupport : RequestExecutionSupport<AliyunRequest> {
     companion object {
-        val ALIYUN_METHODS = listOf("ALIYUN", "ALICLOUD")
+        val ALIYUN_METHODS = listOf("ALIYUN")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
