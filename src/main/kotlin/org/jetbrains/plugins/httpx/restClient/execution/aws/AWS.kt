@@ -1,27 +1,27 @@
-package org.jetbrains.plugins.httpx.restClient.execution.publish
+package org.jetbrains.plugins.httpx.restClient.execution.aws
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 
 object AWS {
 
-    fun awsBasicCredentials(httpRequest: PublishRequest): AwsBasicCredentials? {
-        val credential = readAwsAccessToken(httpRequest)
+    fun awsBasicCredentials(authorizationHeader: String?): AwsBasicCredentials? {
+        val credential = readAwsAccessToken(authorizationHeader)
         return if (credential != null && credential.size > 1) {
             AwsBasicCredentials.create(credential[0], credential[1])
         } else null
     }
 
-    private fun readAwsAccessToken(httpRequest: PublishRequest): List<String?>? {
-        val authHeader = httpRequest.getHeader("Authorization")
+    private fun readAwsAccessToken(authHeader: String?): List<String?>? {
         var awsCredential: List<String?>? = null
         if (authHeader != null) {
             if (authHeader.startsWith("AWS ")) { // VS Code REST Client plugin
-                awsCredential = Arrays.asList(*authHeader.substring(4).trim { it <= ' ' }.split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray())
+                awsCredential = authHeader.substring(4).trim { it <= ' ' }.split("\\s+".toRegex()).dropLastWhile { it.isEmpty() }
             } else if (authHeader.startsWith("Basic")) {
-                return httpRequest.getBasicAuthorization()
+                return getBasicAuthorization(authHeader)
             }
         }
         if (awsCredential == null) { // read default profile
@@ -30,6 +30,17 @@ object AWS {
             awsCredential = readAccessFromAwsCli(awsCredential[0])
         }
         return awsCredential
+    }
+
+    private fun getBasicAuthorization(header: String): List<String>? {
+        if (header.startsWith("Basic ")) {
+            var clearText = header.substring(6).trim()
+            if (!(clearText.contains(' ') || clearText.contains(':'))) {
+                clearText = String(Base64.getDecoder().decode(clearText), StandardCharsets.UTF_8)
+            }
+            return clearText.split("[:\\s]".toRegex())
+        }
+        return null
     }
 
     private fun readAccessFromAwsCli(partOfId: String?): List<String?>? {
