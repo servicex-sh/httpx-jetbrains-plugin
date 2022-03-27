@@ -2,11 +2,17 @@
 
 # httpx plugin Changelog
 
+## [0.5.0]
+
+### Added
+
+- AWS support: AWS, AWSPUT, AWSPOST, AWSDELETE
+
 ## [0.4.0]
 
 ### Added
 
-- SSH support: https://httpx.sh/docs/tutorial-basics/ssh-testing 
+- SSH support: https://httpx.sh/docs/tutorial-basics/ssh-testing
 
 ```http request
 ### ssh with user name and password
