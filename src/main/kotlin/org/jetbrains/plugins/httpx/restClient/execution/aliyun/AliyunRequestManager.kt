@@ -25,7 +25,6 @@ class AliyunRequestManager(private val project: Project) : Disposable {
             return AliyunResponse(null, CommonClientResponseBody.Empty(), "Error", "No Aliyun AK found!")
         }
         val host: String = aliyunRequest.uri.host
-        val serviceName = Aliyun.getServiceName(host)
         val profile = DefaultProfile.getProfile(
             aliyunRequest.regionId,
             keyIdAndSecret[0],
@@ -39,7 +38,7 @@ class AliyunRequestManager(private val project: Project) : Disposable {
         val version = if (queries.containsKey("Version")) {
             queries["Version"]
         } else {
-            Aliyun.getApiVersion(serviceName)
+            Products.instance().findProductByHost(host)?.version
         }
         request.sysVersion = version
         var format: String? = "JSON"
