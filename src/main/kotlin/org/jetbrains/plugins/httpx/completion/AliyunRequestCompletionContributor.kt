@@ -27,6 +27,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                             || o is HttpRequestTarget
                             || o is HttpQueryParameterValue
                             || o is HttpQueryParameterKey
+                            || o is HttpHeaderFieldValue
                 }
 
                 override fun accepts(o: Any?, context: ProcessingContext): Boolean {
@@ -50,7 +51,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
             val prefix = trimDummy(parent.text)
             val httpRequest = element.parentOfType<HttpRequest>()
             if (httpRequest != null && "ALIYUN" == httpRequest.httpMethod) {
-                if (parent is HttpHost) {
+                if (parent is HttpHost) { //host name
                     if (prefix.contains('.')) { // completion for endpoints
                         val productCode = prefix.substring(0, prefix.indexOf('.'))
                         val product = Products.instance().findProduct(productCode)
@@ -68,7 +69,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                             result.addElement(LookupElementBuilder.create("${productCode}.").withPresentableText(productCode))
                         }
                     }
-                } else if (parent is HttpQueryParameterKey) {
+                } else if (parent is HttpQueryParameterKey) { //param names
                     val httpQuery = parent.getParentOfType<HttpQuery>(true)
                     if (httpQuery != null) {
                         val paramNames = httpQuery.queryParameterList.map { it.queryParameterKey.text }
@@ -77,7 +78,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                                 result.addElement(LookupElementBuilder.create("${it}=").withPresentableText(it))
                             }
                     }
-                } else if (parent is HttpQueryParameterValue) {
+                } else if (parent is HttpQueryParameterValue) { //param value
                     //action or version
                     val httpQueryParameter = parent.parent
                     val paramName = httpQueryParameter.firstChild.text
@@ -103,6 +104,13 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                                     }
                                 }
                             }
+                        }
+                    }
+                } else if (parent is HttpHeaderFieldValue) {
+                    val httpHeaderField = parent.getParentOfType<HttpHeaderField>(true)!!
+                    if (httpHeaderField.headerFieldName.text == "X-Region-Id") {
+                        for (region in Aliyun.GLOBAL_REGIONS) {
+                            result.addElement(LookupElementBuilder.create(region))
                         }
                     }
                 }
