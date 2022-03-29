@@ -13,14 +13,14 @@ class HttpxHeadersCompletionContributor : CompletionContributor() {
 
     private class HttpxHeaderFieldNamesProvider : CompletionProvider<CompletionParameters>() {
         override fun addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
-            result.addElement(LookupElementBuilder.create("Subject"))
+            result.addElement(LookupElementBuilder.create("X-JSON-Path"))
+            /*result.addElement(LookupElementBuilder.create("Subject"))
             result.addElement(LookupElementBuilder.create("Reply-To"))
             result.addElement(LookupElementBuilder.create("X-JSON-Schema"))
             result.addElement(LookupElementBuilder.create("X-JSON-Type"))
-            result.addElement(LookupElementBuilder.create("X-JSON-Path"))
             result.addElement(LookupElementBuilder.create("X-GraphQL-Variables"))
             result.addElement(LookupElementBuilder.create("X-SSH-Private-Key"))
-            result.addElement(LookupElementBuilder.create("X-Region-Id"))
+            result.addElement(LookupElementBuilder.create("X-Region-Id"))*/
         }
     }
 }
