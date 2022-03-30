@@ -57,12 +57,12 @@ class Product {
 
     fun hasEndpoint(host: String): Boolean {
         if (global_endpoint != null && host == global_endpoint) {
-            return true;
+            return true
         }
         if (regional_endpoints != null && regional_endpoints!!.isNotEmpty()) {
             for (endpoint in regional_endpoints!!.values) {
                 if (endpoint == host) {
-                    return true;
+                    return true
                 }
             }
         }
@@ -119,19 +119,63 @@ class Action {
             if (paramName.endsWith("RegionId")) {
                 paramMeta["enum"] = Aliyun.GLOBAL_REGIONS
             }
+            if (jsonType == "array") {
+                val subParameters = parameter.sub_parameters
+                if (subParameters != null && subParameters.isNotEmpty()) {
+                    paramMeta["items"] = convertToObjectArray(subParameters, product)
+                }
+            }
             properties[paramName] = paramMeta
             if (parameter.required) {
                 requiredProperties.add(parameter.name)
             }
         }
         jsonSchema["properties"] = properties
-        jsonSchema["required"] = requiredProperties
+        if (requiredProperties.isNotEmpty()) {
+            jsonSchema["required"] = requiredProperties
+        }
         return JsonUtils.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
-}
 
-class Parameter {
-    lateinit var name: String
-    lateinit var type: String
-    var required: Boolean = false
+    private fun convertToObjectArray(subParams: List<Parameter>, product: Product): Map<String, Any> {
+        val subParamsSchema = mutableMapOf<String, Any>()
+        subParamsSchema["type"] = "object"
+        val properties = mutableMapOf<String, Any>()
+        val requiredProperties = mutableListOf<String>()
+        for (parameter in subParams) {
+            val jsonType = when (parameter.type) {
+                "Boolean" -> "boolean"
+                "Integer" -> "integer"
+                "Long" -> "number"
+                "Float" -> "number"
+                "Double" -> "number"
+                else -> "string"
+            }
+            val paramName = parameter.name
+            val paramMeta = mutableMapOf<String, Any>()
+            paramMeta["type"] = jsonType
+            paramMeta["x-intellij-html-description"] = """
+                       <a href='https://next.api.aliyun.com/api/${product.code}/${product.version}/${name}?tab=DOC'>${paramName}</a>
+                   """.trimIndent()
+            if (paramName.endsWith("RegionId")) {
+                paramMeta["enum"] = Aliyun.GLOBAL_REGIONS
+            }
+            properties[paramName] = paramMeta
+            if (parameter.required) {
+                requiredProperties.add(parameter.name)
+            }
+        }
+        subParamsSchema["properties"] = properties
+        if (requiredProperties.isNotEmpty()) {
+            subParamsSchema["required"] = requiredProperties
+        }
+        return subParamsSchema
+    }
+
+    class Parameter {
+        lateinit var name: String
+        lateinit var type: String
+        var required: Boolean = false
+        var sub_parameters: List<Parameter>? = null
+    }
 }
