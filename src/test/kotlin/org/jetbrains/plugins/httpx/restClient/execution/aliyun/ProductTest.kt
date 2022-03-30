@@ -21,4 +21,12 @@ class ProductTest {
         val action = objectMapper.readValue<Action>(URL(url))
         println(action.parameters.size)
     }
+
+    @Test
+    fun testSubParameter() {
+        val products = Products.instance()
+        val alidns = products.findProduct("alidns")!!
+        val action = alidns.findAction("AddGtmAddressPool")!!
+        println(action.convertToJsonSchema(alidns))
+    }
 }
