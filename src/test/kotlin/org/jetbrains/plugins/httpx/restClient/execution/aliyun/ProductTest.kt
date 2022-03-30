@@ -12,7 +12,7 @@ class ProductTest {
         println(products.products.size)
         val arms = products.findProduct("arms")!!
         val action = arms.findAction("ConfigApp")!!
-        println(action.convertToJsonSchema("arms"))
+        println(action.convertToJsonSchema(arms))
     }
 
     @Test
