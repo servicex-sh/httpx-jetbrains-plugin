@@ -10,6 +10,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.util.queryParameters
 import org.jetbrains.plugins.httpx.json.JsonUtils
+import org.jetbrains.plugins.httpx.restClient.execution.common.CloudAccount
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.XmlBodyFileHint
 
@@ -20,15 +21,16 @@ class AliyunRequestManager(private val project: Project) : Disposable {
     }
 
     fun execute(aliyunRequest: AliyunRequest): CommonClientResponse {
-        val keyIdAndSecret: List<String>? = Aliyun.readAliyunAccessToken(aliyunRequest.getBasicAuthorization())
-        if (keyIdAndSecret == null) {
+        val cloudAccount: CloudAccount? = Aliyun.readAliyunAccessToken(aliyunRequest.getBasicAuthorization())
+        if (cloudAccount == null) {
             return AliyunResponse(null, CommonClientResponseBody.Empty(), "Error", "No Aliyun AK found!")
         }
         val host: String = aliyunRequest.uri.host
+        val regionId = aliyunRequest.regionId ?: cloudAccount.regionId
         val profile = DefaultProfile.getProfile(
-            aliyunRequest.regionId,
-            keyIdAndSecret[0],
-            keyIdAndSecret[1]
+            regionId,
+            cloudAccount.accessKeyId,
+            cloudAccount.accessKeySecret
         )
         val queries = aliyunRequest.uri.queryParameters
         val client: IAcsClient = DefaultAcsClient(profile)

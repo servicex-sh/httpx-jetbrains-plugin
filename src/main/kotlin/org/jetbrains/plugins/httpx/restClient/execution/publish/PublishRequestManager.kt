@@ -317,12 +317,12 @@ class PublishRequestManager(private val project: Project) : Disposable {
     }
 
     fun sendMnsMessage(request: PublishRequest): CommonClientResponse {
-        val keyIdAndSecret = readAliyunAccessToken(request.getBasicAuthorization())
-        if (keyIdAndSecret == null) {
+        val cloudAccount = readAliyunAccessToken(request.getBasicAuthorization())
+        if (cloudAccount == null) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
         }
         try {
-            val mnsClient = CloudAccount(keyIdAndSecret[0], keyIdAndSecret[1], "https://" + request.uri!!.host).mnsClient
+            val mnsClient = CloudAccount(cloudAccount.accessKeyId, cloudAccount.accessKeySecret, "https://" + request.uri!!.host).mnsClient
             val queueRef = mnsClient.getQueueRef(request.topic)
             val message = queueRef.putMessage(Message(request.bodyBytes()))
             return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, message.messageId)
@@ -332,8 +332,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
     }
 
     fun publishAliyunEventBridge(request: PublishRequest): CommonClientResponse {
-        val keyIdAndSecret = readAliyunAccessToken(request.getBasicAuthorization())
-        if (keyIdAndSecret == null) {
+        val cloudAccount = readAliyunAccessToken(request.getBasicAuthorization())
+        if (cloudAccount == null) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
         }
         try {
@@ -366,8 +366,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
                 eventId = UUID.randomUUID().toString()
             }
             val authConfig = Config()
-            authConfig.accessKeyId = keyIdAndSecret[0]
-            authConfig.accessKeySecret = keyIdAndSecret[1]
+            authConfig.accessKeyId = cloudAccount.accessKeyId
+            authConfig.accessKeySecret = cloudAccount.accessKeySecret
             authConfig.endpoint = request.uri!!.host
             val eventBridgeClient: EventBridge = com.aliyun.eventbridge.EventBridgeClient(authConfig)
             val event = EventBuilder.builder()
