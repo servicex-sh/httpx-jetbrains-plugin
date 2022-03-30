@@ -1,5 +1,6 @@
 package org.jetbrains.plugins.httpx.restClient.execution.aws
 
+import org.ini4j.Ini
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -85,11 +86,10 @@ object AWS {
         val awsConfigFile = Path.of(System.getProperty("user.home")).resolve(".aws").resolve("config").toAbsolutePath()
         if (awsConfigFile.toFile().exists()) {
             try {
-                val lines = Files.readAllLines(awsConfigFile)
-                for (i in lines.indices) {
-                    if (lines[i].contains("[default]")) {
-                        return lines[i + 1].trim { it <= ' ' }
-                    }
+                val config = Ini(awsConfigFile.toFile())
+                val profile = config["default"]
+                if (profile != null) {
+                    return profile["region"]
                 }
             } catch (ignore: java.lang.Exception) {
             }
