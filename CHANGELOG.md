@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.6.0]
+
+### Added
+
+- Aliyun: code completion for host, param and json body
+
 ## [0.5.0]
 
 ### Added
