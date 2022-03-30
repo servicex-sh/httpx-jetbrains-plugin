@@ -78,7 +78,7 @@ object AWS {
 
     private fun extractAccessToken(profile: Map<String, String>): List<String?>? {
         return if (profile.containsKey("aws_access_key_id") && profile.containsKey("aws_access_key_id")) {
-            java.util.List.of(profile["aws_access_key_id"], profile["aws_secret_access_key"])
+            listOf(profile["aws_access_key_id"], profile["aws_secret_access_key"])
         } else null
     }
 
