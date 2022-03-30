@@ -11,7 +11,7 @@ import java.util.*
 class AliyunRequest(override val URL: String?, override val httpMethod: String, override val textToSend: String?, val headers: Map<String, String>) :
     CommonClientRequest {
     val uri: URI
-    val regionId: String
+    var regionId: String? = null
     val format: String
     val params: Map<String, String>
 
@@ -34,11 +34,13 @@ class AliyunRequest(override val URL: String?, override val httpMethod: String, 
             tempRegionId = uri.host.replace(".aliyuncs.com", "")
             if (tempRegionId.contains('.')) {
                 tempRegionId = tempRegionId.substring(tempRegionId.indexOf('.') + 1)
-            } else if (tempRegionId.contains('-')) {
-                tempRegionId = tempRegionId.substring(tempRegionId.indexOf('-') + 1)
             }
+            if (tempRegionId.contains('-')) {
+                regionId = tempRegionId.substring(tempRegionId.indexOf('-') + 1)
+            }
+        } else {
+            regionId = tempRegionId
         }
-        regionId = tempRegionId
     }
 
     fun bodyBytes(): ByteArray {
