@@ -53,7 +53,7 @@ class AliyunRequestActionJsonSchemaProviderFactory : ContentAwareJsonSchemaFileP
         if (product != null) {
             val action = product.findAction(actionName)
             if (action != null) {
-                val jsonSchema = action.convertToJsonSchema(product.code)
+                val jsonSchema = action.convertToJsonSchema(product)
                 val jsonSchemaFile = LightVirtualFile(jsonSchemaFileName, JsonFileType.INSTANCE, jsonSchema)
                 schemaStore[key] = jsonSchemaFile;
                 return jsonSchemaFile
