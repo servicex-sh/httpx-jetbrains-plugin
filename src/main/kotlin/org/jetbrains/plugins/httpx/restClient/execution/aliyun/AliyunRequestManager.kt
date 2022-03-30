@@ -54,8 +54,19 @@ class AliyunRequestManager(private val project: Project) : Disposable {
         val bodyBytes: ByteArray = aliyunRequest.bodyBytes()
         if (bodyBytes.isNotEmpty()) {
             val requestData = JsonUtils.objectMapper.readValue(bodyBytes, Map::class.java)
-            for ((key, value) in requestData) {
-                request.putQueryParameter(key.toString(), value.toString())
+            for ((key, value) in requestData) { // sub_params
+                if (value is List<*>) {
+                    value.forEachIndexed { index, item ->
+                        if (item is Map<*, *>) {
+                            item.forEach {
+                                val paramName = "${key}[${index}].${it.key}"
+                                request.putQueryParameter(paramName, it.value.toString())
+                            }
+                        }
+                    }
+                } else {
+                    request.putQueryParameter(key.toString(), value.toString())
+                }
             }
         }
         val response = client.getCommonResponse(request)
