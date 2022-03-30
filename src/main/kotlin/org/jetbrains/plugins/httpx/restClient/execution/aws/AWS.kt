@@ -86,8 +86,7 @@ object AWS {
         val awsConfigFile = Path.of(System.getProperty("user.home")).resolve(".aws").resolve("config").toAbsolutePath()
         if (awsConfigFile.toFile().exists()) {
             try {
-                val config = Ini(awsConfigFile.toFile())
-                val profile = config["default"]
+                val profile = Ini(awsConfigFile.toFile())["default"]
                 if (profile != null) {
                     return profile["region"]
                 }
