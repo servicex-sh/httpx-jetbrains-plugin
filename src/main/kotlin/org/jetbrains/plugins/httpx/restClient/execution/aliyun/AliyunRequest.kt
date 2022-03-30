@@ -32,9 +32,6 @@ class AliyunRequest(override val URL: String?, override val httpMethod: String, 
         var tempRegionId: String? = headers["X-Region-Id"]
         if (tempRegionId == null) { //resolve region id from host
             tempRegionId = uri.host.replace(".aliyuncs.com", "")
-            if (tempRegionId.contains('.')) {
-                tempRegionId = tempRegionId.substring(tempRegionId.indexOf('.') + 1)
-            }
             if (tempRegionId.contains('-')) {
                 for (globalRegion in Aliyun.GLOBAL_REGIONS) {
                     if (tempRegionId.contains(globalRegion)) {
