@@ -38,6 +38,7 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
+        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
         <spellchecker.bundledDictionaryProvider
