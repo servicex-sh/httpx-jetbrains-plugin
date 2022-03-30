@@ -29,4 +29,11 @@ class ProductTest {
         val action = alidns.findAction("AddGtmAddressPool")!!
         println(action.convertToJsonSchema(alidns))
     }
+
+    @Test
+     fun testAllRegions() {
+        ProductTest::class.java.getResourceAsStream("/regions.txt").reader().readLines().forEach {
+            println("\"${it}\",")
+        }
+    }
 }
