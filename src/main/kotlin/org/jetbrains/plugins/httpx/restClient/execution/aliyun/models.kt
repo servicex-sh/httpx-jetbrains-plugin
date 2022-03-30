@@ -92,10 +92,10 @@ class Action {
     lateinit var name: String
     var parameters: List<Parameter> = emptyList()
 
-    fun convertToJsonSchema(productCode: String): String {
+    fun convertToJsonSchema(product: Product): String {
         val jsonSchema = mutableMapOf<String, Any>()
         jsonSchema["\$schema"] = "http://json-schema.org/draft-07/schema#"
-        jsonSchema["description"] = "JSON Schema for $name action of $productCode"
+        jsonSchema["description"] = "JSON Schema for $name action of ${product.code}"
         jsonSchema["type"] = "object"
         val properties = mutableMapOf<String, Any>()
         val requiredProperties = mutableListOf<String>()
@@ -111,18 +111,22 @@ class Action {
                 else -> "string"
             }
             val paramName = parameter.name
+            val paramMeta = mutableMapOf<String, Any>()
+            paramMeta["type"] = jsonType
+            paramMeta["x-intellij-html-description"] = """
+                <a href='https://next.api.aliyun.com/api/${product.code}/${product.version}/${name}?tab=DOC'>${paramName}</a>
+            """.trimIndent()
             if (paramName.endsWith("RegionId")) {
-                properties[paramName] = mapOf("type" to jsonType, "enum" to Aliyun.GLOBAL_REGIONS)
-            } else {
-                properties[paramName] = mapOf("type" to jsonType)
+                paramMeta["enum"] = Aliyun.GLOBAL_REGIONS
             }
+            properties[paramName] = paramMeta
             if (parameter.required) {
                 requiredProperties.add(parameter.name)
             }
         }
         jsonSchema["properties"] = properties
         jsonSchema["required"] = requiredProperties
-        return JsonUtils.objectMapper.writeValueAsString(jsonSchema)
+        return JsonUtils.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonSchema)
     }
 }
 
