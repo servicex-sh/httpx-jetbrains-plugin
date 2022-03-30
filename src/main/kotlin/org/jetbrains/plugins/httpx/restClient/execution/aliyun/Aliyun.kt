@@ -1,6 +1,9 @@
 package org.jetbrains.plugins.httpx.restClient.execution.aliyun
 
+import org.ini4j.Ini
+import org.ini4j.Profile
 import org.jetbrains.plugins.httpx.json.JsonUtils
+import org.jetbrains.plugins.httpx.restClient.execution.common.CloudAccount
 import java.nio.file.Path
 
 object Aliyun {
@@ -52,18 +55,30 @@ object Aliyun {
         } else serviceName
     }
 
-    fun readAliyunAccessToken(keyIdAndSecret: List<String>?): List<String>? {
-        var keyIdAndSecret2: List<String>? = keyIdAndSecret
+    fun readAliyunAccessToken(keyIdAndSecret: List<String>?): CloudAccount? {
+        var cloudAccount: CloudAccount?
+        val keyIdAndSecret2: List<String>? = keyIdAndSecret
         if (keyIdAndSecret2 == null) { // read default profile
-            keyIdAndSecret2 = readAccessFromAliyunCli(null)
+            cloudAccount = readAccessFromAliyunCli(null)
+            if (cloudAccount == null) {
+                cloudAccount = readAccessFromCredentials(null);
+            }
         } else if (keyIdAndSecret2.size == 2 && keyIdAndSecret2[1].length <= 4) { // id match
-            keyIdAndSecret2 = readAccessFromAliyunCli(keyIdAndSecret2[0])
+            cloudAccount = readAccessFromAliyunCli(keyIdAndSecret2[0])
+            if (cloudAccount == null) {
+                cloudAccount = readAccessFromCredentials(keyIdAndSecret2[0])
+            }
+        } else {
+            cloudAccount = CloudAccount().apply {
+                accessKeyId = keyIdAndSecret2[0];
+                accessKeyId = keyIdAndSecret2[1];
+            }
         }
-        return keyIdAndSecret2
+        return cloudAccount
     }
 
 
-    private fun readAccessFromAliyunCli(partOfId: String?): List<String>? {
+    private fun readAccessFromAliyunCli(partOfId: String?): CloudAccount? {
         val aliyunConfigJsonFile = Path.of(System.getProperty("user.home")).resolve(".aliyun").resolve("config.json").toAbsolutePath().toFile()
         if (aliyunConfigJsonFile.exists()) {
             val config = JsonUtils.objectMapper.readValue(aliyunConfigJsonFile, MutableMap::class.java)
@@ -81,8 +96,45 @@ object Aliyun {
                         }
                     }
                 if (profile != null) {
-                    return listOf(profile["access_key_id"] as String, profile["access_key_secret"] as String)
+                    return CloudAccount(
+                        profile["access_key_id"] as String,
+                        profile["access_key_secret"] as String,
+                        profile["region_id"] as String
+                    )
                 }
+            }
+        }
+        return null
+    }
+
+    /**
+     * read AK from $HOME/.alibabacloud/credentials.ini
+     *
+     * @param partOfId part of id
+     * @return ak
+     */
+    private fun readAccessFromCredentials(partOfId: String?): CloudAccount? {
+        val configPath = Path.of(System.getProperty("user.home"), ".alibabacloud", "credentials.ini")
+        if (configPath.toFile().exists()) {
+            try {
+                val config = Ini(configPath.toFile())
+                var profile: Profile.Section? = null
+                if (partOfId != null) {
+                    for (tempProfile in config.values) {
+                        if (tempProfile.containsKey("access_key_id")) {
+                            if (tempProfile["access_key_id"]!!.contains(partOfId)) {
+                                profile = tempProfile
+                                break
+                            }
+                        }
+                    }
+                } else {
+                    profile = config["default"]
+                }
+                if (profile != null) {
+                    return CloudAccount(profile["access_key_id"], profile["access_key_secret"], profile["region_id"])
+                }
+            } catch (ignore: Exception) {
             }
         }
         return null
