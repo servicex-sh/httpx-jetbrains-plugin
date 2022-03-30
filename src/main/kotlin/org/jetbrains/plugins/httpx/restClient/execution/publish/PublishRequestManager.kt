@@ -43,7 +43,7 @@ import java.net.URI
 import java.util.*
 
 
-@Suppress("UnstableApiUsage")
+@Suppress("UnstableApiUsage", "MemberVisibilityCanBePrivate")
 class PublishRequestManager(private val project: Project) : Disposable {
 
     override fun dispose() {
@@ -111,7 +111,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
         props[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java.name
         props[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java.name
         // kafka client use Class.forName(trimmed, true, Utils.getContextOrKafkaClassLoader()) to get the Class object
-        Thread.currentThread().contextClassLoader = null;
+        Thread.currentThread().contextClassLoader = null
         val sender = KafkaSender.create(SenderOptions.create<String?, String>(props))
         return sender.send(
             Mono.just(
@@ -196,9 +196,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
 
     fun sendAwsSnsMessage(request: PublishRequest): CommonClientResponse {
         val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
-        if (awsBasicCredentials == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
-        }
+            ?: return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         val topicArn: String = request.uri.toString()
         val regionId = getAwsRegionId(request, topicArn)
         SnsClient.builder()
@@ -220,9 +218,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
 
     fun sendAwsEventBridgeMessage(request: PublishRequest): CommonClientResponse {
         val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
-        if (awsBasicCredentials == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
-        }
+            ?: return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         val eventBusArn: String = request.uri.toString()
         val regionId = getAwsRegionId(request, eventBusArn)
         try {
@@ -233,9 +229,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
                     val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
                     //validate cloudEvent
                     val source = cloudEvent["source"] as String?
-                    if (source == null) {
-                        return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply source field in json body!")
-                    }
+                        ?: return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply source field in json body!")
                     val datacontenttype = cloudEvent["datacontenttype"] as String?
                     if (datacontenttype != null && !datacontenttype.startsWith("application/json")) {
                         System.err.println("datacontenttype value should be 'application/json'!")
@@ -246,8 +240,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
                         System.err.println("data field should be supplied in json body!")
                         return PublishResponse(CommonClientResponseBody.Empty(), "Error", "data field should be supplied in json body!")
                     }
-                    val jsonData: String
-                    jsonData = if (data is Map<*, *> || data is List<*>) {
+                    val jsonData: String = if (data is Map<*, *> || data is List<*>) {
                         objectMapper.writeValueAsString(data)
                     } else {
                         data.toString()
@@ -263,10 +256,10 @@ class PublishRequestManager(private val project: Project) : Disposable {
                         .build()
                     val result = eventBrClient.putEvents(eventsRequest)
                     for (resultEntry in result.entries()) {
-                        if (resultEntry.eventId() != null) {
-                            return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, resultEntry.eventId())
+                        return if (resultEntry.eventId() != null) {
+                            PublishResponse(CommonClientResponseBody.Empty(), "OK", null, resultEntry.eventId())
                         } else {
-                            return PublishResponse(CommonClientResponseBody.Empty(), "Error", resultEntry.errorCode())
+                            PublishResponse(CommonClientResponseBody.Empty(), "Error", resultEntry.errorCode())
                         }
                     }
                 }
@@ -277,11 +270,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
     }
 
     fun sendAwsSqsMessage(request: PublishRequest): CommonClientResponse {
-        val queue: String = request.topic!!
         val awsBasicCredentials = AWS.awsBasicCredentials(request.getHeader("Authorization"))
-        if (awsBasicCredentials == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
-        }
+            ?: return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
         val queueArn: String = request.uri.toString()
         val regionId = getAwsRegionId(request, queueArn)
         val parts = queueArn.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -318,24 +308,28 @@ class PublishRequestManager(private val project: Project) : Disposable {
 
     fun sendMnsMessage(request: PublishRequest): CommonClientResponse {
         val cloudAccount = readAliyunAccessToken(request.getBasicAuthorization())
-        if (cloudAccount == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
-        }
-        try {
+            ?: return PublishResponse(
+                CommonClientResponseBody.Empty(),
+                "Error",
+                "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`"
+            )
+        return try {
             val mnsClient = CloudAccount(cloudAccount.accessKeyId, cloudAccount.accessKeySecret, "https://" + request.uri!!.host).mnsClient
             val queueRef = mnsClient.getQueueRef(request.topic)
             val message = queueRef.putMessage(Message(request.bodyBytes()))
-            return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, message.messageId)
+            PublishResponse(CommonClientResponseBody.Empty(), "OK", null, message.messageId)
         } catch (e: java.lang.Exception) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+            PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
         }
     }
 
     fun publishAliyunEventBridge(request: PublishRequest): CommonClientResponse {
         val cloudAccount = readAliyunAccessToken(request.getBasicAuthorization())
-        if (cloudAccount == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`")
-        }
+            ?: return PublishResponse(
+                CommonClientResponseBody.Empty(),
+                "Error",
+                "Please supply access key Id/Secret in Authorization header as : `Authorization: Basic keyId:secret`"
+            )
         try {
             val eventBus = request.topic
             val cloudEvent = objectMapper.readValue(request.bodyBytes(), Map::class.java)
@@ -355,8 +349,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
                 System.err.println("data field should be supplied in json body!")
                 return PublishResponse(CommonClientResponseBody.Empty(), "Error", "data field should be supplied in json body!")
             }
-            val jsonData: String
-            jsonData = if (data is Map<*, *> || data is List<*>) {
+            val jsonData: String = if (data is Map<*, *> || data is List<*>) {
                 objectMapper.writeValueAsString(data)
             } else {
                 data.toString()
@@ -379,7 +372,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
                 .withJsonStringData(jsonData)
                 .withAliyunEventBus(eventBus)
                 .build()
-            val putEventsResponse = eventBridgeClient.putEvents(java.util.List.of(event))
+            val putEventsResponse = eventBridgeClient.putEvents(listOf(event))
             val resultJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(putEventsResponse)
             return PublishResponse(CommonClientResponseBody.Text(resultJson), "OK", null, eventId)
         } catch (e: Exception) {
