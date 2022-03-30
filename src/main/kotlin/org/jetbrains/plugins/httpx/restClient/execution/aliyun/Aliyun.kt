@@ -8,26 +8,26 @@ import java.nio.file.Path
 
 object Aliyun {
     val GLOBAL_REGIONS = listOf(
-        "me-east-1",
-        "us-east-1",
-        "ap-northeast-1",
-        "ap-southeast-5",
-        "cn-hongkong",
-        "cn-shenzhen",
-        "ap-southeast-3",
-        "ap-southeast-2",
-        "ap-south-1",
-        "cn-huhehaote",
         "cn-qingdao",
         "cn-beijing",
-        "cn-shanghai",
-        "cn-hangzhou",
-        "ap-southeast-1",
-        "us-west-1",
-        "eu-central-1",
         "cn-zhangjiakou",
-        "cn-chengdu",
-        "eu-west-1"
+        "cn-huhehaote",
+        "cn-hangzhou",
+        "cn-shanghai",
+        "cn-shenzhen",
+        "cn-hongkong",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-southeast-3",
+        "ap-southeast-4",
+        "ap-southeast-5",
+        "ap-southeast-6",
+        "ap-south-1",
+        "ap-northeast-1",
+        "us-west-1",
+        "us-east-1",
+        "eu-central-1",
+        "me-east-1",
     )
 
     fun getServiceName(host: String): String {
