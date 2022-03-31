@@ -61,7 +61,7 @@ class AliyunRequestManager(private val project: Project) : Disposable {
                     value.forEachIndexed { index, item ->
                         if (item is Map<*, *>) {
                             item.forEach {
-                                val paramName = "${key}[${index}].${it.key}"
+                                val paramName = "${key}.${index+1}.${it.key}"
                                 request.putQueryParameter(paramName, it.value.toString())
                             }
                         }
