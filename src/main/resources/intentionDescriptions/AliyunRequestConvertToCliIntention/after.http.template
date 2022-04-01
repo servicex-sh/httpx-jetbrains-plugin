@@ -1,0 +1,6 @@
+# clipboard: [
+# aliyun ecs DescribeInstances --region cn-hangzhou
+# ]
+# clipboard: []
+ALIYUN ecs.aliyuncs.com?Action=DescribeInstances
+X-Region-Id: cn-hangzhou
