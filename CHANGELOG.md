@@ -2,6 +2,13 @@
 
 # httpx plugin Changelog
 
+## [0.6.1]
+
+### Added
+
+- Intention Action: convert to ALIYUN request to CLI
+- Past Processor:  convert aliyun cli to ALIYUN request in http file
+
 ## [0.6.0]
 
 ### Added
