@@ -66,7 +66,19 @@ class Product {
                 }
             }
         }
-        return false;
+        return false
+    }
+
+    fun findEndpointByRegion(regionId: String?): String {
+        if (regionId != null && regional_endpoints != null) {
+            if (regional_endpoints!!.contains(regionId)) {
+                return regional_endpoints!![regionId]!!
+            }
+        }
+        if (global_endpoint != null && global_endpoint!!.isNotEmpty()) {
+            return global_endpoint!!
+        }
+        return "${code.toLowerCase()}.aliyuncs.com"
     }
 
     fun findAction(name: String): Action? {
