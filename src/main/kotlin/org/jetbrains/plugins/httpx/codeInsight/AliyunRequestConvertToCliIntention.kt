@@ -76,16 +76,26 @@ class AliyunRequestConvertToCliIntention : BaseElementAtCaretIntentionAction() {
                             if (item is Map<*, *>) {
                                 item.forEach {
                                     val paramName = "${key}.${index + 1}.${it.key}"
-                                    builder.append("--").append(paramName).append(' ').append(value.toString())
+                                    builder.append("--").append(paramName).append(' ').append(convertValueToCli(it.value.toString())).append(' ')
                                 }
                             }
                         }
                     } else {
-                        builder.append("--").append(key).append(' ').append(value.toString())
+                        builder.append("--").append(key).append(' ').append(convertValueToCli(value.toString())).append(' ')
                     }
                 }
             }
         }
         return builder.toString().trim()
+    }
+
+    private fun convertValueToCli(value: String): String {
+        return if (value.matches("[1-9]\\d{0,8}".toRegex())) {
+            value
+        } else if (value.contains('\'')) {
+            "\"${value}\""
+        } else {
+            "'${value}'"
+        }
     }
 }
