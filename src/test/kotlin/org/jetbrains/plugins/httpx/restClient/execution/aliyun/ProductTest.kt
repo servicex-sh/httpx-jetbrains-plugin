@@ -9,7 +9,9 @@ class ProductTest {
     @Test
     fun testParse() {
         val products = Products.instance()
-        println(products.products.size)
+        products.products.forEach {
+            println(it.code)
+        }
         val arms = products.findProduct("arms")!!
         val action = arms.findAction("ConfigApp")!!
         println(action.convertToJsonSchema(arms))
@@ -31,7 +33,7 @@ class ProductTest {
     }
 
     @Test
-     fun testAllRegions() {
+    fun testAllRegions() {
         ProductTest::class.java.getResourceAsStream("/regions.txt").reader().readLines().forEach {
             println("\"${it}\",")
         }
