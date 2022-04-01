@@ -28,7 +28,7 @@ class AliyunCliParser(val text: String) {
     fun httpRequestCode(product: Product): String {
         val builder = StringBuilder()
         builder.append('\n')
-        builder.append("### aliyun request converted from ").append(text).append('\n')
+        builder.append("### aliyun request converted from cli: ").append(text).append('\n')
         val paramsMap = if (params != null) {
             val len = params.size
             val tempMap = mutableMapOf<String, Any>()
