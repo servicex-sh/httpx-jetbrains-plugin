@@ -44,6 +44,12 @@
         <spellchecker.bundledDictionaryProvider
                 implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
+        <intentionAction>
+            <className>org.jetbrains.plugins.httpx.codeInsight.AliyunRequestConvertToCliIntention</className>
+            <!--suppress PluginXmlCapitalization -->
+            <category>HTTP Client</category>
+        </intentionAction>
+        <copyPastePreProcessor implementation="org.jetbrains.plugins.httpx.codeInsight.AliyunCliCopyPastePreProcessor"/>
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
