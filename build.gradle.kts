@@ -63,7 +63,7 @@ dependencies {
     }
     implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.4")
     implementation("org.apache.bookkeeper:circe-checksum:4.14.4@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:2.9.1") {
+    implementation("org.apache.pulsar:pulsar-client-original:2.9.2") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -81,10 +81,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.2")
-    implementation("software.amazon.awssdk:aws-core:2.17.150")
-    implementation("software.amazon.awssdk:sns:2.17.150")
-    implementation("software.amazon.awssdk:sqs:2.17.150")
-    implementation("software.amazon.awssdk:eventbridge:2.17.150")
+    implementation("software.amazon.awssdk:aws-core:2.17.166")
+    implementation("software.amazon.awssdk:sns:2.17.166")
+    implementation("software.amazon.awssdk:sqs:2.17.166")
+    implementation("software.amazon.awssdk:eventbridge:2.17.166")
 }
 
 configurations.implementation {
