@@ -14,18 +14,12 @@ class ThriftRequestConverter : RequestConverter<ThriftRequest>() {
 
     override fun psiToCommonRequest(requestPsiPointer: SmartPsiElementPointer<HttpRequest>, substitutor: HttpRequestVariableSubstitutor): ThriftRequest {
         var url = ""
-        var requestType = "THRIFT" // 6 chars
+        var requestType = "THRIFT"
         var requestBody: String? = null
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
-            val httpMethod = httpRequest.httpMethod
-            val schema = if (httpMethod.length > 6) {
-                httpMethod.substring(6).toLowerCase()
-            } else {
-                httpRequest.requestTarget?.scheme?.text ?: "thrift"
-            }
-            url = "${schema}://" + httpRequest.getHttpUrl(substitutor)!!
+            url = "thrift://" + httpRequest.getHttpUrl(substitutor)!!
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
             requestType = httpRequest.httpMethod
             requestBody = httpRequest.requestBody?.text
