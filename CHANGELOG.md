@@ -2,6 +2,22 @@
 
 # httpx plugin Changelog
 
+## [0.7.0]
+
+### Added
+
+- tarpc support: https://github.com/google/tarpc
+
+```
+### tarpc request
+TARPC 127.0.0.1:4500/hello
+Content-Type: application/json
+     
+{
+  "name": "jackie"
+}
+```
+
 ## [0.6.1]
 
 ### Added
