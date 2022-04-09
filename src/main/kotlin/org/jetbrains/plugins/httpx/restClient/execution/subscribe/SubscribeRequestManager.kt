@@ -118,7 +118,11 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                 val body = it.data.toString(StandardCharsets.UTF_8)
                 shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
             }
-            dispatcher.subscribe(request.topic!!)
+            request.topic!!.split("[,;]".toRegex()).forEach {
+                if (it.isNotEmpty()) {
+                    dispatcher.subscribe(it)
+                }
+            }
         } catch (e: java.lang.Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
         }
