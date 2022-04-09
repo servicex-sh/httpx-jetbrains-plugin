@@ -6,7 +6,7 @@
 
 ### Added
  
-- Multi subjects support for Nats:  `SUB subject1,subject2`
+- Multi subjects support for Nats:  `SUB subject1,subject2` or `PUB subject1,subject2`
 - tarpc support: https://github.com/google/tarpc
 
 ```
