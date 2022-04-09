@@ -46,6 +46,7 @@
         <spellchecker.bundledDictionaryProvider
                 implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
+        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.LuaScriptInjectionContributor"/>
         <intentionAction>
             <className>org.jetbrains.plugins.httpx.codeInsight.AliyunRequestConvertToCliIntention</className>
             <!--suppress PluginXmlCapitalization -->
