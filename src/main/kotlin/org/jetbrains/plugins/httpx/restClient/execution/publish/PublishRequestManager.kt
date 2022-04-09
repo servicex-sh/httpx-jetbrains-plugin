@@ -168,7 +168,11 @@ class PublishRequestManager(private val project: Project) : Disposable {
     private fun sendNatsMessage(request: PublishRequest): CommonClientResponse {
         try {
             Nats.connect(request.uri.toString()).use { nc ->
-                nc.publish(request.topic, request.bodyBytes())
+                request.topic!!.split("[,;]".toRegex()).forEach {
+                    if (it.isNotEmpty()) {
+                        nc.publish(it, request.bodyBytes())
+                    }
+                }
             }
         } catch (e: Exception) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
