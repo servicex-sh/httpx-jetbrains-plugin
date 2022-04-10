@@ -96,7 +96,7 @@ class TarpcRequestManager(private val project: Project) : Disposable {
 
     private fun extractData(socketChannel: SocketChannel): ByteArray? {
         val bos = ByteArrayOutputStream()
-        val buf = ByteBuffer.allocate(1024)
+        val buf = ByteBuffer.allocate(4096)
         var readCount: Int
         var counter = 0
         do {
@@ -112,7 +112,7 @@ class TarpcRequestManager(private val project: Project) : Disposable {
             }
             bos.write(buf.array(), startOffset, length)
             counter++
-        } while (readCount == 1024)
+        } while (readCount == 4096)
         return bos.toByteArray()
     }
 
