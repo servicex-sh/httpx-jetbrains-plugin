@@ -4,9 +4,6 @@ import com.intellij.httpClient.execution.common.RequestContext
 import com.intellij.httpClient.execution.common.RequestConverter
 import com.intellij.httpClient.execution.common.RequestExecutionSupport
 import com.intellij.httpClient.execution.common.RequestHandler
-import org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequest
-import org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestConverter
-import org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestHandler
 
 @Suppress("UnstableApiUsage")
 class TarpcRequestExecutionSupport : RequestExecutionSupport<TarpcRequest> {
