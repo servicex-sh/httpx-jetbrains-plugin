@@ -2,6 +2,23 @@
 
 # httpx plugin Changelog
 
+
+## [0.7.1]
+
+### Fixed
+
+* `MSGPACK` fix for Neovim RPC test
+* `X-Args-0`, `X-Args-0`  introduced for `MSGPACK` with Language injection
+
+```
+### msgpack request
+MSGPACK 127.0.0.1:6666/nvim_exec_lua
+X-Args-1: []
+Content-Type: text/x-lua
+
+return vim.api.nvim_win_get_cursor(0)[1]
+```
+
 ## [0.7.0]
 
 ### Added
