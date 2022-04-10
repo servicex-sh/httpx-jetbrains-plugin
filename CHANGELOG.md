@@ -19,6 +19,15 @@ Content-Type: application/json
   "name": "jackie"
 }
 ```
+- msgpack-rpc support: https://github.com/msgpack-rpc/msgpack-rpc
+
+```
+### msgpack request
+MSGPACK 127.0.0.1:18800/add
+Content-Type: application/json
+
+[1, 2]
+```
 
 ## [0.6.1]
 
