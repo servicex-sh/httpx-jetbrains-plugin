@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.commons.lang.StringUtils
 
 
 object JsonUtils {
@@ -15,4 +16,15 @@ object JsonUtils {
         .configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
         .configure(JsonParser.Feature.ALLOW_COMMENTS, true)
         .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+
+    fun convertToDoubleQuoteString(text: String): String {
+        return if (!text.startsWith('\"')) {
+            var escapedText = StringUtils.replace(text, "\"", "\\\"")
+            escapedText = StringUtils.replace(escapedText, "\n", "\\n")
+            escapedText = StringUtils.replace(escapedText, "\r", "")
+            "\"${escapedText}\""
+        } else {
+            text
+        }
+    }
 }
