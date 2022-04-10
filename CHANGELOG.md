@@ -2,13 +2,11 @@
 
 # httpx plugin Changelog
 
-
 ## [0.7.1]
 
-### Fixed
+### Added
 
-* `MSGPACK` fix for Neovim RPC test
-* `X-Args-0`, `X-Args-0`  introduced for `MSGPACK` with Language injection
+- `X-Args-0`, `X-Args-0`  introduced for `MSGPACK` with Language injection
 
 ```
 ### msgpack request
@@ -19,11 +17,15 @@ Content-Type: text/x-lua
 return vim.api.nvim_win_get_cursor(0)[1]
 ```
 
+### Fixed
+
+- `MSGPACK` fix for Neovim RPC test
+
 ## [0.7.0]
 
 ### Added
-          
-- Lua Language injection for `EVAL` method 
+
+- Lua Language injection for `EVAL` method
 - Multi subjects support for Nats:  `SUB subject1,subject2` or `PUB subject1,subject2`
 - tarpc support: https://github.com/google/tarpc
 
@@ -36,6 +38,7 @@ Content-Type: application/json
   "name": "jackie"
 }
 ```
+
 - msgpack-rpc support: https://github.com/msgpack-rpc/msgpack-rpc
 
 ```
