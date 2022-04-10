@@ -1,14 +1,14 @@
 package org.jetbrains.plugins.httpx.restClient.execution.msgpack
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.gson.Gson
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.httpx.json.JsonUtils
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
-import org.msgpack.jackson.dataformat.MessagePackFactory
+import org.msgpack.jackson.dataformat.MessagePackMapper
 import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
@@ -44,7 +44,7 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
             msgpackRequest.add(0) //msg id
             msgpackRequest.add(functionName)
             msgpackRequest.add(args)
-            val objectMapper = ObjectMapper(MessagePackFactory())
+            val objectMapper = MessagePackMapper()
             try {
                 SocketChannel.open(InetSocketAddress(msgpackUri.host, msgpackUri.port)).use { socketChannel ->
                     val content = objectMapper.writeValueAsBytes(msgpackRequest)
@@ -57,12 +57,12 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
                     val response = objectMapper.readValue<List<Any>>(data)
                     @Suppress("SENSELESS_COMPARISON")
                     if (response.size > 3 && response[3] != null) {
-                        val resultJson = JsonUtils.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response[3])
+                        val resultJson = Gson().toJson(response[3])
                         return MsgpackResponse(CommonClientResponseBody.Text(resultJson, JsonBodyFileHint.jsonBodyFileHint("msgpack-result.json")))
                     } else {
                         val error = response[2]
                         if (error != null) {
-                            return MsgpackResponse(CommonClientResponseBody.Empty(), "Error", JsonUtils.objectMapper.writeValueAsString(error))
+                            return MsgpackResponse(CommonClientResponseBody.Empty(), "Error", Gson().toJson(error))
                         } else {
                             return MsgpackResponse(CommonClientResponseBody.Empty())
                         }
