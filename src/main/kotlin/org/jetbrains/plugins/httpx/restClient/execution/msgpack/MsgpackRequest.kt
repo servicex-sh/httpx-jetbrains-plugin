@@ -1,6 +1,7 @@
 package org.jetbrains.plugins.httpx.restClient.execution.msgpack
 
 import com.intellij.httpClient.execution.common.CommonClientRequest
+import org.apache.commons.lang.StringUtils
 import java.net.URI
 
 @Suppress("UnstableApiUsage")
@@ -28,7 +29,7 @@ class MsgpackRequest(override val URL: String?, override val httpMethod: String?
         var newBody = body
         if (!contentType.contains("json")) {
             if (!newBody.startsWith('"')) {
-                newBody = "\"${newBody}\""
+                newBody = convertToDoubleQuoteString(newBody)
             }
         }
         val argLines = mutableListOf<String>()
@@ -37,6 +38,17 @@ class MsgpackRequest(override val URL: String?, override val httpMethod: String?
             argLines.add(argsHeaders.getOrDefault(key, newBody))
         }
         return "[" + java.lang.String.join(",", argLines) + "]"
+    }
+
+    private fun convertToDoubleQuoteString(text: String): String {
+        return if (!text.startsWith('\"')) {
+            var escapedText = StringUtils.replace(text, "\"", "\\\"")
+            escapedText = StringUtils.replace(escapedText, "\n", "\\n")
+            escapedText = StringUtils.replace(escapedText, "\r", "")
+            "\"${escapedText}\""
+        } else {
+            text
+        }
     }
 
 }
