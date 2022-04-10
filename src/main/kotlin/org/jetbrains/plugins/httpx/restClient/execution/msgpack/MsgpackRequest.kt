@@ -25,10 +25,16 @@ class MsgpackRequest(override val URL: String?, override val httpMethod: String?
         if (argsHeaders.isEmpty()) {
             return body
         }
+        var newBody = body
+        if (!contentType.contains("json")) {
+            if (!newBody.startsWith('"')) {
+                newBody = "\"${newBody}\""
+            }
+        }
         val argLines = mutableListOf<String>()
         for (i in 0..argsHeaders.size) {
             val key = "x-args-$i"
-            argLines.add(argsHeaders.getOrDefault(key, body))
+            argLines.add(argsHeaders.getOrDefault(key, newBody))
         }
         return "[" + java.lang.String.join(",", argLines) + "]"
     }
