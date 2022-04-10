@@ -19,10 +19,15 @@ class TarpcRequestConverter : RequestConverter<TarpcRequest>() {
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
-            url = "tarpc://" + httpRequest.getHttpUrl(substitutor)!!
+            url = httpRequest.getHttpUrl(substitutor)!!
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
             requestType = httpRequest.httpMethod
             requestBody = httpRequest.requestBody?.text
+        }
+        url = if (headers.containsKey("Host")) {
+            "tarpc://${headers["Host"]}/${url.trim('/')}"
+        } else {
+            "tarpc://${url}"
         }
         return TarpcRequest(url, requestType, requestBody, headers)
     }

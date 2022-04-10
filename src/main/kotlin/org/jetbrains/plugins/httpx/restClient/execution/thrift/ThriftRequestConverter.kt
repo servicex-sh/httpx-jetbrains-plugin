@@ -19,10 +19,15 @@ class ThriftRequestConverter : RequestConverter<ThriftRequest>() {
         lateinit var headers: Map<String, String>
         ApplicationManager.getApplication().runReadAction {
             val httpRequest = requestPsiPointer.element!!
-            url = "thrift://" + httpRequest.getHttpUrl(substitutor)!!
+            url = httpRequest.getHttpUrl(substitutor)!!
             headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
             requestType = httpRequest.httpMethod
             requestBody = httpRequest.requestBody?.text
+        }
+        url = if (headers.containsKey("Host")) {
+            "thrift://${headers["Host"]}/${url.trim('/')}"
+        } else {
+            "thrift://${url}"
         }
         return ThriftRequest(url, requestType, requestBody, headers)
     }
