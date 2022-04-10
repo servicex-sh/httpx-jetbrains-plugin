@@ -21,6 +21,12 @@ class HttpxHeadersCompletionContributor : CompletionContributor() {
             result.addElement(LookupElementBuilder.create("X-GraphQL-Variables"))
             result.addElement(LookupElementBuilder.create("X-SSH-Private-Key"))
             result.addElement(LookupElementBuilder.create("X-Region-Id"))
+            result.addElement(LookupElementBuilder.create("X-Args-0"))
+            result.addElement(LookupElementBuilder.create("X-Args-1"))
+            result.addElement(LookupElementBuilder.create("X-Args-2"))
+            result.addElement(LookupElementBuilder.create("X-Args-3"))
+            result.addElement(LookupElementBuilder.create("X-Args-4"))
+            result.addElement(LookupElementBuilder.create("X-Args-5"))
         }
     }
 }

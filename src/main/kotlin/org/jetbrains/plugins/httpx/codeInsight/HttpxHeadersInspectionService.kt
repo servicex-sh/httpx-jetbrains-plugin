@@ -19,5 +19,11 @@ class HttpxHeadersInspectionService(project: Project) {
         customHeaders.add("X-Region-Id")
         customHeaders.add("X-GraphQL-Variables")
         customHeaders.add("X-SSH-Private-Key")
+        customHeaders.add("X-Args-0")
+        customHeaders.add("X-Args-1")
+        customHeaders.add("X-Args-2")
+        customHeaders.add("X-Args-3")
+        customHeaders.add("X-Args-4")
+        customHeaders.add("X-Args-5")
     }
 }
