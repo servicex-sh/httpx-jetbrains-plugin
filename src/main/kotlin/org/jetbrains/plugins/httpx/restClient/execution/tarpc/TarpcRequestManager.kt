@@ -8,7 +8,6 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import org.jetbrains.plugins.httpx.json.JsonUtils
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
-import org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftResponse
 import java.io.ByteArrayOutputStream
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
@@ -81,11 +80,11 @@ class TarpcRequestManager(private val project: Project) : Disposable {
                             val okResult = message["Ok"] as Map<String, Any>
                             if (okResult.containsKey(functionName)) {
                                 val resultJson = JsonUtils.objectMapper.writeValueAsString(okResult[functionName])
-                                return ThriftResponse(CommonClientResponseBody.Text(resultJson, JsonBodyFileHint.jsonBodyFileHint("tarpc-result.json")))
+                                return TarpcResponse(CommonClientResponseBody.Text(resultJson, JsonBodyFileHint.jsonBodyFileHint("tarpc-result.json")))
                             }
                         }
                     }
-                    return ThriftResponse(CommonClientResponseBody.Text(text, JsonBodyFileHint.jsonBodyFileHint("tarpc-result.json")))
+                    return TarpcResponse(CommonClientResponseBody.Text(text, JsonBodyFileHint.jsonBodyFileHint("tarpc-result.json")))
                 }
             } catch (e: Exception) {
                 return TarpcResponse(CommonClientResponseBody.Empty(), "Error", e.message)
