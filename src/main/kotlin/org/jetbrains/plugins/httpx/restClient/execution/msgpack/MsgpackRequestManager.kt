@@ -28,7 +28,7 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
                 functionName = functionName.substring(functionName.lastIndexOf('/') + 1)
             }
             var args = arrayOf<Any>()
-            var body = request.body
+            var body = request.jsonArrayBodyWithArgsHeaders()
             if (body.isNotEmpty()) {
                 if (!body.startsWith("[")) {
                     body = "[$body]"
