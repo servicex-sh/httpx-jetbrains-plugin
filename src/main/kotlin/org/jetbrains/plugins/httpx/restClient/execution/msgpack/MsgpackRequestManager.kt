@@ -55,12 +55,17 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
                         "Failed to call remote service, please check function and arguments!"
                     )
                     val response = objectMapper.readValue<List<Any>>(data)
+                    @Suppress("SENSELESS_COMPARISON")
                     if (response.size > 3 && response[3] != null) {
                         val resultJson = JsonUtils.objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(response[3])
                         return MsgpackResponse(CommonClientResponseBody.Text(resultJson, JsonBodyFileHint.jsonBodyFileHint("msgpack-result.json")))
                     } else {
-                        val error = response[2] ?: "Unknown error"
-                        return MsgpackResponse(CommonClientResponseBody.Empty(), "Error", JsonUtils.objectMapper.writeValueAsString(error))
+                        val error = response[2]
+                        if (error != null) {
+                            return MsgpackResponse(CommonClientResponseBody.Empty(), "Error", JsonUtils.objectMapper.writeValueAsString(error))
+                        } else {
+                            return MsgpackResponse(CommonClientResponseBody.Empty())
+                        }
                     }
                 }
             } catch (e: Exception) {
