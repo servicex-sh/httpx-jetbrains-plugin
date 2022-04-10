@@ -28,6 +28,7 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestManager"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
@@ -39,6 +40,7 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
