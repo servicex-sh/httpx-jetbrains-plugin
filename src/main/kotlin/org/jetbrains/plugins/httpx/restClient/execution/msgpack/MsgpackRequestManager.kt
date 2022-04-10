@@ -78,7 +78,7 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
 
     private fun extractData(socketChannel: SocketChannel): ByteArray? {
         val bos = ByteArrayOutputStream()
-        val buf = ByteBuffer.allocate(1024)
+        val buf = ByteBuffer.allocate(30720)
         var readCount: Int
         do {
             readCount = socketChannel.read(buf)
@@ -86,7 +86,7 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
                 return byteArrayOf()
             }
             bos.write(buf.array(), 0, readCount)
-        } while (readCount == 1024)
+        } while (readCount == 30720)
         return bos.toByteArray()
     }
 
