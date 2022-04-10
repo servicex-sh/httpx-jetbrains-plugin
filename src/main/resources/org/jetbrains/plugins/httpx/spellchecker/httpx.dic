@@ -29,3 +29,4 @@ awsput
 awsdelete
 awspost
 tarpc
+msgpack
