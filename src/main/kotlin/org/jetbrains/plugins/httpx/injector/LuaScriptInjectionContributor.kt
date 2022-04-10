@@ -1,5 +1,6 @@
 package org.jetbrains.plugins.httpx.injector
 
+import com.intellij.httpClient.http.request.HttpRequestVariableSubstitutor
 import com.intellij.httpClient.http.request.psi.HttpMessageBody
 import com.intellij.httpClient.http.request.psi.HttpRequest
 import com.intellij.lang.Language
@@ -150,8 +151,16 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
     override fun getInjection(context: PsiElement): Injection? {
         if (luaLanguage != null && context is HttpMessageBody) {
             val httpRequest = context.getParentOfType<HttpRequest>(false)
-            if (httpRequest != null && httpRequest.httpMethod == "EVAL") {
-                return SimpleInjection(luaLanguage!!, prefix, "", null);
+            if (httpRequest != null) {
+                if (httpRequest.httpMethod == "EVAL") {
+                    return SimpleInjection(luaLanguage!!, prefix, "", null);
+                } else {
+                    val contentTypeHeader = httpRequest.getHeaderField("Content-Type")
+                    val contentType = contentTypeHeader?.getValue(HttpRequestVariableSubstitutor.getDefault(context.project))
+                    if (contentType == "text/x-lua") {
+                        return SimpleInjection(luaLanguage!!, "", "", null);
+                    }
+                }
             }
         }
         return null
