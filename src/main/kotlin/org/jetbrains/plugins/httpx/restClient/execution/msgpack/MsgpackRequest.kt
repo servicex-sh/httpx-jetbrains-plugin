@@ -16,4 +16,21 @@ class MsgpackRequest(override val URL: String?, override val httpMethod: String?
         body = textToSend ?: ""
     }
 
+    /**
+     * merge X-Args-0 headers into json array body
+     */
+    fun jsonArrayBodyWithArgsHeaders(): String {
+        val argsHeaders: Map<String, String> = headers.filter { it.key.toLowerCase().startsWith("x-args-") }
+            .mapKeys { it.key.toLowerCase() }
+        if (argsHeaders.isEmpty()) {
+            return body
+        }
+        val argLines = mutableListOf<String>()
+        for (i in 0..argsHeaders.size) {
+            val key = "x-args-$i"
+            argLines.add(argsHeaders.getOrDefault(key, body))
+        }
+        return "[" + java.lang.String.join(",", argLines) + "]"
+    }
+
 }
