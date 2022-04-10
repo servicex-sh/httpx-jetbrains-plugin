@@ -142,6 +142,14 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
                 end
             }    
             """.trimIndent()
+        //language=lua
+        val neovimPrefix = """
+        vim = {
+           api = {
+              
+           }
+        }    
+        """.trimIndent()
     }
 
     init {
@@ -158,7 +166,11 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
                     val contentTypeHeader = httpRequest.getHeaderField("Content-Type")
                     val contentType = contentTypeHeader?.getValue(HttpRequestVariableSubstitutor.getDefault(context.project))
                     if (contentType == "text/x-lua") {
-                        return SimpleInjection(luaLanguage!!, "", "", null);
+                        return if (httpRequest.requestTarget!!.text.contains("nvim_")) {
+                            SimpleInjection(luaLanguage!!, neovimPrefix, "", null)
+                        } else {
+                            SimpleInjection(luaLanguage!!, "", "", null)
+                        }
                     }
                 }
             }
