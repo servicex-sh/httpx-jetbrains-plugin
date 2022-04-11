@@ -2,6 +2,26 @@
 
 # httpx plugin Changelog
 
+## [0.8.0]
+
+### Added
+
+- `JSONRPC` support
+
+```
+### json-rpc over http
+JSONRPC http://127.0.0.1:8080/add
+Content-Type: application/json
+
+[ 1, 2 ]
+
+### json-rpc over tcp
+JSONRPC 127.0.0.1:9080/add
+Content-Type: application/json
+
+[ 1, 2 ]
+```
+
 ## [0.7.1]
 
 ### Added
