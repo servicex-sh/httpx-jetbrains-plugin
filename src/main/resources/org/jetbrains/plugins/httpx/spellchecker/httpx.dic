@@ -32,3 +32,4 @@ tarpc
 msgpack
 neovim
 nvim
+jsonrpc
