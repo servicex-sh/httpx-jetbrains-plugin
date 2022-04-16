@@ -2,6 +2,20 @@
 
 # httpx plugin Changelog
 
+## [0.8.1]
+
+### Added
+
+- NVIM support to execute nvim api
+
+```
+### neovim request
+NVIM nvim_exec_lua
+Content-Type: text/x-lua
+
+vim.api.nvim_command('!ls')
+```
+
 ## [0.8.0]
 
 ### Added
