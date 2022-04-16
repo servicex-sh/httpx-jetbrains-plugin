@@ -142,11 +142,18 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
                 end
             }    
             """.trimIndent()
+
         //language=lua
         val neovimPrefix = """
         vim = {
            api = {
               
+           },
+           fn = {
+           
+           },
+           keymap = {
+           
            }
         }    
         """.trimIndent()
