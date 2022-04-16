@@ -27,6 +27,13 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
             if (functionName.contains("/")) {
                 functionName = functionName.substring(functionName.lastIndexOf('/') + 1)
             }
+            // optimization for nvim nvim_exec_lua
+            if (functionName == "nvim_exec_lua" && "NVIM" == request.httpMethod) {
+                val contentType = request.headers["Content-Type"]
+                if (!request.headers.containsKey("X-Args-1") && "text/x-lua" == contentType) {
+                    request.headers["X-Args-1"] = "[]"
+                }
+            }
             var args = arrayOf<Any>()
             var body = request.jsonArrayBodyWithArgsHeaders()
             if (body.isNotEmpty()) {
@@ -50,13 +57,10 @@ class MsgpackRequestManager(private val project: Project) : Disposable {
                     val content = objectMapper.writeValueAsBytes(msgpackRequest)
                     socketChannel.write(ByteBuffer.wrap(content))
                     val data = extractData(socketChannel) ?: return MsgpackResponse(
-                        CommonClientResponseBody.Empty(),
-                        "Error",
-                        "Failed to call remote service, please check function and arguments!"
+                        CommonClientResponseBody.Empty(), "Error", "Failed to call remote service, please check function and arguments!"
                     )
                     val response = objectMapper.readValue<List<Any>>(data)
-                    @Suppress("SENSELESS_COMPARISON")
-                    if (response.size > 3 && response[3] != null) {
+                    @Suppress("SENSELESS_COMPARISON") if (response.size > 3 && response[3] != null) {
                         val resultJson = Gson().toJson(response[3])
                         return MsgpackResponse(CommonClientResponseBody.Text(resultJson, JsonBodyFileHint.jsonBodyFileHint("msgpack-result.json")))
                     } else {
