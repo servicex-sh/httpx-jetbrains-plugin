@@ -14,6 +14,8 @@ The following features are available for httpx plugin:
 - Memcache: set/get/delete
 - Redis: rset/hmset/eval, and Pub/Sub
 - SSH: execute script on remote host
+- msgpack-rpc: msgpack/Neovim RPC
+- json-rpc: HTTP and TCP protocols
 - Live templates: graphql, kafka, email
 - JSON Schema support:
     * Content-Type: application/cloudevents+json
@@ -109,7 +111,6 @@ subscription { greetings }
 * JSON Schema URL:
 
 ```
-
 X-JSON-Schema: https://json.schemastore.org/vsconfig.json
 ```
 
