@@ -33,7 +33,7 @@ class MsgpackRequestConverter : RequestConverter<MsgpackRequest>() {
                 "msgpack://127.0.0.1:6666/${url}"
             }
         }
-        return MsgpackRequest(url, requestType, requestBody, headers)
+        return MsgpackRequest(url, requestType, requestBody, headers.toMutableMap())
     }
 
     override fun toExternalFormInner(request: MsgpackRequest, fileName: String?): String {

@@ -5,7 +5,7 @@ import org.jetbrains.plugins.httpx.json.JsonUtils.convertToDoubleQuoteString
 import java.net.URI
 
 @Suppress("UnstableApiUsage")
-class MsgpackRequest(override val URL: String?, override val httpMethod: String?, override val textToSend: String?, private val headers: Map<String, String>) :
+class MsgpackRequest(override val URL: String?, override val httpMethod: String?, override val textToSend: String?, val headers: MutableMap<String, String>) :
     CommonClientRequest {
     val contentType: String
     val uri: URI
