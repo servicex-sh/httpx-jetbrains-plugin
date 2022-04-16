@@ -8,7 +8,7 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class MsgpackRequestExecutionSupport : RequestExecutionSupport<MsgpackRequest> {
     override fun canProcess(requestContext: RequestContext): Boolean {
-        return requestContext.method == "MSGPACK"
+        return requestContext.method == "MSGPACK" || requestContext.method == "NVIM"
     }
 
     override fun getRequestConverter(): RequestConverter<MsgpackRequest> {
@@ -20,6 +20,6 @@ class MsgpackRequestExecutionSupport : RequestExecutionSupport<MsgpackRequest> {
     }
 
     override fun supportedMethods(): Collection<String> {
-        return listOf("MSGPACK")
+        return listOf("MSGPACK", "NVIM")
     }
 }
