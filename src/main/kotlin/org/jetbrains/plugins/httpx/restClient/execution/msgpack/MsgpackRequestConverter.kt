@@ -27,7 +27,11 @@ class MsgpackRequestConverter : RequestConverter<MsgpackRequest>() {
         url = if (headers.containsKey("Host")) {
             "msgpack://${headers["Host"]}/${url.trim('/')}"
         } else {
-            "msgpack://${url}"
+            if (url.contains(':')) {
+                "msgpack://${url}"
+            } else {
+                "msgpack://127.0.0.1:6666/${url}"
+            }
         }
         return MsgpackRequest(url, requestType, requestBody, headers)
     }
