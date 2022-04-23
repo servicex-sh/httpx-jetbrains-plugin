@@ -18,8 +18,10 @@ class SubscribeRequest(override val URL: String?, override val httpMethod: Strin
         topic = URL?.trim()?.trim('/')
         contentType = headers.getOrDefault("Content-Type", "text/plain")
         acceptType = headers.getOrDefault("Accept", "text/plain")
-        uri = headers["Host"]?.let {
-            URI.create(it)
+        uri = if (headers.containsKey("URI")) {
+            URI.create(headers["URI"]!!)
+        } else {
+            URI.create(headers["Host"]!!)
         }
     }
 
