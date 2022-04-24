@@ -18,14 +18,10 @@ object JsonUtils {
         .setSerializationInclusion(JsonInclude.Include.NON_NULL)
 
     fun convertToDoubleQuoteString(text: String): String {
-        return if (!text.startsWith('\"')) {
-            var escapedText = StringUtils.replace(text, "\"", "\\\"")
-            escapedText = StringUtils.replace(escapedText, "\n", "\\n")
-            escapedText = StringUtils.replace(escapedText, "\r", "")
-            "\"${escapedText}\""
-        } else {
-            text
-        }
+        var escapedText = StringUtils.replace(text, "\"", "\\\"")
+        escapedText = StringUtils.replace(escapedText, "\n", "\\n")
+        escapedText = StringUtils.replace(escapedText, "\r", "")
+        return "\"${escapedText}\""
     }
 
     /**
