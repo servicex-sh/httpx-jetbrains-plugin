@@ -20,6 +20,7 @@ class JsonRestRequestConverter : HttpRequestConverter() {
                 val schema = requestPsiPointer.element!!.requestTarget?.scheme?.text ?: "http"
                 request.urlBase = "${schema}://${request.urlBase}"
             }
+            val contentType = request.getHeaderValue("Content-Type", "application/json");
             val httpHeaders = request.headers
             val jsonObjectType = httpHeaders.any { it.key == "X-Body-Name" }
             if (jsonObjectType) { // convert to json object
@@ -32,7 +33,12 @@ class JsonRestRequestConverter : HttpRequestConverter() {
                         builder.append('"').append(name).append('"').append(':').append(JsonUtils.wrapJsonValue(value)).append(",")
                     }
                 val bodyName = request.getHeaderValue("X-Body-Name", "")
-                builder.append('"').append(bodyName).append('"').append(":").append(JsonUtils.convertToDoubleQuoteString(request.textToSend))
+                builder.append('"').append(bodyName).append('"').append(":")
+                if (contentType.contains("json")) {
+                    builder.append(request.textToSend)
+                } else {
+                    builder.append(JsonUtils.convertToDoubleQuoteString(request.textToSend))
+                }
                 builder.append("}")
                 request.textToSend = builder.toString()
             } else {
@@ -40,7 +46,11 @@ class JsonRestRequestConverter : HttpRequestConverter() {
                 if (jsonArrayType) { // convert to array
                     val argsHeaders = httpHeaders.filter { it.key.startsWith("X-Args-") }
                     if (argsHeaders.isNotEmpty()) {
-                        val newBody = JsonUtils.convertToDoubleQuoteString(request.textToSend)
+                        val newBody = if (contentType.contains("json")) {
+                            request.textToSend
+                        } else {
+                            JsonUtils.convertToDoubleQuoteString(request.textToSend)
+                        }
                         val argLines = mutableListOf<String>()
                         for (i in 0..argsHeaders.size) {
                             val key = "X-Args-$i"
