@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils
 
 
 object JsonUtils {
-    val objectMapper = ObjectMapper()
+    val objectMapper: ObjectMapper = ObjectMapper()
         .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
         .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -25,6 +25,25 @@ object JsonUtils {
             "\"${escapedText}\""
         } else {
             text
+        }
+    }
+
+    /**
+     * JSON Type object, array, number, string, Boolean ( true or false ), or null
+     */
+    fun wrapJsonValue(value: String): String {
+        return if (value == "true" || value == "false" || value == "null") {
+            value
+        } else if (value.startsWith('\"') || value.startsWith('[') || value.startsWith('{')) {
+            value
+        } else if (value.contains('\"')) {
+            convertToDoubleQuoteString(value)
+        } else { // text or number
+            if (value.toDoubleOrNull() != null) {
+                value
+            } else {
+                "\"${value}\""
+            }
         }
     }
 }
