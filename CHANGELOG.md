@@ -2,6 +2,33 @@
 
 # httpx plugin Changelog
 
+## [0.9.0]
+
+### Added
+
+- REST method added to make language injection easy for JSON Array and Object: https://servicex.sh/docs/tutorial-basics/http-testing
+
+```
+### registering a new schema to Spring Cloud Schema Registry Server
+REST http://localhost:8990/
+X-Args-subject: subject1
+X-Args-format: avro
+X-Body-Name: definition
+Content-Type: text/avsc
+
+{
+  "type": "record",
+  "namespace": "com.example.messages.avro",
+  "name": "Subject1",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    }
+  ]
+}  
+```
+
 ## [0.8.1]
 
 ### Added
