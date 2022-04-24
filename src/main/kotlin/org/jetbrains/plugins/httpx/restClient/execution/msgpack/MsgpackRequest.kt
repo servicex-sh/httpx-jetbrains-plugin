@@ -1,6 +1,7 @@
 package org.jetbrains.plugins.httpx.restClient.execution.msgpack
 
 import com.intellij.httpClient.execution.common.CommonClientRequest
+import org.jetbrains.plugins.httpx.json.JsonUtils
 import org.jetbrains.plugins.httpx.json.JsonUtils.convertToDoubleQuoteString
 import java.net.URI
 
@@ -35,7 +36,12 @@ class MsgpackRequest(override val URL: String?, override val httpMethod: String?
         val argLines = mutableListOf<String>()
         for (i in 0..argsHeaders.size) {
             val key = "x-args-$i"
-            argLines.add(argsHeaders.getOrDefault(key, newBody))
+            val headerValue = argsHeaders.getOrDefault(key, "")
+            if (headerValue.isNotEmpty()) {
+                argLines.add(JsonUtils.wrapJsonValue(headerValue))
+            } else {
+                argLines.add(newBody)
+            }
         }
         return "[" + java.lang.String.join(",", argLines) + "]"
     }
