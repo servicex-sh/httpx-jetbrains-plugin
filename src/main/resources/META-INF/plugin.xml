@@ -43,6 +43,7 @@
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestExecutionSupport"/>
         <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestExecutionSupport"/>
+        <httpClient.RequestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.rest.JsonRestRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
