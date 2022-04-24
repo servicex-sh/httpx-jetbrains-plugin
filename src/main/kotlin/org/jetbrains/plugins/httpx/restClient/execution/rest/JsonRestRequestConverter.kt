@@ -23,6 +23,7 @@ class JsonRestRequestConverter : HttpRequestConverter() {
             val contentType = request.getHeaderValue("Content-Type", "application/json");
             val httpHeaders = request.headers
             val jsonObjectType = httpHeaders.any { it.key == "X-Body-Name" }
+            val jsonArrayType = httpHeaders.any { it.key.startsWith("X-Args-") }
             if (jsonObjectType) { // convert to json object
                 val builder = StringBuilder()
                 builder.append("{")
@@ -41,32 +42,31 @@ class JsonRestRequestConverter : HttpRequestConverter() {
                 }
                 builder.append("}")
                 request.textToSend = builder.toString()
-            } else {
-                val jsonArrayType = httpHeaders.any { it.key.startsWith("X-Args-") }
-                if (jsonArrayType) { // convert to array
-                    val argsHeaders = httpHeaders.filter { it.key.startsWith("X-Args-") }
-                    if (argsHeaders.isNotEmpty()) {
-                        val newBody = if (contentType.contains("json")) {
-                            request.textToSend
-                        } else {
-                            JsonUtils.convertToDoubleQuoteString(request.textToSend)
-                        }
-                        val argLines = mutableListOf<String>()
-                        for (i in 0..argsHeaders.size) {
-                            val key = "X-Args-$i"
-                            val headerValue = request.getHeaderValue(key, "")
-                            if (headerValue.isNotEmpty()) {
-                                argLines.add(JsonUtils.wrapJsonValue(headerValue))
-                            } else {
-                                argLines.add(newBody)
-                            }
-                        }
-                        request.textToSend = "[" + java.lang.String.join(",", argLines) + "]"
+            } else if (jsonArrayType) { // convert to array
+                val argsHeaders = httpHeaders.filter { it.key.startsWith("X-Args-") }
+                if (argsHeaders.isNotEmpty()) {
+                    val newBody = if (contentType.contains("json")) {
+                        request.textToSend
+                    } else {
+                        JsonUtils.convertToDoubleQuoteString(request.textToSend)
                     }
+                    val argLines = mutableListOf<String>()
+                    for (i in 0..argsHeaders.size) {
+                        val key = "X-Args-$i"
+                        val headerValue = request.getHeaderValue(key, "")
+                        if (headerValue.isNotEmpty()) {
+                            argLines.add(JsonUtils.wrapJsonValue(headerValue))
+                        } else {
+                            argLines.add(newBody)
+                        }
+                    }
+                    request.textToSend = "[" + java.lang.String.join(",", argLines) + "]"
                 }
             }
-            request.headers.add(RestClientRequest.KeyValuePair("Content-Type", "application/json"))
-            request.headers.removeIf { it.key.startsWith("X-Args-") || it.key.startsWith("X-Body-Name") }
+            if (jsonObjectType || jsonArrayType) {
+                request.headers.removeIf { it.key.startsWith("X-Args-") || it.key == "X-Body-Name" || it.key == "Content-Type" }
+                request.headers.add(RestClientRequest.KeyValuePair("Content-Type", "application/json"))
+            }
         }
         return request
     }
