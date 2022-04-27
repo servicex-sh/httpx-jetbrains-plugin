@@ -21,7 +21,7 @@ class MemcacheRequest(
         contentType = headers.getOrDefault("Content-Type", "text/plain")
         var memcacheURI = if (headers.containsKey("URI")) {
             headers["URI"]!!
-        } else if (headers.containsKey("HOST")) {
+        } else if (headers.containsKey("Host")) {
             headers["Host"]!!
         } else {
             "memcache://localhost:11211"

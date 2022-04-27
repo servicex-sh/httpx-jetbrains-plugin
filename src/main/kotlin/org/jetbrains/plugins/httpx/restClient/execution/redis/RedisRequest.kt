@@ -21,7 +21,7 @@ class RedisRequest(
         contentType = headers.getOrDefault("Content-Type", "text/plain")
         var redisURI = if (headers.containsKey("URI")) {
             headers["URI"]!!
-        } else if (headers.containsKey("HOST")) {
+        } else if (headers.containsKey("Host")) {
             headers["Host"]!!
         } else {
             "redis://localhost:6379"
