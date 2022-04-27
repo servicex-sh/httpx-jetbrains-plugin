@@ -59,6 +59,7 @@ dependencies {
     implementation("com.spotify:folsom:1.13.1")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("io.lettuce:lettuce-core:6.1.8.RELEASE")
+    implementation("redis.clients:jedis:4.2.2")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
