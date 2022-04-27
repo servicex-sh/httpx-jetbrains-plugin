@@ -10,6 +10,7 @@ import io.lettuce.core.ScriptOutputType
 import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
+import redis.clients.jedis.Jedis
 
 @Suppress("UnstableApiUsage")
 class RedisRequestManager(private val project: Project) : Disposable {
@@ -21,6 +22,9 @@ class RedisRequestManager(private val project: Project) : Disposable {
         try {
             val redisClient = RedisClient.create(request.uri.toString())
             val method = request.httpMethod!!
+            if (method == "LOAD") {
+                return loadRedisFunctions(request);
+            }
             val result = redisClient.connect().use {
                 val commands = it.sync()
                 when (method) {
@@ -66,6 +70,27 @@ class RedisRequestManager(private val project: Project) : Disposable {
                 }
             } else {
                 RedisResponse()
+            }
+        } catch (e: Exception) {
+            return RedisResponse(CommonClientResponseBody.Empty(), "Error", e.message)
+        }
+    }
+
+    private fun loadRedisFunctions(request: RedisRequest): CommonClientResponse {
+        try {
+            val redisUri = request.uri
+            var luaScript = request.bodyText()
+            val libName = request.key
+            if (!luaScript.startsWith("#!lua")) {
+                luaScript = "#!lua name=$libName\n$luaScript"
+            }
+            Jedis(redisUri.toString()).use { jedis ->
+                val result = jedis.functionLoadReplace(luaScript)
+                return if (result == null || result != libName) {
+                    RedisResponse(CommonClientResponseBody.Empty(), "Error", result)
+                } else {
+                    RedisResponse(CommonClientResponseBody.Text(result, TextBodyFileHint.textBodyFileHint("redis-result.txt")))
+                }
             }
         } catch (e: Exception) {
             return RedisResponse(CommonClientResponseBody.Empty(), "Error", e.message)
