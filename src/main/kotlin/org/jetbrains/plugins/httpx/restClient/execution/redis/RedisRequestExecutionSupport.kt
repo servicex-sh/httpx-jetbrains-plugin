@@ -8,7 +8,7 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class RedisRequestExecutionSupport : RequestExecutionSupport<RedisRequest> {
     companion object {
-        val redisMethods = listOf("RSET", "HMSET", "EVAL")
+        val redisMethods = listOf("RSET", "HMSET", "EVAL", "LOAD")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
