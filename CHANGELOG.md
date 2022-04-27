@@ -2,6 +2,24 @@
 
 # httpx plugin Changelog
 
+## [0.9.1]
+
+### Added
+             
+- Add LOAD method for Redis 7.0 functions: https://redis.io/docs/manual/programmability/functions-intro/ 
+            
+```
+### Redis 7.0 functions
+LOAD mylib
+Content-Type: text/x-lua
+  
+#!lua name=mylib  
+redis.register_function(
+  'knockknock',
+  function() return 'Who\'s there?' end
+)
+```
+
 ## [0.9.0]
 
 ### Added
