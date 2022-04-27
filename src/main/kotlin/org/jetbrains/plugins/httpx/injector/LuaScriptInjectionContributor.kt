@@ -67,6 +67,9 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
                 end,
                 acl_check_cmd = function(command, ...)
             
+                end,
+                register_function = function(command, ...)
+                
                 end
             }
             
@@ -167,7 +170,7 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
         if (luaLanguage != null && context is HttpMessageBody) {
             val httpRequest = context.getParentOfType<HttpRequest>(false)
             if (httpRequest != null) {
-                if (httpRequest.httpMethod == "EVAL") {
+                if (httpRequest.httpMethod == "EVAL" || httpRequest.httpMethod == "LOAD") {
                     return SimpleInjection(luaLanguage!!, prefix, "", null);
                 } else {
                     val contentTypeHeader = httpRequest.getHeaderField("Content-Type")
