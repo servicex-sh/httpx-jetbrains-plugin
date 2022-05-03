@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.jcraft.jsch.JSch
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
+import java.io.File
 import java.net.URI
 import java.nio.charset.StandardCharsets
 
@@ -47,14 +48,25 @@ class SSHRequestManager(private val project: Project) : Disposable {
                 session = jsch.getSession(userName, sshURI.host, sshPort)
                 session.setPassword(password)
             } else { //login by private key
-                var privateKey = request.getHeader("X-SSH-Private-Key")
-                if (privateKey == null) {
-                    privateKey = System.getProperty("user.home") + "/.ssh/id_rsa"
+                val privateKey = request.getHeader("X-SSH-Private-Key")
+                if (privateKey != null) {
+                    if (!File(privateKey).exists()) {
+                        return SSHResponse(CommonClientResponseBody.Empty(), "Error", "Failed to load SSH private key: $privateKey")
+                    } else {
+                        jsch.addIdentity(privateKey)
+                    }
+                } else {
+                    // load private keys from $HOME/.ssh/
+                    val sshDir = File(System.getProperty("user.home"), ".ssh")
+                    if (sshDir.exists()) {
+                        val privateFiles = sshDir.listFiles { _: File?, name: String -> name.startsWith("id_") && !name.contains(".") }
+                        if (privateFiles != null && privateFiles.isNotEmpty()) {
+                            for (privateFile in privateFiles) {
+                                jsch.addIdentity(privateFile.absolutePath)
+                            }
+                        }
+                    }
                 }
-                if (!java.io.File(privateKey).exists()) {
-                    return SSHResponse(CommonClientResponseBody.Empty(), "Error", "Failed to load SSH private key: $privateKey")
-                }
-                jsch.addIdentity(privateKey)
                 session = jsch.getSession(userName, sshURI.host, sshPort)
             }
             session.setConfig("StrictHostKeyChecking", "no")
