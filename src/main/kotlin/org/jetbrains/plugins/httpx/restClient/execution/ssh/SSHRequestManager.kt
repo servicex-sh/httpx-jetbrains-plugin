@@ -5,6 +5,7 @@ import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.jcraft.jsch.JSch
+import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
 import java.net.URI
 import java.nio.charset.StandardCharsets
@@ -67,7 +68,12 @@ class SSHRequestManager(private val project: Project) : Disposable {
                 Thread.sleep(100)
             }
             val content = responseStream.toString(StandardCharsets.UTF_8)
-            return SSHResponse(CommonClientResponseBody.Text(content, TextBodyFileHint.textBodyFileHint("ssh-result.txt")))
+            val outputContentType = request.getHeader("Accept");
+            return if (outputContentType != null && outputContentType.contains("json")) {
+                SSHResponse(CommonClientResponseBody.Text(content, JsonBodyFileHint.jsonBodyFileHint("ssh-result.json")))
+            } else {
+                SSHResponse(CommonClientResponseBody.Text(content, TextBodyFileHint.textBodyFileHint("ssh-result.txt")))
+            }
         } catch (e: Exception) {
             return SSHResponse(CommonClientResponseBody.Empty(), "Error", e.message)
         } finally {
