@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.9.2]
+
+### Optimized
+
+- Load private keys from $HOME/.ssh for SSH method 
+
 ## [0.9.1]
 
 ### Added
