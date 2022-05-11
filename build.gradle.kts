@@ -40,32 +40,32 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.75.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.17"))
+    implementation(platform("io.netty:netty-bom:4.1.77.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.18"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.1.0") {
+    implementation("org.apache.kafka:kafka-clients:3.2.0") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.14.2")
-    implementation("io.nats:jnats:2.14.0")
+    implementation("io.nats:jnats:2.15.0")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.1")
     implementation("com.jcraft:jsch:0.1.55")
-    implementation("com.spotify:folsom:1.13.1")
+    implementation("com.spotify:folsom:1.14.0")
     implementation("org.zeromq:jeromq:0.5.2")
     implementation("io.lettuce:lettuce-core:6.1.8.RELEASE")
-    implementation("redis.clients:jedis:4.2.2")
+    implementation("redis.clients:jedis:4.2.3")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
     implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.4")
     implementation("org.apache.bookkeeper:circe-checksum:4.14.4@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:2.9.2") {
+    implementation("org.apache.pulsar:pulsar-client-original:2.10.0") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -84,10 +84,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.2")
-    implementation("software.amazon.awssdk:aws-core:2.17.166")
-    implementation("software.amazon.awssdk:sns:2.17.166")
-    implementation("software.amazon.awssdk:sqs:2.17.166")
-    implementation("software.amazon.awssdk:eventbridge:2.17.166")
+    implementation("software.amazon.awssdk:aws-core:2.17.188")
+    implementation("software.amazon.awssdk:sns:2.17.188")
+    implementation("software.amazon.awssdk:sqs:2.17.188")
+    implementation("software.amazon.awssdk:eventbridge:2.17.188")
 }
 
 configurations.implementation {
