@@ -21,6 +21,7 @@ import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
+import org.eclipse.paho.mqttv5.common.packet.MqttProperties
 import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun.readAliyunAccessToken
 import org.jetbrains.plugins.httpx.restClient.execution.aws.AWS
@@ -189,7 +190,12 @@ class PublishRequestManager(private val project: Project) : Disposable {
                 isCleanStart = true
             }
             mqttClient.connect(connOpts)
-            mqttClient.publish(request.topic, MqttMessage(request.bodyBytes()))
+            val mqttMessage = MqttMessage(request.bodyBytes()).apply {
+                properties = MqttProperties().apply {
+                    contentType = request.contentType
+                }
+            }
+            mqttClient.publish(request.topic, mqttMessage)
         } catch (e: Exception) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
         } finally {
