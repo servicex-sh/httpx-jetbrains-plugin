@@ -16,7 +16,7 @@ class PublishRequest(
     CommonClientRequest {
     var topic: String? = null
     var uri: URI? = null
-    var contentType: String? = null
+    val contentType: String
 
     init {
         topic = topicText?.trim()?.trim('/')
