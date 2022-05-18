@@ -11,7 +11,7 @@ class PublishRequest(
     override val httpMethod: String?,
     override val textToSend: String?,
     private val topicText: String?,
-    private val headers: Map<String, String>
+    val headers: Map<String, String>
 ) :
     CommonClientRequest {
     var topic: String? = null
@@ -38,6 +38,19 @@ class PublishRequest(
 
     fun getHeader(name: String): String? {
         return headers[name]
+    }
+
+    fun getMsgHeaders(): Map<String, String> {
+        if (this.headers.isNotEmpty()) {
+            val msgHeaders = mutableMapOf<String, String>()
+            this.headers.forEach { (name, value) ->
+                if (name.startsWith("X-")) {
+                    msgHeaders[name.substring(2)] = value;
+                }
+            }
+            return msgHeaders
+        }
+        return emptyMap()
     }
 
     fun getBasicAuthorization(): List<String>? {
