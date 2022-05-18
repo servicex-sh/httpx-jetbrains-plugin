@@ -10,6 +10,7 @@ import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.util.queryParameters
+import com.rabbitmq.client.AMQP
 import com.rabbitmq.client.ConnectionFactory
 import io.lettuce.core.RedisClient
 import io.nats.client.Nats
@@ -17,11 +18,13 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.pulsar.client.api.PulsarClient
+import org.apache.pulsar.client.api.TypedMessageBuilder
 import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
 import org.eclipse.paho.mqttv5.common.MqttMessage
 import org.eclipse.paho.mqttv5.common.packet.MqttProperties
+import org.eclipse.paho.mqttv5.common.packet.UserProperty
 import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun.readAliyunAccessToken
 import org.jetbrains.plugins.httpx.restClient.execution.aws.AWS
@@ -114,14 +117,15 @@ class PublishRequestManager(private val project: Project) : Disposable {
         // kafka client use Class.forName(trimmed, true, Utils.getContextOrKafkaClassLoader()) to get the Class object
         Thread.currentThread().contextClassLoader = null
         val sender = KafkaSender.create(SenderOptions.create<String?, String>(props))
-        return sender.send(
-            Mono.just(
-                SenderRecord.create<String?, String, Any?>(
-                    request.topic, partition, System.currentTimeMillis(),
-                    key, request.textToSend, null
-                )
-            )
+        val senderRecord = SenderRecord.create<String?, String, Any?>(
+            request.topic, partition, System.currentTimeMillis(),
+            key, request.textToSend, null
         )
+        request.getMsgHeaders().forEach { (name, value) ->
+            senderRecord.headers().add(name, value.toByteArray())
+        }
+        senderRecord.headers().add("Content-Type", request.headers.getOrDefault("Content-Type", "text/plain").toByteArray())
+        return sender.send(Mono.just(senderRecord))
             .map {
                 PublishResponse()
             }
@@ -141,8 +145,14 @@ class PublishRequestManager(private val project: Project) : Disposable {
             .connectionFactory(connectionFactory)
             .resourceManagementScheduler(Schedulers.immediate())
         val rabbitSender = RabbitFlux.createSender(senderOptions)
+        val contentType: String = request.headers.getOrDefault("Content-Type", "text/plain")
+        val amqpHeaders: MutableMap<String, Any> = HashMap()
+        request.getMsgHeaders().forEach { (name, value) ->
+            amqpHeaders[name] = value
+        }
+        val basicProperties = AMQP.BasicProperties.Builder().headers(amqpHeaders).contentType(contentType).build()
         return rabbitSender
-            .send(Mono.just(OutboundMessage("", request.topic!!, request.bodyBytes())))
+            .send(Mono.just(OutboundMessage("", request.topic!!, basicProperties, request.bodyBytes())))
             .map {
                 PublishResponse()
             }.onErrorResume {
@@ -193,6 +203,9 @@ class PublishRequestManager(private val project: Project) : Disposable {
             val mqttMessage = MqttMessage(request.bodyBytes()).apply {
                 properties = MqttProperties().apply {
                     contentType = request.contentType
+                }
+                request.getMsgHeaders().forEach { (name, value) ->
+                    properties.userProperties.add(UserProperty(name, value))
                 }
             }
             mqttClient.publish(request.topic, mqttMessage)
@@ -394,7 +407,12 @@ class PublishRequestManager(private val project: Project) : Disposable {
         try {
             PulsarClient.builder().serviceUrl(request.uri!!.toString()).build().use { client ->
                 client.newProducer().topic(request.topic).create().use { producer ->
-                    val msgId = producer.send(request.bodyBytes())
+                    val builder: TypedMessageBuilder<ByteArray> = producer.newMessage().value(request.bodyBytes())
+                        .property("Content-Type", request.headers.getOrDefault("Content-Type", "text/plan"))
+                    request.getMsgHeaders().forEach { (name, value) ->
+                        builder.property(name, value)
+                    }
+                    val msgId = builder.send()
                     return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, msgId.toString())
                 }
             }
