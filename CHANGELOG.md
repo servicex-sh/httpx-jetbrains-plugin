@@ -2,6 +2,24 @@
 
 # httpx plugin Changelog
 
+## [0.10.0]
+
+### Added
+
+- Add 'X-msg-header' custom message headers for PUB method
+
+```
+### send pulsar message
+PUB test-topic
+Host: pulsar://localhost:6650
+Content-Type: application/json
+X-Custom-Header: header_value
+
+{
+  "name": "Jackie"
+}
+```
+
 ## [0.9.2]
 
 ### Optimized
