@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.10.1]
+
+### Added
+
+- Compatible with JetBrains IDEs 2022.*
+
 ## [0.10.0]
 
 ### Added
@@ -24,14 +30,14 @@ X-Custom-Header: header_value
 
 ### Optimized
 
-- Load private keys from $HOME/.ssh for SSH method 
+- Load private keys from $HOME/.ssh for SSH method
 
 ## [0.9.1]
 
 ### Added
-             
-- Add LOAD method for Redis 7.0 functions: https://redis.io/docs/manual/programmability/functions-intro/ 
-            
+
+- Add LOAD method for Redis 7.0 functions: https://redis.io/docs/manual/programmability/functions-intro/
+
 ```
 ### Redis 7.0 functions
 LOAD mylib
