@@ -47,7 +47,7 @@ class XJavaTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         if (schemaStore.containsKey(javaType)) {
             return schemaStore[javaType]
         }
-        val targetPsiClasses = JavaFullClassNameIndex.getInstance().get(javaType.hashCode(), project, GlobalSearchScope.allScope(project))
+        val targetPsiClasses = JavaFullClassNameIndex.getInstance().get(javaType, project, GlobalSearchScope.allScope(project))
         if (targetPsiClasses != null && targetPsiClasses.isNotEmpty()) {
             val psiClass = targetPsiClasses.first()
             val modificationStamp = psiClass.containingFile.modificationStamp
@@ -94,7 +94,7 @@ class XJavaTypeJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 "time"
             } else if (typeName == "java.lang.String") {
                 "string"
-            } else if (name.toLowerCase().contains("email")) {
+            } else if (name.lowercase().contains("email")) {
                 "email"
             } else if (typeName.contains("List<")) {
                 "array"
