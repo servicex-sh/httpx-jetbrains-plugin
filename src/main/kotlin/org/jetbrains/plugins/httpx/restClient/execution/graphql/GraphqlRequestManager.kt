@@ -98,7 +98,7 @@ class GraphqlRequestManager(private val project: Project) : Disposable {
                                 } else if ("next" == type) { //result received
                                     val payload = response["payload"]
                                     val jsonText: String = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(payload)
-                                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(jsonText + "\n\n"))
+                                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(jsonText + "\n\n"))
                                     fluxSink.next(jsonText)
                                 } else if ("complete" == type) {  // query completed
                                     outbound.sendClose().subscribe()
