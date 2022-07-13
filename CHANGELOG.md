@@ -2,6 +2,14 @@
 
 # httpx plugin Changelog
 
+## [0.11.0]
+
+### Added
+
+- Compatible with JetBrains IDEs 2022.2
+- Disable GRAPHQL method because of built-in by JetBrains
+- Dependencies updated
+
 ## [0.10.1]
 
 ### Added
