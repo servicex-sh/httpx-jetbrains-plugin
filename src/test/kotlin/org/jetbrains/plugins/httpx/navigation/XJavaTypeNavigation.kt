@@ -16,7 +16,7 @@ class XJavaTypeNavigation : DirectNavigationProvider {
             val httpHeader = element.parentOfType<HttpHeaderField>()!!
             if (httpHeader.name == "X-Java-Type") {
                 val javaType = element.text
-                val targetPsiClasses = JavaFullClassNameIndex.getInstance().get(javaType.hashCode(), element.project, GlobalSearchScope.allScope(element.project))
+                val targetPsiClasses = JavaFullClassNameIndex.getInstance().get(javaType, element.project, GlobalSearchScope.allScope(element.project))
                 if (targetPsiClasses != null && targetPsiClasses.isNotEmpty()) {
                     return targetPsiClasses.first()
                 }
