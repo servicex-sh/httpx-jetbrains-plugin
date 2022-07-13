@@ -88,7 +88,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             mqttClient.setCallback(object : AbstractMqttCallback() {
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     val body = String(message.payload, StandardCharsets.UTF_8)
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(body)))
                 }
             })
             val connOpts = MqttConnectionOptions().apply {
@@ -116,7 +116,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             nc = Nats.connect(request.uri.toString())
             val dispatcher = nc.createDispatcher {
                 val body = it.data.toString(StandardCharsets.UTF_8)
-                shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
+                shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(body)))
             }
             request.topic!!.split("[,;]".toRegex()).forEach {
                 if (it.isNotEmpty()) {
@@ -146,7 +146,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             reactiveSubscriber.subscribe(request.topic).subscribe()
             reactiveSubscriber.observeChannels()
                 .doOnNext {
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(it.message)))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(it.message)))
                 }
                 .doOnError {
                     shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(it))
@@ -182,7 +182,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                 }
                 .subscribe {
                     val data = String(it.body, StandardCharsets.UTF_8)
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(data)))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(data)))
                 }
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
@@ -209,7 +209,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                     try {
                         val data = String(msg.data, StandardCharsets.UTF_8)
                         consumer.acknowledge(msg)
-                        shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(data)))
+                        shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(data)))
                     } catch (e: Exception) {
                         consumer.negativeAcknowledge(msg)
                         shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
@@ -263,7 +263,7 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
                     fluxDisposable?.dispose()
                 }
                 .subscribe {
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(it.value())))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(it.value())))
                 }
         } catch (e: Exception) {
             shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))

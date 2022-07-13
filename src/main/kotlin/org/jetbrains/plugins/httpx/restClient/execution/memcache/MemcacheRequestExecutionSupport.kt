@@ -23,4 +23,7 @@ class MemcacheRequestExecutionSupport : RequestExecutionSupport<MemcacheRequest>
     override fun supportedMethods(): Collection<String> {
         return listOf("MEMCACHE")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

@@ -23,4 +23,7 @@ class MailRequestExecutionSupport : RequestExecutionSupport<MailRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("MAIL")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

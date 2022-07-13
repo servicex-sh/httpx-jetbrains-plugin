@@ -22,4 +22,7 @@ class ThriftRequestExecutionSupport : RequestExecutionSupport<ThriftRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("THRIFT")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

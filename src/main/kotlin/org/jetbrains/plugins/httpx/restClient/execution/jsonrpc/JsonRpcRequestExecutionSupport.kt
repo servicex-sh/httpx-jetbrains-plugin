@@ -22,4 +22,9 @@ class JsonRpcRequestExecutionSupport : RequestExecutionSupport<JsonRpcRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("JSONRPC")
     }
+
+    override val needsScheme: Boolean
+        get() = true
+    override val supportedSchemes: List<String>
+        get() = listOf("http", "https", "tcp")
 }

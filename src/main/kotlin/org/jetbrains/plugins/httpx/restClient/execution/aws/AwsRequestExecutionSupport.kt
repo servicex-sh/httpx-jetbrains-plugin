@@ -8,7 +8,7 @@ import com.intellij.httpClient.execution.common.RequestHandler
 @Suppress("UnstableApiUsage")
 class AwsRequestExecutionSupport : RequestExecutionSupport<AwsRequest> {
     companion object {
-        val AWS_METHODS = listOf("AWS","AWSPUT","AWSDELETE","AWSPOST")
+        val AWS_METHODS = listOf("AWS", "AWSPUT", "AWSDELETE", "AWSPOST")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
@@ -26,4 +26,9 @@ class AwsRequestExecutionSupport : RequestExecutionSupport<AwsRequest> {
     override fun supportedMethods(): Collection<String> {
         return AWS_METHODS
     }
+
+    override val needsScheme: Boolean
+        get() = true
+    override val supportedSchemes: List<String>
+        get() = listOf("https")
 }

@@ -22,4 +22,7 @@ class SSHRequestExecutionSupport : RequestExecutionSupport<SSHRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("SSH")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

@@ -26,4 +26,9 @@ class AliyunRequestExecutionSupport : RequestExecutionSupport<AliyunRequest> {
     override fun supportedMethods(): Collection<String> {
         return ALIYUN_METHODS
     }
+
+    override val needsScheme: Boolean
+        get() = true
+    override val supportedSchemes: List<String>
+        get() = listOf("https")
 }

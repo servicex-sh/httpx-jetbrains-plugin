@@ -4,9 +4,6 @@ import com.intellij.httpClient.execution.common.RequestContext
 import com.intellij.httpClient.execution.common.RequestConverter
 import com.intellij.httpClient.execution.common.RequestExecutionSupport
 import com.intellij.httpClient.execution.common.RequestHandler
-import org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequest
-import org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestConverter
-import org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestHandler
 
 @Suppress("UnstableApiUsage")
 class SubscribeRequestExecutionSupport : RequestExecutionSupport<SubscribeRequest> {
@@ -26,4 +23,7 @@ class SubscribeRequestExecutionSupport : RequestExecutionSupport<SubscribeReques
     override fun supportedMethods(): Collection<String> {
         return listOf("SUB")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

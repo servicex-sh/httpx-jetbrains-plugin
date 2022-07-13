@@ -22,4 +22,7 @@ class TarpcRequestExecutionSupport : RequestExecutionSupport<TarpcRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("TARPC")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

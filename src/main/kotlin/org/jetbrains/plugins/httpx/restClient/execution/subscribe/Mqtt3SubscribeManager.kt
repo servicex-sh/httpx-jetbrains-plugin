@@ -37,7 +37,7 @@ object Mqtt3SubscribeManager {
 
                 override fun messageArrived(topic: String?, message: MqttMessage) {
                     val body = String(message.payload, StandardCharsets.UTF_8)
-                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Chunk(formatReceivedMessage(body)))
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(body)))
 
                 }
 

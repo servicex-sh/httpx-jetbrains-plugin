@@ -23,4 +23,7 @@ class PublishRequestExecutionSupport : RequestExecutionSupport<PublishRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("PUB")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

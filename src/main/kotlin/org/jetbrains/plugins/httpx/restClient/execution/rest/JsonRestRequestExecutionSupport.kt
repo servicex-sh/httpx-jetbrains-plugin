@@ -24,4 +24,9 @@ class JsonRestRequestExecutionSupport : RequestExecutionSupport<RestClientReques
     override fun supportedMethods(): Collection<String> {
         return listOf("REST")
     }
+
+    override val needsScheme: Boolean
+        get() = true
+    override val supportedSchemes: List<String>
+        get() = listOf("http","https")
 }

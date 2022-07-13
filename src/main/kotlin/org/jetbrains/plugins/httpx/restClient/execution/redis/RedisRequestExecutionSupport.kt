@@ -26,4 +26,7 @@ class RedisRequestExecutionSupport : RequestExecutionSupport<RedisRequest> {
     override fun supportedMethods(): Collection<String> {
         return redisMethods
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }

@@ -22,4 +22,7 @@ class MsgpackRequestExecutionSupport : RequestExecutionSupport<MsgpackRequest> {
     override fun supportedMethods(): Collection<String> {
         return listOf("MSGPACK", "NVIM")
     }
+
+    override val needsScheme: Boolean
+        get() = false
 }
