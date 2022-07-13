@@ -9,7 +9,8 @@ import com.intellij.httpClient.execution.common.RequestHandler
 class GraphqlRequestExecutionSupport : RequestExecutionSupport<GraphqlRequest> {
 
     companion object {
-        val GRAPHQL_METHODS = listOf("GRAPHQL", "GRAPHQLWS", "GRAPHQLWSS")
+        val GRAPHQL_METHODS = listOf("GRAPHQL")
+        val GRAPHQL_SCHEMAS = listOf("http", "ws", "wss", "rsocket", "rsocketws", "rsocketwss")
     }
 
     override fun canProcess(requestContext: RequestContext): Boolean {
@@ -27,4 +28,10 @@ class GraphqlRequestExecutionSupport : RequestExecutionSupport<GraphqlRequest> {
     override fun supportedMethods(): Collection<String> {
         return GRAPHQL_METHODS
     }
+
+    override val needsScheme: Boolean
+        get() = true
+
+    override val supportedSchemes: List<String>
+        get() = GRAPHQL_SCHEMAS
 }
