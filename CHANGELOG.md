@@ -2,6 +2,29 @@
 
 # httpx plugin Changelog
 
+## [0.12.0]
+
+### Added
+
+- Add [RocketMQ](https://rocketmq.apache.org/) support
+             
+```
+### publish rocketmq message
+//@name rocketmq-pub
+PUB testTopic
+URI: rocketmq://localhost:9876
+Content-Type: application/json
+
+{
+  "name": "Jackie"
+}
+
+### consume rocketmq message
+//@name rocketmq-sub
+SUB testTopic
+URI: rocketmq://localhost:9876
+```
+
 ## [0.11.0]
 
 ### Added
