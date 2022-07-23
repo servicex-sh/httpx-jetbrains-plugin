@@ -16,6 +16,9 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.pulsar.client.api.Consumer
 import org.apache.pulsar.client.api.Message
 import org.apache.pulsar.client.api.PulsarClient
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
@@ -31,6 +34,7 @@ import java.nio.charset.StandardCharsets
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 @Suppress("UnstableApiUsage")
 class SubscribeRequestManager(private val project: Project) : Disposable {
@@ -65,6 +69,8 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
             return subscribeKafka(request)
         } else if (schema.startsWith("pulsar")) {
             return subscribePulsar(request)
+        } else if (schema.startsWith("rocketmq")) {
+            return subscribeRocketMQ(request)
         } else if (schema.startsWith("redis")) {
             return subscribeRedis(request)
         }
@@ -271,6 +277,36 @@ class SubscribeRequestManager(private val project: Project) : Disposable {
         return SubscribeResponse(textStream)
     }
 
+    private fun subscribeRocketMQ(request: SubscribeRequest): CommonClientResponse {
+        val shared = MutableSharedFlow<CommonClientResponseBody.TextStream.Message>(
+            replay = 1000,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST
+        )
+        val consumer = DefaultMQPushConsumer("httpx-" + UUID.randomUUID())
+        val disposeConnection = Disposable {
+            consumer.shutdown()
+        }
+        val textStream = CommonClientResponseBody.TextStream(shared, request.getMessageBodyFiletHint("pulsar-messages")).withConnectionDisposable(disposeConnection)
+        try {
+            val rocketURI = request.uri!!
+            val nameServerAddress: String = rocketURI.host + ":" + rocketURI.port
+            val topic: String = request.topic!!
+            consumer.namesrvAddr = nameServerAddress
+            consumer.subscribe(topic, "*")
+            // Register callback to execute on arrival of messages fetched from brokers.
+            consumer.registerMessageListener(MessageListenerConcurrently { msgList, context ->
+                for (messageExt in msgList) {
+                    val textBody = String(messageExt.body, StandardCharsets.UTF_8)
+                    shared.tryEmit(CommonClientResponseBody.TextStream.Message.Content.Chunk(formatReceivedMessage(textBody)))
+                }
+                ConsumeConcurrentlyStatus.CONSUME_SUCCESS
+            } as MessageListenerConcurrently?)
+            consumer.start()
+        } catch (e: Exception) {
+            shared.tryEmit(CommonClientResponseBody.TextStream.Message.ConnectionClosed.WithError(e))
+        }
+        return SubscribeResponse(textStream)
+    }
 
 }
 

@@ -4,7 +4,6 @@ import com.aliyun.eventbridge.EventBridge
 import com.aliyun.eventbridge.models.Config
 import com.aliyun.eventbridge.util.EventBuilder
 import com.aliyun.mns.client.CloudAccount
-import com.aliyun.mns.model.Message
 import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
@@ -19,6 +18,9 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.TypedMessageBuilder
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
 import org.eclipse.paho.mqttv5.client.MqttClient
 import org.eclipse.paho.mqttv5.client.MqttConnectionOptions
 import org.eclipse.paho.mqttv5.client.persist.MemoryPersistence
@@ -76,6 +78,8 @@ class PublishRequestManager(private val project: Project) : Disposable {
             return sendPulsarMessage(request)
         } else if (schema.startsWith("amqp")) {
             return sendRabbitMQ(request)
+        } else if (schema.startsWith("rocketmq")) {
+            return sendRocketMQMessage(request)
         } else if (schema.startsWith("mns") || (host.contains(".mns.") && host.endsWith(".aliyuncs.com"))) {
             return sendMnsMessage(request)
         } else if (schema.startsWith("eventbridge")) {
@@ -339,7 +343,7 @@ class PublishRequestManager(private val project: Project) : Disposable {
         return try {
             val mnsClient = CloudAccount(cloudAccount.accessKeyId, cloudAccount.accessKeySecret, "https://" + request.uri!!.host).mnsClient
             val queueRef = mnsClient.getQueueRef(request.topic)
-            val message = queueRef.putMessage(Message(request.bodyBytes()))
+            val message = queueRef.putMessage(com.aliyun.mns.model.Message(request.bodyBytes()))
             PublishResponse(CommonClientResponseBody.Empty(), "OK", null, message.messageId)
         } catch (e: java.lang.Exception) {
             PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
@@ -418,6 +422,29 @@ class PublishRequestManager(private val project: Project) : Disposable {
             }
         } catch (e: Exception) {
             return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        }
+    }
+
+    private fun sendRocketMQMessage(request: PublishRequest): CommonClientResponse {
+        val producer = DefaultMQProducer("httpx-plugin")
+        try {
+            val rocketURI = request.uri!!
+            // Specify name server addresses.
+            val nameServerAddress: String = rocketURI.host + ":" + rocketURI.port
+            val topic: String = request.topic!!
+            producer.namesrvAddr = nameServerAddress
+            //Launch the instance.
+            producer.start()
+            val msg = Message(topic, request.bodyBytes())
+            msg.putUserProperty("Content-Type", request.headers.getOrDefault("Content-Type", "text/plain"))
+            request.headers.forEach(msg::putUserProperty)
+            //Call send message to deliver message to one of brokers.
+            val sendResult: SendResult = producer.send(msg)
+            return PublishResponse(CommonClientResponseBody.Empty(), "OK", null, sendResult.toString())
+        } catch (e: java.lang.Exception) {
+            return PublishResponse(CommonClientResponseBody.Empty(), "Error", e.stackTraceToString())
+        } finally {
+            producer.shutdown()
         }
     }
 
