@@ -40,13 +40,13 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.81.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.22"))
+    implementation(platform("io.netty:netty-bom:4.1.82.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.23"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.2.2") {
+    implementation("org.apache.kafka:kafka-clients:3.2.3") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
@@ -84,10 +84,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.8")
-    implementation("software.amazon.awssdk:aws-core:2.17.271")
-    implementation("software.amazon.awssdk:sns:2.17.271")
-    implementation("software.amazon.awssdk:sqs:2.17.271")
-    implementation("software.amazon.awssdk:eventbridge:2.17.271")
+    implementation("software.amazon.awssdk:aws-core:2.17.276")
+    implementation("software.amazon.awssdk:sns:2.17.276")
+    implementation("software.amazon.awssdk:sqs:2.17.276")
+    implementation("software.amazon.awssdk:eventbridge:2.17.276")
 }
 
 configurations.implementation {
