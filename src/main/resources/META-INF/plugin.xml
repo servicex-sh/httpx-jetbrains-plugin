@@ -8,12 +8,14 @@
     <vendor email="libing.chen@gmail.com">linux_china</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    
     <dependencies>
         <plugin id="com.jetbrains.restClient"/>
     </dependencies>
 
     <!--  <depends optional="true" config-file="httpx-withJava.xml">com.intellij.java</depends>-->
     <depends optional="true" config-file="httpx-withGraphql.xml">com.intellij.lang.jsgraphql</depends>
+    <depends optional="true" config-file="httpfile-msa.xml">org.strangeway.msa</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectService preload="true" serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
