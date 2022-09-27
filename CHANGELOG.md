@@ -2,6 +2,18 @@
 
 # httpx plugin Changelog
 
+## [0.14.0]
+
+### Added 
+
+- MicroService annotator support for @HttpRequestName 
+
+## [0.13.0]
+
+### Added 
+
+- Compatible with JetBrains IDE 2022.3 
+
 ## [0.12.0]
 
 ### Added
