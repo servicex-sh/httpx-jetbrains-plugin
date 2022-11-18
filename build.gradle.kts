@@ -9,7 +9,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.9.0"
+    id("org.jetbrains.intellij") version "1.10.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -22,10 +22,10 @@ repositories {
     mavenCentral()
 }
 
-// Set the JVM language level used to compile sources and generate files - Java 11 is required since 2020.3
+// Set the JVM language level used to compile sources and generate files - Java 17 is required since 2022.2
 kotlin {
     jvmToolchain {
-        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(11))
+        this.languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -40,8 +40,8 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.84.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.24"))
+    implementation(platform("io.netty:netty-bom:4.1.85.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.25"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
@@ -53,7 +53,7 @@ dependencies {
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.16.0")
-    implementation("io.nats:jnats:2.16.1")
+    implementation("io.nats:jnats:2.16.3")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
     implementation("com.github.mwiede:jsch:0.2.4")
     implementation("com.spotify:folsom:1.15.0")
@@ -77,17 +77,17 @@ dependencies {
     }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
-    implementation("com.aliyun:aliyun-java-sdk-core:4.6.0")
+    implementation("com.aliyun:aliyun-java-sdk-core:4.6.2")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
-    implementation("org.json:json:20220320")
+    implementation("org.json:json:20220924")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.1") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
-    implementation("com.aliyun:eventbridge-client:1.3.8")
-    implementation("software.amazon.awssdk:aws-core:2.17.295")
-    implementation("software.amazon.awssdk:sns:2.17.295")
-    implementation("software.amazon.awssdk:sqs:2.17.295")
-    implementation("software.amazon.awssdk:eventbridge:2.17.295")
+    implementation("com.aliyun:eventbridge-client:1.3.14")
+    implementation("software.amazon.awssdk:aws-core:2.18.16")
+    implementation("software.amazon.awssdk:sns:2.18.16")
+    implementation("software.amazon.awssdk:sqs:2.18.16")
+    implementation("software.amazon.awssdk:eventbridge:2.18.16")
 }
 
 configurations.implementation {
