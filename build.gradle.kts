@@ -53,13 +53,13 @@ dependencies {
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.16.0")
-    implementation("io.nats:jnats:2.16.3")
+    implementation("io.nats:jnats:2.16.5")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
     implementation("com.github.mwiede:jsch:0.2.4")
     implementation("com.spotify:folsom:1.15.0")
-    implementation("org.zeromq:jeromq:0.5.2")
-    implementation("io.lettuce:lettuce-core:6.2.1.RELEASE")
-    implementation("redis.clients:jedis:4.3.0")
+    implementation("org.zeromq:jeromq:0.5.3")
+    implementation("io.lettuce:lettuce-core:6.2.2.RELEASE")
+    implementation("redis.clients:jedis:4.3.1")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
@@ -77,17 +77,17 @@ dependencies {
     }
     implementation("org.eclipse.paho:org.eclipse.paho.mqttv5.client:1.2.5")
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
-    implementation("com.aliyun:aliyun-java-sdk-core:4.6.2")
+    implementation("com.aliyun:aliyun-java-sdk-core:4.6.3")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
     implementation("org.json:json:20220924")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.1") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.18.16")
-    implementation("software.amazon.awssdk:sns:2.18.16")
-    implementation("software.amazon.awssdk:sqs:2.18.16")
-    implementation("software.amazon.awssdk:eventbridge:2.18.16")
+    implementation("software.amazon.awssdk:aws-core:2.18.32")
+    implementation("software.amazon.awssdk:sns:2.18.32")
+    implementation("software.amazon.awssdk:sqs:2.18.32")
+    implementation("software.amazon.awssdk:eventbridge:2.18.32")
 }
 
 configurations.implementation {
