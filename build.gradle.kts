@@ -7,9 +7,9 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("org.jetbrains.kotlin.jvm") version "1.7.22"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.10.0"
+    id("org.jetbrains.intellij") version "1.11.0"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -40,8 +40,8 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.85.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.25"))
+    implementation(platform("io.netty:netty-bom:4.1.86.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.26"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
@@ -55,7 +55,7 @@ dependencies {
     implementation("com.rabbitmq:amqp-client:5.16.0")
     implementation("io.nats:jnats:2.16.5")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
-    implementation("com.github.mwiede:jsch:0.2.4")
+    implementation("com.github.mwiede:jsch:0.2.5")
     implementation("com.spotify:folsom:1.15.0")
     implementation("org.zeromq:jeromq:0.5.3")
     implementation("io.lettuce:lettuce-core:6.2.2.RELEASE")
@@ -80,14 +80,14 @@ dependencies {
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.3")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
     implementation("org.json:json:20220924")
-    implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.1") {
+    implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.2") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.18.32")
-    implementation("software.amazon.awssdk:sns:2.18.32")
-    implementation("software.amazon.awssdk:sqs:2.18.32")
-    implementation("software.amazon.awssdk:eventbridge:2.18.32")
+    implementation("software.amazon.awssdk:aws-core:2.19.3")
+    implementation("software.amazon.awssdk:sns:2.19.3")
+    implementation("software.amazon.awssdk:sqs:2.19.3")
+    implementation("software.amazon.awssdk:eventbridge:2.19.3")
 }
 
 configurations.implementation {
