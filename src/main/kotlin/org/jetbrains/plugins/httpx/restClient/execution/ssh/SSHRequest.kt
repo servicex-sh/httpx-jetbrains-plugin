@@ -25,10 +25,6 @@ class SSHRequest(override val URL: String?, override val httpMethod: String?, ov
             }
             return clearText.split("[:\\s]".toRegex())
         }
-        val userInfo = uri.userInfo
-        if (userInfo != null && userInfo.contains(":")) {
-            return userInfo.split(":")
-        }
         return null
     }
 
