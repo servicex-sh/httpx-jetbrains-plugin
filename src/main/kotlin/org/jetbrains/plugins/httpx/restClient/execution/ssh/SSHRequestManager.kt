@@ -30,7 +30,7 @@ class SSHRequestManager(private val project: Project) : Disposable {
             var userName: String? = null
             var password: String? = null
             val userInfo: String? = sshURI.userInfo
-            if (userInfo != null && userInfo.isNotEmpty()) {
+            if (!userInfo.isNullOrEmpty()) {
                 if (userInfo.contains(":")) {
                     val parts = userInfo.split(":".toRegex(), limit = 2).toTypedArray()
                     userName = parts[0]
