@@ -2,30 +2,54 @@
 
 # httpx plugin Changelog
 
+## [0.16.0]
+
+### Added
+                    
+- Update dependencies
+- Redis JSON Support
+
+```
+### Redis json set
+JSONSET user.1/$
+Host: localhost:16379
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "jackie",
+  "age": 42
+}
+
+### Redis json get
+JSONGET user.1/$
+Host: localhost:16379
+```
+
 ## [0.15.0]
 
-### Added 
+### Added
 
-- Compatible with JetBrains IDE 2022.3 EAP 4 
+- Compatible with JetBrains IDE 2022.3 EAP 4
 
 ## [0.14.0]
 
-### Added 
+### Added
 
-- MicroService annotator support for @HttpRequestName 
+- MicroService annotator support for @HttpRequestName
 
 ## [0.13.0]
 
-### Added 
+### Added
 
-- Compatible with JetBrains IDE 2022.3 
+- Compatible with JetBrains IDE 2022.3
 
 ## [0.12.0]
 
 ### Added
 
 - Add [RocketMQ](https://rocketmq.apache.org/) support
-             
+
 ```
 ### publish rocketmq message
 //@name rocketmq-pub
