@@ -10,7 +10,11 @@ import io.lettuce.core.ScriptOutputType
 import org.jetbrains.plugins.httpx.json.JsonUtils.objectMapper
 import org.jetbrains.plugins.httpx.restClient.execution.common.JsonBodyFileHint
 import org.jetbrains.plugins.httpx.restClient.execution.common.TextBodyFileHint
+import redis.clients.jedis.HostAndPort
 import redis.clients.jedis.Jedis
+import redis.clients.jedis.UnifiedJedis
+import redis.clients.jedis.json.Path
+import redis.clients.jedis.json.Path2
 
 @Suppress("UnstableApiUsage")
 class RedisRequestManager(private val project: Project) : Disposable {
@@ -19,18 +23,22 @@ class RedisRequestManager(private val project: Project) : Disposable {
     }
 
     fun requestResponse(request: RedisRequest): CommonClientResponse {
+        val method = request.httpMethod!!
+        if (method.startsWith("JSON")) {
+            return redisJsonFunctions(request)
+        }
         try {
-            val redisClient = RedisClient.create(request.uri.toString())
-            val method = request.httpMethod!!
             if (method == "LOAD") {
                 return loadRedisFunctions(request);
             }
+            val redisClient = RedisClient.create(request.uri.toString())
             val result = redisClient.connect().use {
                 val commands = it.sync()
                 when (method) {
                     "RSET" -> {
                         commands.set(request.key, request.bodyText())
                     }
+
                     "HMSET" -> {
                         val params = objectMapper.readValue<Map<String, Any>>(request.bodyText())
                         val redisParams = mutableMapOf<String, String>()
@@ -44,6 +52,7 @@ class RedisRequestManager(private val project: Project) : Disposable {
                         }
                         commands.hmset(request.key, redisParams)
                     }
+
                     "EVAL" -> {
                         val key = request.key
                         if (key == null || key.isEmpty() || key == "0") {
@@ -56,6 +65,7 @@ class RedisRequestManager(private val project: Project) : Disposable {
                             commands.eval(request.bodyText(), ScriptOutputType.VALUE, keys.toTypedArray(), *args.toTypedArray())
                         }
                     }
+
                     else -> {
                         ""
                     }
@@ -90,6 +100,42 @@ class RedisRequestManager(private val project: Project) : Disposable {
                     RedisResponse(CommonClientResponseBody.Empty(), "Error", result)
                 } else {
                     RedisResponse(CommonClientResponseBody.Text(result, TextBodyFileHint.textBodyFileHint("redis-result.txt")))
+                }
+            }
+        } catch (e: Exception) {
+            return RedisResponse(CommonClientResponseBody.Empty(), "Error", e.message)
+        }
+    }
+
+    private fun redisJsonFunctions(request: RedisRequest): CommonClientResponse {
+        val method = request.httpMethod!!
+        try {
+            UnifiedJedis(HostAndPort(request.uri!!.host, request.uri!!.port)).use { jedis ->
+                var jsonKey = request.key!!
+                var jsonPath = "$"
+                if (jsonKey.contains("/$")) {
+                    jsonPath = jsonKey.substring(jsonKey.indexOf("/$") + 1)
+                    jsonKey = jsonKey.substring(0, jsonKey.indexOf("/$"))
+                }
+                return when (method) {
+                    "JSONGET" -> {
+                        val json = jedis.jsonGet(jsonKey, Path.of(jsonPath))
+                        if (json == null) {
+                            return RedisResponse(CommonClientResponseBody.Empty(), "Error", "No value found for ${request.key}")
+                        } else {
+                            val jsonText = objectMapper.writeValueAsString(json)
+                            RedisResponse(CommonClientResponseBody.Text(jsonText, JsonBodyFileHint.jsonBodyFileHint("redis-result.json")))
+                        }
+                    }
+
+                    "JSONSET" -> {
+                        jedis.jsonSet(jsonKey, Path2.of(jsonPath), request.bodyText())
+                        RedisResponse()
+                    }
+
+                    else -> {
+                        RedisResponse(CommonClientResponseBody.Empty(), "Error", "Unknown method $method")
+                    }
                 }
             }
         } catch (e: Exception) {
