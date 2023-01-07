@@ -16,6 +16,7 @@ The following features are available for httpx plugin:
 - SSH: execute script on remote host
 - msgpack-rpc: msgpack/Neovim RPC
 - json-rpc: HTTP and TCP protocols
+- tRPC: query and mutate support
 - Live templates: graphql, kafka, email
 - JSON Schema support:
     * Content-Type: application/cloudevents+json
