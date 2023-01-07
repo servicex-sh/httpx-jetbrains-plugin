@@ -32,6 +32,7 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestManager"/>
         <!-- <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>-->
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
@@ -46,6 +47,7 @@
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.rest.JsonRestRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
@@ -55,6 +57,7 @@
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.LuaScriptInjectionContributor"/>
         <intentionAction>
+            <language>HTTP Request</language>
             <className>org.jetbrains.plugins.httpx.codeInsight.AliyunRequestConvertToCliIntention</className>
             <!--suppress PluginXmlCapitalization -->
             <category>HTTP Client</category>
