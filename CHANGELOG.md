@@ -2,6 +2,34 @@
 
 # httpx plugin Changelog
 
+## [0.17.0]
+
+### Added
+                    
+- Update dependencies
+- TRPC Support
+
+```
+### trpc query
+#@name trpc-query
+TRPC http://localhost:2022/greeting.hello
+Content-Type: application/json
+
+{
+  "name": "world"
+}
+
+### trpc mutate
+#@name trpc-mutate
+TRPCM http://localhost:2022/post.createPost
+Content-Type: application/json
+
+{
+  "title": "hello world",
+  "text": "check out https://tRPC.io"
+}
+```
+
 ## [0.16.0]
 
 ### Added
