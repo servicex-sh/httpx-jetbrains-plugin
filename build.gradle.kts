@@ -40,13 +40,13 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.86.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.26"))
+    implementation(platform("io.netty:netty-bom:4.1.87.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.27"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.3.1") {
+    implementation("org.apache.kafka:kafka-clients:3.3.2") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
