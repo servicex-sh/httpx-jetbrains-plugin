@@ -9,7 +9,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.7.22"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.12.0"
+    id("org.jetbrains.intellij") version "1.13.3"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -40,33 +40,33 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.87.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.27"))
+    implementation(platform("io.netty:netty-bom:4.1.91.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.31"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.3.2") {
+    implementation("org.apache.kafka:kafka-clients:3.4.0") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
-    implementation("com.rabbitmq:amqp-client:5.16.0")
-    implementation("io.nats:jnats:2.16.5")
+    implementation("com.rabbitmq:amqp-client:5.17.0")
+    implementation("io.nats:jnats:2.16.10")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
-    implementation("com.github.mwiede:jsch:0.2.6")
+    implementation("com.github.mwiede:jsch:0.2.8")
     implementation("com.spotify:folsom:1.15.0")
     implementation("org.zeromq:jeromq:0.5.3")
-    implementation("io.lettuce:lettuce-core:6.2.2.RELEASE")
-    implementation("redis.clients:jedis:4.3.1")
+    implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
+    implementation("redis.clients:jedis:4.3.2")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
-    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.5")
-    implementation("org.apache.bookkeeper:circe-checksum:4.14.5@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:2.10.2") {
+    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.7")
+    implementation("org.apache.bookkeeper:circe-checksum:4.14.7@jar")
+    implementation("org.apache.pulsar:pulsar-client-original:2.10.4") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -85,10 +85,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.19.8")
-    implementation("software.amazon.awssdk:sns:2.19.8")
-    implementation("software.amazon.awssdk:sqs:2.19.8")
-    implementation("software.amazon.awssdk:eventbridge:2.19.8")
+    implementation("software.amazon.awssdk:aws-core:2.20.51")
+    implementation("software.amazon.awssdk:sns:2.20.51")
+    implementation("software.amazon.awssdk:sqs:2.20.51")
+    implementation("software.amazon.awssdk:eventbridge:2.20.51")
 }
 
 configurations.implementation {
