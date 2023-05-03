@@ -40,7 +40,7 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.91.Final"))
+    implementation(platform("io.netty:netty-bom:4.1.92.Final"))
     implementation(platform("io.projectreactor:reactor-bom:2020.0.31"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
@@ -64,9 +64,9 @@ dependencies {
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
-    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.14.7")
-    implementation("org.apache.bookkeeper:circe-checksum:4.14.7@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:2.10.4") {
+    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.16.1")
+    implementation("org.apache.bookkeeper:circe-checksum:4.16.1@jar")
+    implementation("org.apache.pulsar:pulsar-client-original:3.0.0") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -85,10 +85,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.20.51")
-    implementation("software.amazon.awssdk:sns:2.20.51")
-    implementation("software.amazon.awssdk:sqs:2.20.51")
-    implementation("software.amazon.awssdk:eventbridge:2.20.51")
+    implementation("software.amazon.awssdk:aws-core:2.20.58")
+    implementation("software.amazon.awssdk:sns:2.20.58")
+    implementation("software.amazon.awssdk:sqs:2.20.58")
+    implementation("software.amazon.awssdk:eventbridge:2.20.58")
 }
 
 configurations.implementation {
