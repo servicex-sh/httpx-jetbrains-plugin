@@ -33,6 +33,7 @@
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestManager"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestManager"/>
         <!-- <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>-->
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
@@ -48,6 +49,7 @@
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.rest.JsonRestRequestExecutionSupport"/>
         <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestExecutionSupport"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
         <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
@@ -56,6 +58,7 @@
                 implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
         <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.LuaScriptInjectionContributor"/>
+        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ChatgptInjectionContributor"/>
         <intentionAction>
             <language>HTTP Request</language>
             <className>org.jetbrains.plugins.httpx.codeInsight.AliyunRequestConvertToCliIntention</className>
