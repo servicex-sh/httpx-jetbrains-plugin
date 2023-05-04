@@ -54,6 +54,7 @@ class ChatgptRequestManager(private val project: Project) : Disposable {
                 ChatgptResponse(
                     response.responseHeaders(),
                     CommonClientResponseBody.Text(body, JsonBodyFileHint.jsonBodyFileHint("chatgpt-result.json")),
+                    body,
                     response.status().toString()
                 )
             }
