@@ -5,7 +5,8 @@
 ## [0.18.0]
 
 ### Added
-
+         
+- Update to Apache Pulsar 3.0.0
 - Add ChatGPT support: If you set environment variable `OPENAI_API_KEY` already, you can remove `X-OPENAI-API-KEY` header from your
 request.
 
