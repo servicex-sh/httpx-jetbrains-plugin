@@ -16,6 +16,7 @@ The following features are available for httpx plugin:
 - SSH: execute script on remote host
 - msgpack-rpc: msgpack/Neovim RPC
 - json-rpc: HTTP and TCP protocols
+- ChatGPT support: Call OpenAI ChatGPT API by Markdown format
 - tRPC: query and mutate support
 - Live templates: graphql, kafka, email
 - JSON Schema support:
@@ -126,7 +127,8 @@ X-JSON-Type: [ { name: string, age: number, email?: string }, string]
 * tuple: [string, number]
 * array: string[]
 * set: Set<string>
-* normal type: string, object, integer, number, 1..100(range), boolean, date-time, time, date, email, hostname, ipv4, ipv6, uuid, uri
+* normal type: string, object, integer, number, 1..100(range), boolean, date-time, time, date, email, hostname, ipv4,
+  ipv6, uuid, uri
 
 if property name ends with `?`, and it means property not required.
 
