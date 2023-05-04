@@ -12,7 +12,7 @@ request.
 
 ```
 CHATGPT https://api.openai.com/v1/chat/completions
-X-OPENAI-API-KEY: sk-xxx
+X-OPENAI-API-KEY: {{OPENAI_API_KEY}}
 
 What's Java? could you give me a simple example?
 ```
