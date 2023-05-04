@@ -2,6 +2,20 @@
 
 # httpx plugin Changelog
 
+## [0.18.0]
+
+### Added
+
+- Add ChatGPT support: If you set environment variable `OPENAI_API_KEY` already, you can remove `X-OPENAI-API-KEY` header from your
+request.
+
+```
+CHATGPT https://api.openai.com/v1/chat/completions
+X-OPENAI-API-KEY: sk-xxx
+
+What's Java? could you give me a simple example?
+```
+
 ## [0.17.1]
 
 ### Added
@@ -11,7 +25,7 @@
 ## [0.17.0]
 
 ### Added
-                    
+
 - Update dependencies
 - TRPC Support
 
@@ -39,7 +53,7 @@ Content-Type: application/json
 ## [0.16.0]
 
 ### Added
-                    
+
 - Update dependencies
 - Redis JSON Support
 
@@ -161,7 +175,8 @@ redis.register_function(
 
 ### Added
 
-- REST method added to make language injection easy for JSON Array and Object: https://servicex.sh/docs/tutorial-basics/http-testing
+- REST method added to make language injection easy for JSON Array and
+  Object: https://servicex.sh/docs/tutorial-basics/http-testing
 
 ```
 ### registering a new schema to Spring Cloud Schema Registry Server
