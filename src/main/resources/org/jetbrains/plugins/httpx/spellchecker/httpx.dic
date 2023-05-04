@@ -33,6 +33,7 @@ msgpack
 neovim
 nvim
 jsonrpc
+tjson
 chatgpt
 openai
 davinci
