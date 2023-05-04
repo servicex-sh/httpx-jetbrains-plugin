@@ -7,7 +7,8 @@ import com.intellij.profile.codeInspection.ProjectInspectionProfileManager
 class HttpxHeadersInspectionService(project: Project) {
     init {
         val inspectionProfileManager = ProjectInspectionProfileManager.getInstance(project)
-        val inspectionToolWrapper = inspectionProfileManager.currentProfile.getInspectionTool("IncorrectHttpHeaderInspection", project)
+        val inspectionToolWrapper =
+            inspectionProfileManager.currentProfile.getInspectionTool("IncorrectHttpHeaderInspection", project)
         val httpHeaderInspection = inspectionToolWrapper?.tool as HttpRequestIncorrectHttpHeaderInspection
         val customHeaders = httpHeaderInspection.getCustomHeaders()
         customHeaders.add("Subject")
@@ -19,6 +20,9 @@ class HttpxHeadersInspectionService(project: Project) {
         customHeaders.add("X-Region-Id")
         customHeaders.add("X-GraphQL-Variables")
         customHeaders.add("X-SSH-Private-Key")
+        customHeaders.add("X-Temperature")
+        customHeaders.add("X-Model")
+        customHeaders.add("X-OPENAI-API-KEY")
         customHeaders.add("X-Args-0")
         customHeaders.add("X-Args-1")
         customHeaders.add("X-Args-2")
