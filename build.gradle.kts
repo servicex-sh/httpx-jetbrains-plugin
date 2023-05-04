@@ -103,6 +103,7 @@ configurations.implementation {
     exclude(group = "org.lz4", module = "lz4-java")
     exclude(group = "org.xerial.snappy", module = "snappy-java")
     exclude(group = "javax.activation", module = "activation")
+    exclude(group = "com.fasterxml.jackson.core", module = "jackson-annotations")
     exclude(group = "com.fasterxml.jackson.core", module = "jackson-databind")
     exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
     exclude(group = "com.fasterxml.jackson.dataformat", module = "jackson-dataformat-yaml")
