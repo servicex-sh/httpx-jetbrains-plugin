@@ -53,13 +53,13 @@ dependencies {
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.17.0")
-    implementation("io.nats:jnats:2.16.10")
+    implementation("io.nats:jnats:2.16.11")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
     implementation("com.github.mwiede:jsch:0.2.8")
     implementation("com.spotify:folsom:1.15.0")
     implementation("org.zeromq:jeromq:0.5.3")
     implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
-    implementation("redis.clients:jedis:4.3.2")
+    implementation("redis.clients:jedis:4.4.0")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
@@ -85,10 +85,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.20.58")
-    implementation("software.amazon.awssdk:sns:2.20.58")
-    implementation("software.amazon.awssdk:sqs:2.20.58")
-    implementation("software.amazon.awssdk:eventbridge:2.20.58")
+    implementation("software.amazon.awssdk:aws-core:2.20.65")
+    implementation("software.amazon.awssdk:sns:2.20.65")
+    implementation("software.amazon.awssdk:sqs:2.20.65")
+    implementation("software.amazon.awssdk:eventbridge:2.20.65")
 }
 
 configurations.implementation {
