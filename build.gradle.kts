@@ -40,26 +40,26 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.92.Final"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.31"))
+    implementation(platform("io.netty:netty-bom:4.1.93.Final"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.33"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.4.0") {
+    implementation("org.apache.kafka:kafka-clients:3.4.1") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.17.0")
-    implementation("io.nats:jnats:2.16.11")
+    implementation("io.nats:jnats:2.16.12")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.3")
-    implementation("com.github.mwiede:jsch:0.2.8")
-    implementation("com.spotify:folsom:1.15.0")
+    implementation("com.github.mwiede:jsch:0.2.9")
+    implementation("com.spotify:folsom:1.15.1")
     implementation("org.zeromq:jeromq:0.5.3")
     implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
-    implementation("redis.clients:jedis:4.4.0")
+    implementation("redis.clients:jedis:4.4.1")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
@@ -80,15 +80,15 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.3")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
-    implementation("org.json:json:20220924")
+    implementation("org.json:json:20230227")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.2") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.20.65")
-    implementation("software.amazon.awssdk:sns:2.20.65")
-    implementation("software.amazon.awssdk:sqs:2.20.65")
-    implementation("software.amazon.awssdk:eventbridge:2.20.65")
+    implementation("software.amazon.awssdk:aws-core:2.20.86")
+    implementation("software.amazon.awssdk:sns:2.20.86")
+    implementation("software.amazon.awssdk:sqs:2.20.86")
+    implementation("software.amazon.awssdk:eventbridge:2.20.86")
 }
 
 configurations.implementation {
