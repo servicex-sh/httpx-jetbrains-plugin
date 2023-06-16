@@ -1,0 +1,37 @@
+{
+  "model": "gpt-3.5-turbo-0613",
+  "temperature": 1.0,
+  "n": 1,
+  "functions": [
+    {
+      "name": "send_email",
+      "description": "send email to receivers",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "email address"
+            }
+          },
+          "subject": {
+            "type": "string",
+            "description": "email subject"
+          }
+        },
+        "required": [
+          "emails",
+          "subject"
+        ]
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hi Jackie, if you have time, could you send an email to linux_china@hotmail.com and river@hotmail.com about meeting tomorrow?"
+    }
+  ]
+}
