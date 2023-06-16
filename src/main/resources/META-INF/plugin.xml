@@ -74,6 +74,7 @@
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJsonSchemaProviderFactory"/>
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.ThriftJsonSchemaProviderFactory"/>
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.AliyunRequestActionJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.OpenAIRequestJsonSchemaProviderFactory"/>
     </extensions>
 
 </idea-plugin>
