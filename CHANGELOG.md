@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.18.2]
+
+### Added
+
+- JSON Schema support for OpenAI Chat and Completions
+
 ## [0.18.1]
 
 ### Added
