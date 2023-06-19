@@ -21,10 +21,13 @@ class OpenAIRequestJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvide
                 val httpRequest = PsiTreeUtil.getParentOfType(httpMessageBody, HttpRequest::class.java)!!
                 if (httpRequest.httpMethod == "POST") {
                     val targetText = httpRequest.requestTarget?.text ?: ""
-                    if (targetText.startsWith("https://api.openai.com/v1/chat/completions")) {
-                        return VfsUtil.findFileByURL(this.javaClass.getResource("/chatgpt-request-schema.json")!!)
-                    } else if (targetText.startsWith("https://api.openai.com/v1/completions")) {
-                        return VfsUtil.findFileByURL(this.javaClass.getResource("/openai-completion-request-schema.json")!!)
+                    // add OpenAI and Azure OpenAI support
+                    if (targetText.contains(".openai.") || targetText.contains("_OPENAI_")) {
+                        if (targetText.contains("/chat/completions")) {
+                            return VfsUtil.findFileByURL(this.javaClass.getResource("/chatgpt-request-schema.json")!!)
+                        } else if (targetText.contains("/completions")) {
+                            return VfsUtil.findFileByURL(this.javaClass.getResource("/openai-completion-request-schema.json")!!)
+                        }
                     }
                 }
             }
