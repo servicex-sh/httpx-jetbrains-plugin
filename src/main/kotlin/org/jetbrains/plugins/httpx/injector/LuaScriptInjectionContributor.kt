@@ -174,7 +174,7 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
                     return SimpleInjection(luaLanguage!!, prefix, "", null);
                 } else {
                     val contentTypeHeader = httpRequest.getHeaderField("Content-Type")
-                    val contentType = contentTypeHeader?.getValue(HttpRequestVariableSubstitutor.getDefault(context.project))
+                    val contentType = contentTypeHeader?.getValue(HttpRequestVariableSubstitutor.getDefault(context.project, context.containingFile))
                     if (contentType == "text/x-lua") {
                         return if (httpRequest.requestTarget!!.text.contains("nvim_")) {
                             SimpleInjection(luaLanguage!!, neovimPrefix, "", null)

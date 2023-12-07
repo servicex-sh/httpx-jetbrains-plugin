@@ -30,14 +30,14 @@ class AliyunRequestConvertToCliIntention : BaseElementAtCaretIntentionAction() {
         return false
     }
 
-    override fun isAvailable(project: Project, editor: Editor?, element: PsiElement): Boolean {
+    override fun isAvailable(project: Project, editor: Editor, element: PsiElement): Boolean {
         val httpRequest = PsiTreeUtil.getParentOfType(element, HttpRequest::class.java)
         return httpRequest != null && "ALIYUN" == httpRequest.httpMethod
     }
 
-    override fun invoke(project: Project, editor: Editor?, element: PsiElement) {
+    override fun invoke(project: Project, editor: Editor, element: PsiElement) {
         val httpRequest = PsiTreeUtil.getParentOfType(element, HttpRequest::class.java)!!
-        val substitutor = HttpRequestVariableSubstitutor.getDefault(project)
+        val substitutor = HttpRequestVariableSubstitutor.getDefault(project,element.containingFile)
         val headers = httpRequest.headerFieldList.associate { it.name to it.getValue(substitutor) }
         val requestType = httpRequest.httpMethod
         val url = getRequestURL(httpRequest, substitutor, "https")

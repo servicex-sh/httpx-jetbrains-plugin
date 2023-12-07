@@ -18,7 +18,7 @@ class GraphqlInjectionContributor : LanguageInjectionContributor {
         if (context is HttpMessageBody) {
             val contentTypeHeader = context.getParentOfType<HttpRequest>(false)?.getHeaderField("Content-Type")
             if (contentTypeHeader != null) {
-                val contentType = contentTypeHeader.getValue(HttpRequestVariableSubstitutor.getDefault(context.project))
+                val contentType = contentTypeHeader.getValue(HttpRequestVariableSubstitutor.getDefault(context.project, context.containingFile))
                 if (contentType == "application/graphql") {
                     return SimpleInjection(GraphQLLanguage.INSTANCE, "", "", null);
                 }

@@ -29,7 +29,7 @@ class XJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
                 val httpRequest = PsiTreeUtil.getParentOfType(httpMessageBody, HttpRequest::class.java)!!
                 val xJsonSchema = httpRequest.getHeaderField("X-JSON-Schema")
                 if (xJsonSchema != null) {
-                    val jsonSchemaUrl = xJsonSchema.getValue(HttpRequestVariableSubstitutor.getDefault(psiFile.project)).trim()
+                    val jsonSchemaUrl = xJsonSchema.getValue(HttpRequestVariableSubstitutor.getDefault(psiFile.project, psiFile)).trim()
                     return getJsonSchema(jsonSchemaUrl)
                 }
             }
