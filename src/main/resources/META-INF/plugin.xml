@@ -18,7 +18,7 @@
     <!--  <depends optional="true" config-file="httpfile-msa.xml">org.strangeway.msa</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService preload="true" serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
+        <projectService serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
         <!-- <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestManager"/>-->
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestManager"/>
