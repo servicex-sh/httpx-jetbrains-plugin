@@ -3,11 +3,12 @@ package org.jetbrains.plugins.httpx.msa
 import com.intellij.codeInsight.AnnotationUtil
 import com.intellij.openapi.project.Project
 import org.jetbrains.uast.UCallExpression
-import org.strangeway.msa.db.InteractionType
-import org.strangeway.msa.frameworks.CallDetector
-import org.strangeway.msa.frameworks.FrameworkInteraction
-import org.strangeway.msa.frameworks.Interaction
-import org.strangeway.msa.frameworks.hasLibraryClass
+//import org.strangeway.msa.db.InteractionType
+//import org.strangeway.msa.frameworks.CallDetector
+//import org.strangeway.msa.frameworks.FrameworkInteraction
+//import org.strangeway.msa.frameworks.Interaction
+//import org.strangeway.msa.frameworks.hasLibraryClass
+/*
 
 class HttpfileCallDetector : CallDetector {
     private val interaction: Interaction = FrameworkInteraction(InteractionType.REQUEST, "HTTP")
@@ -25,4 +26,4 @@ class HttpfileCallDetector : CallDetector {
     override fun isAvailable(project: Project): Boolean {
         return hasLibraryClass(project, "sh.servicex.httpfile.HttpRequestName")
     }
-}
+}*/
