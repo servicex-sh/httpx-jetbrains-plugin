@@ -9,7 +9,7 @@ plugins {
     // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.9.20"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.16.1"
+    id("org.jetbrains.intellij") version "1.17.2"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -32,9 +32,8 @@ kotlin {
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName.set(properties("pluginName"))
-    //version.set(properties("platformVersion"))
+    version.set(properties("platformVersion"))
     //localPath.set("/Users/linux_china/Applications/IntelliJ IDEA Ultimate.app/Contents")
-    localPath.set("/Users/linux_china/Applications/IntelliJ IDEA Ultimate.app/Contents")
     type.set(properties("platformType"))
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
@@ -42,34 +41,34 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.101.Final"))
-    implementation(platform("com.fasterxml.jackson:jackson-bom:2.15.2"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.38"))
+    implementation(platform("io.netty:netty-bom:4.1.107.Final"))
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.16.1"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.41"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.5.1") {
+    implementation("org.apache.kafka:kafka-clients:3.6.1") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
-    implementation("com.rabbitmq:amqp-client:5.18.0")
-    implementation("io.nats:jnats:2.17.1")
-    implementation("org.msgpack:jackson-dataformat-msgpack:0.9.6")
-    implementation("com.github.mwiede:jsch:0.2.13")
+    implementation("com.rabbitmq:amqp-client:5.20.0")
+    implementation("io.nats:jnats:2.17.3")
+    implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
+    implementation("com.github.mwiede:jsch:0.2.16")
     implementation("com.spotify:folsom:1.17.0")
-    implementation("org.zeromq:jeromq:0.5.4")
-    implementation("io.lettuce:lettuce-core:6.2.4.RELEASE")
-    implementation("redis.clients:jedis:4.4.4")
+    implementation("org.zeromq:jeromq:0.6.0")
+    implementation("io.lettuce:lettuce-core:6.3.1.RELEASE")
+    implementation("redis.clients:jedis:5.1.1")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
-    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.16.2")
-    implementation("org.apache.bookkeeper:circe-checksum:4.16.2@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:3.1.0") {
+    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.16.4")
+    implementation("org.apache.bookkeeper:circe-checksum:4.16.4@jar")
+    implementation("org.apache.pulsar:pulsar-client-original:3.2.0") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -83,15 +82,15 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.4")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
-    implementation("org.json:json:20230227")
+    implementation("org.json:json:20240205")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.2") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.21.40")
-    implementation("software.amazon.awssdk:sns:2.21.40")
-    implementation("software.amazon.awssdk:sqs:2.21.40")
-    implementation("software.amazon.awssdk:eventbridge:2.21.40")
+    implementation("software.amazon.awssdk:aws-core:2.24.10")
+    implementation("software.amazon.awssdk:sns:2.24.10")
+    implementation("software.amazon.awssdk:sqs:2.24.10")
+    implementation("software.amazon.awssdk:eventbridge:2.24.10")
 }
 
 configurations.implementation {
