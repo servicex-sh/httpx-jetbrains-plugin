@@ -1,6 +1,6 @@
 package org.jetbrains.plugins.httpx.codeInsight
 
-import org.apache.tools.ant.types.Commandline
+import org.codehaus.plexus.util.cli.CommandLineUtils
 import org.jetbrains.plugins.httpx.json.JsonUtils
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Product
 
@@ -16,7 +16,7 @@ class AliyunCliParser(val text: String) {
         actionName = parts[2]
         params = try {
             if (parts.size > 3) {
-                Commandline.translateCommandline(parts[3])
+                CommandLineUtils.translateCommandline(parts[3])
             } else {
                 null
             }

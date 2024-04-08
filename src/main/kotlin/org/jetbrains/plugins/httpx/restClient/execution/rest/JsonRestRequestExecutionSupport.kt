@@ -5,7 +5,7 @@ import com.intellij.httpClient.execution.common.RequestContext
 import com.intellij.httpClient.execution.common.RequestConverter
 import com.intellij.httpClient.execution.common.RequestExecutionSupport
 import com.intellij.httpClient.execution.common.RequestHandler
-import com.intellij.httpClient.execution.impl.HttpRequestHandler
+import com.intellij.httpClient.execution.impl.engineV2.HttpRequestHandlerV2
 
 @Suppress("UnstableApiUsage")
 class JsonRestRequestExecutionSupport : RequestExecutionSupport<RestClientRequest> {
@@ -18,7 +18,7 @@ class JsonRestRequestExecutionSupport : RequestExecutionSupport<RestClientReques
     }
 
     override fun getRequestHandler(): RequestHandler<RestClientRequest> {
-        return HttpRequestHandler()
+        return HttpRequestHandlerV2()
     }
 
     override fun supportedMethods(): Collection<String> {
