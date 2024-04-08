@@ -2,6 +2,13 @@
 
 # httpx plugin Changelog
 
+## [0.19.1]
+
+### Added
+
+- Compatible with JetBrains IDE 2024.1
+- Bug fix tarpc
+
 ## [0.19.0]
 
 ### Added
