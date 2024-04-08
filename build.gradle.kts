@@ -54,14 +54,14 @@ dependencies {
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
-    implementation("com.rabbitmq:amqp-client:5.20.0")
-    implementation("io.nats:jnats:2.17.3")
+    implementation("com.rabbitmq:amqp-client:5.21.0")
+    implementation("io.nats:jnats:2.17.4")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
-    implementation("com.github.mwiede:jsch:0.2.16")
+    implementation("com.github.mwiede:jsch:0.2.17")
     implementation("com.spotify:folsom:1.17.0")
     implementation("org.zeromq:jeromq:0.6.0")
-    implementation("io.lettuce:lettuce-core:6.3.1.RELEASE")
-    implementation("redis.clients:jedis:5.1.1")
+    implementation("io.lettuce:lettuce-core:6.3.2.RELEASE")
+    implementation("redis.clients:jedis:5.1.2")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
@@ -82,7 +82,7 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.4")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
-    implementation("org.json:json:20240205")
+    implementation("org.json:json:20240303")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.2") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
