@@ -23,7 +23,6 @@ class TarpcRequestManager(private val project: Project) : Disposable {
     fun requestResponse(request: TarpcRequest): CommonClientResponse {
         try {
             val tarpcUri = request.uri
-            val now = java.time.Instant.now().plusSeconds(10) //plus 10 seconds for deadline
             var functionName = tarpcUri.path.substring(1)
             if (functionName.contains("/")) {
                 functionName = functionName.substring(functionName.lastIndexOf('/') + 1)
@@ -34,12 +33,12 @@ class TarpcRequestManager(private val project: Project) : Disposable {
               "Request": {
                 "context": {
                   "deadline": {
-                    "secs_since_epoch": ${now.epochSecond},
-                    "nanos_since_epoch": ${now.nano}
+                    "secs": 9,
+                    "nanos": 999641000
                   },
                   "trace_context": {
                     "trace_id": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-                    "span_id": 2661146547092162534,
+                    "span_id": 481056967432925815,
                     "sampling_decision": "Unsampled"
                   }
                 },
