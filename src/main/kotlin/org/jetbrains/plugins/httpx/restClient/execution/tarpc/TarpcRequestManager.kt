@@ -58,8 +58,8 @@ class TarpcRequestManager(private val project: Project) : Disposable {
                     val buffer = ByteBuffer.allocate(content.size + 4)
                     buffer.put(0x00.toByte())
                     buffer.put(0x00.toByte())
-                    buffer.put(0x01.toByte())
-                    buffer.put(0x0C.toByte())
+                    buffer.put(0x00.toByte())
+                    buffer.put(0xEA.toByte())
                     // buffer.put((byte) 0x7B);
                     // buffer.put((byte) 0x22);
                     // buffer.put((byte) 0x52);
