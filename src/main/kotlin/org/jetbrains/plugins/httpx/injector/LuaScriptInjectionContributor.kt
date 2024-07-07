@@ -8,7 +8,7 @@ import com.intellij.lang.injection.general.Injection
 import com.intellij.lang.injection.general.LanguageInjectionContributor
 import com.intellij.lang.injection.general.SimpleInjection
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
+import com.intellij.psi.util.parentOfType
 
 /**
  * language injection for Redis EVAL method with Lua script
@@ -168,7 +168,7 @@ class LuaScriptInjectionContributor : LanguageInjectionContributor {
 
     override fun getInjection(context: PsiElement): Injection? {
         if (luaLanguage != null && context is HttpMessageBody) {
-            val httpRequest = context.getParentOfType<HttpRequest>(false)
+            val httpRequest = context.parentOfType<HttpRequest>(false)
             if (httpRequest != null) {
                 if (httpRequest.httpMethod == "EVAL" || httpRequest.httpMethod == "LOAD") {
                     return SimpleInjection(luaLanguage!!, prefix, "", null);

@@ -8,7 +8,7 @@ import com.intellij.lang.injection.general.LanguageInjectionContributor
 import com.intellij.lang.injection.general.SimpleInjection
 import com.intellij.lang.jsgraphql.GraphQLLanguage
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
+import com.intellij.psi.util.parentOfType
 
 /**
  * language injection for Content-Type header with application/graphql
@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
 class GraphqlInjectionContributor : LanguageInjectionContributor {
     override fun getInjection(context: PsiElement): Injection? {
         if (context is HttpMessageBody) {
-            val contentTypeHeader = context.getParentOfType<HttpRequest>(false)?.getHeaderField("Content-Type")
+            val contentTypeHeader = context.parentOfType<HttpRequest>(false)?.getHeaderField("Content-Type")
             if (contentTypeHeader != null) {
                 val contentType = contentTypeHeader.getValue(HttpRequestVariableSubstitutor.getDefault(context.project, context.containingFile))
                 if (contentType == "application/graphql") {

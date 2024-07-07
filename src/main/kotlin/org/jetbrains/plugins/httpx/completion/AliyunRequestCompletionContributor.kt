@@ -12,7 +12,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
-import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Products
 
@@ -70,7 +69,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                         }
                     }
                 } else if (parent is HttpQueryParameterKey) { //param names
-                    val httpQuery = parent.getParentOfType<HttpQuery>(true)
+                    val httpQuery = parent.parentOfType<HttpQuery>(true)
                     if (httpQuery != null) {
                         val paramNames = httpQuery.queryParameterList.map { it.queryParameterKey.text }
                         globalParamNames.filter { paramNames.isEmpty() || !paramNames.contains(it) }
@@ -83,7 +82,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                     val httpQueryParameter = parent.parent
                     val paramName = httpQueryParameter.firstChild.text
                     if (globalParamNames.contains(paramName)) {
-                        val httpRequestTarget = httpQueryParameter.getParentOfType<HttpRequestTarget>(true)
+                        val httpRequestTarget = httpQueryParameter.parentOfType<HttpRequestTarget>(true)
                         val host = httpRequestTarget?.host?.text
                         if (host != null && host.contains('.')) {
                             val product = Products.instance().findProductByHost(host)
@@ -107,7 +106,7 @@ class AliyunRequestCompletionContributor : CompletionContributor() {
                         }
                     }
                 } else if (parent is HttpHeaderFieldValue) {
-                    val httpHeaderField = parent.getParentOfType<HttpHeaderField>(true)!!
+                    val httpHeaderField = parent.parentOfType<HttpHeaderField>(true)!!
                     if (httpHeaderField.headerFieldName.text == "X-Region-Id") {
                         for (region in Aliyun.GLOBAL_REGIONS) {
                             result.addElement(LookupElementBuilder.create(region))

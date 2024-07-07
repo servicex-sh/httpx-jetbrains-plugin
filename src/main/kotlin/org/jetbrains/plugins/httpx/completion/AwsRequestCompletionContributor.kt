@@ -13,7 +13,6 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.parentOfType
 import com.intellij.util.ProcessingContext
 import com.intellij.util.ReflectionUtil
-import org.jetbrains.kotlin.psi.psiUtil.getParentOfType
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Aliyun
 import software.amazon.awssdk.regions.GeneratedServiceMetadataProvider
 import software.amazon.awssdk.regions.Region
@@ -73,7 +72,7 @@ class AwsRequestCompletionContributor : CompletionContributor() {
                         }
                     }
                 } else if (parent is HttpQueryParameterKey) { //param names
-                    val httpQuery = parent.getParentOfType<HttpQuery>(true)
+                    val httpQuery = parent.parentOfType<HttpQuery>(true)
                     if (httpQuery != null) {
                         val paramNames = httpQuery.queryParameterList.map { it.queryParameterKey.text }
                         globalParamNames.filter { paramNames.isEmpty() || !paramNames.contains(it) }
@@ -86,7 +85,7 @@ class AwsRequestCompletionContributor : CompletionContributor() {
                     val httpQueryParameter = parent.parent
                     val paramName = httpQueryParameter.firstChild.text
                     if (globalParamNames.contains(paramName)) {
-                        val httpRequestTarget = httpQueryParameter.getParentOfType<HttpRequestTarget>(true)
+                        val httpRequestTarget = httpQueryParameter.parentOfType<HttpRequestTarget>(true)
                         val host = httpRequestTarget?.host?.text
                         if (host != null && host.contains('.')) {
                             val productCode = host.substring(0, host.indexOf('.'))
@@ -112,7 +111,7 @@ class AwsRequestCompletionContributor : CompletionContributor() {
                         }
                     }
                 } else if (parent is HttpHeaderFieldValue) {
-                    val httpHeaderField = parent.getParentOfType<HttpHeaderField>(true)!!
+                    val httpHeaderField = parent.parentOfType<HttpHeaderField>(true)!!
                     if (httpHeaderField.headerFieldName.text == "X-Region-Id") {
                         for (region in Aliyun.GLOBAL_REGIONS) {
                             Region.regions().forEach {
