@@ -7,9 +7,9 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.9.20"
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
     // Gradle IntelliJ Plugin
-    id("org.jetbrains.intellij") version "1.17.2"
+    id("org.jetbrains.intellij") version "1.17.4"
     // Gradle Changelog Plugin
     id("org.jetbrains.changelog") version "1.3.1"
 }
@@ -22,18 +22,18 @@ repositories {
     mavenCentral()
 }
 
-// Set the JVM language level used to compile sources and generate files - Java 17 is required since 2022.2
+// Set the JVM language level used to compile sources and generate files - Java 21 is required since 2024.2
 kotlin {
     jvmToolchain {
-        this.languageVersion.set(JavaLanguageVersion.of(17))
+        this.languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName.set(properties("pluginName"))
-    version.set(properties("platformVersion"))
-    //localPath.set("/Users/linux_china/Applications/IntelliJ IDEA Ultimate.app/Contents")
+    //version.set(properties("platformVersion"))
+    localPath.set("/Users/linux_china/Applications/IntelliJ IDEA Ultimate.app/Contents")
     type.set(properties("platformType"))
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
@@ -41,7 +41,7 @@ intellij {
 }
 
 dependencies {
-    implementation(platform("io.netty:netty-bom:4.1.107.Final"))
+    implementation(platform("io.netty:netty-bom:4.1.111.Final"))
     implementation(platform("com.fasterxml.jackson:jackson-bom:2.16.1"))
     implementation(platform("io.projectreactor:reactor-bom:2020.0.41"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
@@ -203,6 +203,6 @@ tasks {
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
+        //channels.set(listOf(properties("pluginVersion").split('-').getOrElse(1) { "default" }.split('.').first()))
     }
 }
