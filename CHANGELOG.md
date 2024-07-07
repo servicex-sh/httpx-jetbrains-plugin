@@ -2,6 +2,12 @@
 
 # httpx plugin Changelog
 
+## [0.20.1]
+
+### Added
+
+- Compatible with JetBrains IDE 2024.2
+
 ## [0.20.0]
 
 ### Added
