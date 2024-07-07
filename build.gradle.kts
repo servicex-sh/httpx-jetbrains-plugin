@@ -7,7 +7,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.jvm") version "1.9.24"
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij") version "1.17.4"
     // Gradle Changelog Plugin
@@ -43,7 +43,7 @@ intellij {
 dependencies {
     implementation(platform("io.netty:netty-bom:4.1.111.Final"))
     implementation(platform("com.fasterxml.jackson:jackson-bom:2.16.1"))
-    implementation(platform("io.projectreactor:reactor-bom:2020.0.41"))
+    implementation(platform("io.projectreactor:reactor-bom:2020.0.45"))
     implementation("com.squareup.okhttp3:okhttp:3.14.9")
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
@@ -55,10 +55,10 @@ dependencies {
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.21.0")
-    implementation("io.nats:jnats:2.17.4")
+    implementation("io.nats:jnats:2.19.1")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
-    implementation("com.github.mwiede:jsch:0.2.17")
-    implementation("com.spotify:folsom:1.17.0")
+    implementation("com.github.mwiede:jsch:0.2.18")
+    implementation("com.spotify:folsom:1.21.0")
     implementation("org.zeromq:jeromq:0.6.0")
     implementation("io.lettuce:lettuce-core:6.3.2.RELEASE")
     implementation("redis.clients:jedis:5.1.2")
