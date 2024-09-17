@@ -33,7 +33,7 @@ kotlin {
 intellij {
     pluginName.set(properties("pluginName"))
     //version.set(properties("platformVersion"))
-    localPath.set("/Users/linux_china/Applications/IntelliJ IDEA Ultimate.app/Contents")
+    localPath.set("/Users/linux_china/tools/ideaIU-2024.2")
     type.set(properties("platformType"))
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
@@ -54,10 +54,10 @@ dependencies {
     }
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
-    implementation("com.rabbitmq:amqp-client:5.21.0")
-    implementation("io.nats:jnats:2.19.1")
+    implementation("com.rabbitmq:amqp-client:5.22.0")
+    implementation("io.nats:jnats:2.20.2")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
-    implementation("com.github.mwiede:jsch:0.2.19")
+    implementation("com.github.mwiede:jsch:0.2.20")
     implementation("com.spotify:folsom:1.21.0")
     implementation("org.zeromq:jeromq:0.6.0")
     implementation("io.lettuce:lettuce-core:6.4.0.RELEASE")
@@ -66,9 +66,9 @@ dependencies {
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
     }
-    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.16.4")
-    implementation("org.apache.bookkeeper:circe-checksum:4.16.4@jar")
-    implementation("org.apache.pulsar:pulsar-client-original:3.2.0") {
+    implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.17.1")
+    implementation("org.apache.bookkeeper:circe-checksum:4.17.1@jar")
+    implementation("org.apache.pulsar:pulsar-client-original:3.3.1") {
         exclude(group = "com.beust", module = "jcommander")
         exclude(group = "org.asynchttpclient", module = "async-http-client")
         exclude(group = "org.apache.avro", module = "avro")
@@ -88,9 +88,10 @@ dependencies {
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
     implementation("software.amazon.awssdk:aws-core:2.24.10")
-    implementation("software.amazon.awssdk:sns:2.24.10")
-    implementation("software.amazon.awssdk:sqs:2.24.10")
-    implementation("software.amazon.awssdk:eventbridge:2.24.10")
+    implementation("software.amazon.awssdk:sns:2.28.2")
+    implementation("software.amazon.awssdk:sqs:2.28.2")
+    implementation("software.amazon.awssdk:eventbridge:2.28.2")
+    testImplementation("junit:junit:4.13.2")
 }
 
 configurations.implementation {
