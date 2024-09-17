@@ -2,6 +2,13 @@
 
 # httpx plugin Changelog
 
+## [0.20.2]
+
+### Added
+
+- Compatible with JetBrains IDE 2024.3
+- Update to Apache Pulsar 3.3.1
+
 ## [0.20.1]
 
 ### Added
