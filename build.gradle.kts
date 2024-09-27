@@ -48,7 +48,7 @@ dependencies {
     implementation("javax.mail:javax.mail-api:1.6.2")
     implementation("com.sun.mail:javax.mail:1.6.2")
     implementation("io.projectreactor.netty:reactor-netty")
-    implementation("org.apache.kafka:kafka-clients:3.6.1") {
+    implementation("org.apache.kafka:kafka-clients:3.7.1") {
         exclude(group = "com.github.luben", module = "zstd-jni")
         exclude(group = "org.lz4", module = "lz4-java")
     }
@@ -61,10 +61,11 @@ dependencies {
     implementation("com.spotify:folsom:1.21.0")
     implementation("org.zeromq:jeromq:0.6.0")
     implementation("io.lettuce:lettuce-core:6.4.0.RELEASE")
-    implementation("redis.clients:jedis:5.1.5")
+    implementation("redis.clients:jedis:5.2.0")
     implementation("com.alibaba:fastjson:1.2.83")
     implementation("org.apache.rocketmq:rocketmq-client:4.9.3") {
         exclude(group = "io.netty", module = "netty-all")
+        exclude(group = "com.github.luben", module = "zstd-jni")
     }
     implementation("org.apache.bookkeeper:bookkeeper-common-allocator:4.17.1")
     implementation("org.apache.bookkeeper:circe-checksum:4.17.1@jar")
@@ -87,10 +88,10 @@ dependencies {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
     implementation("com.aliyun:eventbridge-client:1.3.14")
-    implementation("software.amazon.awssdk:aws-core:2.24.10")
-    implementation("software.amazon.awssdk:sns:2.28.2")
-    implementation("software.amazon.awssdk:sqs:2.28.2")
-    implementation("software.amazon.awssdk:eventbridge:2.28.2")
+    implementation("software.amazon.awssdk:aws-core:2.28.10")
+    implementation("software.amazon.awssdk:sns:2.28.10")
+    implementation("software.amazon.awssdk:sqs:2.28.10")
+    implementation("software.amazon.awssdk:eventbridge:2.28.10")
     testImplementation("junit:junit:4.13.2")
 }
 
