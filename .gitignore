@@ -122,3 +122,4 @@ gradle-app.setting
 
 temp/
 .envrc
+.intellijPlatform
