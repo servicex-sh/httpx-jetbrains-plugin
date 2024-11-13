@@ -12,7 +12,6 @@ import com.intellij.testFramework.LightVirtualFile
 import com.jetbrains.jsonSchema.extension.ContentAwareJsonSchemaFileProvider
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Products
 
-@Suppress("UnstableApiUsage")
 class AliyunRequestActionJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
     companion object {
         val schemaStore = HashMap<String, VirtualFile>()
