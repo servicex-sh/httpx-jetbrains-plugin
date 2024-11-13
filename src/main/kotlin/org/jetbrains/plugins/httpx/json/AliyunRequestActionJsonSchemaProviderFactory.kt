@@ -13,9 +13,6 @@ import com.jetbrains.jsonSchema.extension.ContentAwareJsonSchemaFileProvider
 import org.jetbrains.plugins.httpx.restClient.execution.aliyun.Products
 
 class AliyunRequestActionJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
-    companion object {
-        val schemaStore = HashMap<String, VirtualFile>()
-    }
 
     override fun getSchemaFile(psiFile: PsiFile): VirtualFile? {
         if (psiFile is JsonFile) {
@@ -62,3 +59,5 @@ class AliyunRequestActionJsonSchemaProviderFactory : ContentAwareJsonSchemaFileP
     }
 
 }
+
+val schemaStore = HashMap<String, VirtualFile>()
