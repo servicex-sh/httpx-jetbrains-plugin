@@ -2,12 +2,12 @@
 
 # httpx plugin Changelog
 
-## [0.20.2]
+## [0.21.0]
 
 ### Added
 
 - Compatible with JetBrains IDE 2024.3
-- Update to Apache Pulsar 3.3.1
+- Update to Apache Pulsar 3.3.2
 
 ## [0.20.1]
 
@@ -43,10 +43,11 @@
 ## [0.18.0]
 
 ### Added
-         
+
 - Update to Apache Pulsar 3.0.0
-- Add ChatGPT support: If you set environment variable `OPENAI_API_KEY` already, you can remove `X-OPENAI-API-KEY` header from your
-request.
+- Add ChatGPT support: If you set environment variable `OPENAI_API_KEY` already, you can remove `X-OPENAI-API-KEY`
+  header from your
+  request.
 
 ```
 CHATGPT https://api.openai.com/v1/chat/completions
