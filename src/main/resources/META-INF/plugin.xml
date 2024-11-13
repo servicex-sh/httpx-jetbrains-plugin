@@ -10,6 +10,7 @@
     <depends>com.intellij.modules.platform</depends>
 
     <dependencies>
+        <plugin id="com.intellij.modules.json"/>
         <plugin id="com.jetbrains.restClient"/>
     </dependencies>
 
@@ -20,45 +21,78 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.codeInsight.HttpxHeadersInspectionService"/>
         <!-- <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestManager"/>-->
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestManager"/>
         <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestManager"/>
-        <projectService serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestManager"/>
+        <projectService
+                serviceImplementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestManager"/>
         <!-- <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.graphql.GraphqlRequestExecutionSupport"/>-->
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.rest.JsonRestRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestExecutionSupport"/>
-        <httpClient.requestExecutionSupport implementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestExecutionSupport"/>
-        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
-        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
-        <completion.contributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.email.MailRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.publish.PublishRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.subscribe.SubscribeRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.aliyun.AliyunRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.thrift.ThriftRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.memcache.MemcacheRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.redis.RedisRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.ssh.SSHRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.aws.AwsRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.tarpc.TarpcRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.msgpack.MsgpackRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.jsonrpc.JsonRpcRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.rest.JsonRestRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.trpc.TrpcRequestExecutionSupport"/>
+        <httpClient.requestExecutionSupport
+                implementation="org.jetbrains.plugins.httpx.restClient.execution.chatgpt.ChatgptRequestExecutionSupport"/>
+        <completion.contributor language="HTTP Request"
+                                implementationClass="org.jetbrains.plugins.httpx.completion.AliyunRequestCompletionContributor"/>
+        <completion.contributor language="HTTP Request"
+                                implementationClass="org.jetbrains.plugins.httpx.completion.AwsRequestCompletionContributor"/>
+        <completion.contributor language="HTTP Request"
+                                implementationClass="org.jetbrains.plugins.httpx.completion.HttpxHeadersCompletionContributor"/>
         <defaultLiveTemplates file="/liveTemplates/httpx.xml"/>
         <spellchecker.bundledDictionaryProvider
                 implementation="org.jetbrains.plugins.httpx.spellchecker.HttpxBundledDictionaryProvider"/>
-        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
-        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.LuaScriptInjectionContributor"/>
-        <languageInjectionContributor language="HTTP Request" implementationClass="org.jetbrains.plugins.httpx.injector.ChatgptInjectionContributor"/>
+        <languageInjectionContributor language="HTTP Request"
+                                      implementationClass="org.jetbrains.plugins.httpx.injector.ShellScriptInjectionContributor"/>
+        <languageInjectionContributor language="HTTP Request"
+                                      implementationClass="org.jetbrains.plugins.httpx.injector.LuaScriptInjectionContributor"/>
+        <languageInjectionContributor language="HTTP Request"
+                                      implementationClass="org.jetbrains.plugins.httpx.injector.ChatgptInjectionContributor"/>
         <intentionAction>
             <language>HTTP Request</language>
             <className>org.jetbrains.plugins.httpx.codeInsight.AliyunRequestConvertToCliIntention</className>
@@ -69,12 +103,17 @@
     </extensions>
 
     <extensions defaultExtensionNs="JavaScript.JsonSchema">
-        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.CloudEventsJsonSchemaProviderFactory"/>
-        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJsonTypeJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider
+                implementation="org.jetbrains.plugins.httpx.json.CloudEventsJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider
+                implementation="org.jetbrains.plugins.httpx.json.XJsonTypeJsonSchemaProviderFactory"/>
         <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.XJsonSchemaProviderFactory"/>
-        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.ThriftJsonSchemaProviderFactory"/>
-        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.AliyunRequestActionJsonSchemaProviderFactory"/>
-        <ContentAwareSchemaFileProvider implementation="org.jetbrains.plugins.httpx.json.OpenAIRequestJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider
+                implementation="org.jetbrains.plugins.httpx.json.ThriftJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider
+                implementation="org.jetbrains.plugins.httpx.json.AliyunRequestActionJsonSchemaProviderFactory"/>
+        <ContentAwareSchemaFileProvider
+                implementation="org.jetbrains.plugins.httpx.json.OpenAIRequestJsonSchemaProviderFactory"/>
     </extensions>
 
 </idea-plugin>
