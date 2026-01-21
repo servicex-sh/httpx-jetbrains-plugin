@@ -4,7 +4,7 @@ import com.intellij.httpClient.execution.common.CommonClientResponse
 import com.intellij.httpClient.execution.common.CommonClientResponseBody
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -30,7 +30,11 @@ class AwsRequestManager(private val project: Project) : Disposable {
         val serviceName = host.substring(0, host.indexOf('.'))
         val awsBasicCredentials = AWS.awsBasicCredentials(awsRequest.getHeader("Authorization"))
         if (awsBasicCredentials == null) {
-            return PublishResponse(CommonClientResponseBody.Empty(), "Error", "Cannot find AWS AK info, please check Authorization header!")
+            return PublishResponse(
+                CommonClientResponseBody.Empty(),
+                "Error",
+                "Cannot find AWS AK info, please check Authorization header!"
+            )
         }
         val method = awsRequest.getHttpRequestMethod()
         val requestBuilder = SdkHttpFullRequest.builder()
@@ -65,16 +69,18 @@ class AwsRequestManager(private val project: Project) : Disposable {
         val okhttpRequestBuilder = if (method == "GET") {
             Request.Builder().get().url(requestUri.toURL())
         } else {
-            val requestBody = RequestBody.create(MediaType.get(awsRequest.getHeader("Content-Type")!!), bodyBytes)
+            val requestBody = RequestBody.create(awsRequest.getHeader("Content-Type")!!.toMediaType(), bodyBytes)
             Request.Builder().post(requestBody).url(requestUri.toURL())
         }
-        signedRequest.headers().forEach { (name: String?, values: List<String?>) ->
-            okhttpRequestBuilder.header(name, values[0])
+        signedRequest.headers().forEach { (name: String?, values: List<String>) ->
+            if (name != null && !values.isEmpty()) {
+                okhttpRequestBuilder.header(name, values[0])
+            }
         }
         OkHttpClient().newCall(okhttpRequestBuilder.build()).execute().use { response ->
             val responseHeaders = mutableMapOf<String, String>()
             var contentType = "application/json"
-            response.headers().toMultimap().forEach { (name, values) ->
+            response.headers.toMultimap().forEach { (name, values) ->
                 responseHeaders[name] = values[0]
                 if (name == "Content-Type") {
                     contentType = values[0]
@@ -85,7 +91,7 @@ class AwsRequestManager(private val project: Project) : Disposable {
             } else {
                 XmlBodyFileHint.xmlBodyFileHint("aws-result.xml")
             }
-            return AwsResponse(responseHeaders, CommonClientResponseBody.Text(response.body()!!.string(), bodyFileHint))
+            return AwsResponse(responseHeaders, CommonClientResponseBody.Text(response.body!!.string(), bodyFileHint))
         }
     }
 }
