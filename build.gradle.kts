@@ -12,7 +12,7 @@ plugins {
     // Gradle IntelliJ Plugin
     id("org.jetbrains.intellij.platform") version "2.1.0"
     // Gradle Changelog Plugin
-    id("org.jetbrains.changelog") version "2.2.1"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 group = properties("pluginGroup")
@@ -48,9 +48,9 @@ dependencies {
     implementation("io.projectreactor.kafka:reactor-kafka")
     implementation("io.projectreactor.rabbitmq:reactor-rabbitmq")
     implementation("com.rabbitmq:amqp-client:5.22.0")
-    implementation("io.nats:jnats:2.20.4")
-    implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
-    implementation("com.github.mwiede:jsch:0.2.21")
+    implementation("io.nats:jnats:2.25.1")
+    implementation("org.msgpack:jackson-dataformat-msgpack:0.9.11")
+    implementation("com.github.mwiede:jsch:2.27.7")
     implementation("com.spotify:folsom:1.21.0")
     implementation("org.zeromq:jeromq:0.6.0")
     implementation("io.lettuce:lettuce-core:6.4.0.RELEASE")
@@ -76,7 +76,7 @@ dependencies {
     implementation("org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5")
     implementation("com.aliyun:aliyun-java-sdk-core:4.6.4")
     implementation("org.apache.httpcomponents:httpasyncclient:4.1.5")
-    implementation("org.json:json:20240303")
+    implementation("org.json:json:20251224")
     implementation("com.aliyun.mns:aliyun-sdk-mns:1.1.9.2") {
         exclude(group = "com.aliyun", module = "aliyun-java-sdk-ecs")
     }
