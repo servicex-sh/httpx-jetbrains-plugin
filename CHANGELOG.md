@@ -2,6 +2,26 @@
 
 # httpx plugin Changelog
 
+
+## [0.21.3]
+
+### Added
+
+- Compatible with JetBrains IDE 2026.1
+
+## [0.21.2]
+
+### Added
+
+- Compatible with JetBrains IDE 2025.3
+
+
+## [0.21.1]
+
+### Added
+
+- Compatible with JetBrains IDE 2025.1
+
 ## [0.21.0]
 
 ### Added
@@ -203,8 +223,8 @@ X-Custom-Header: header_value
 ### Redis 7.0 functions
 LOAD mylib
 Content-Type: text/x-lua
-  
-#!lua name=mylib  
+
+#!lua name=mylib
 redis.register_function(
   'knockknock',
   function() return 'Who\'s there?' end
@@ -236,7 +256,7 @@ Content-Type: text/avsc
       "type": "string"
     }
   ]
-}  
+}
 ```
 
 ## [0.8.1]
@@ -304,7 +324,7 @@ return vim.api.nvim_win_get_cursor(0)[1]
 ### tarpc request
 TARPC 127.0.0.1:4500/hello
 Content-Type: application/json
-     
+
 {
   "name": "jackie"
 }
