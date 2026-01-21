@@ -1,5 +1,8 @@
 #!/usr/bin/env just --justfile
 
+build:
+   ./gradlew -x test build patchPluginXml buildPlugin
+
 # build plugin with changelog
 build-plugin:
    rm -rf build/distributions
