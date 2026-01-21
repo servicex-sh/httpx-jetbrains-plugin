@@ -73,7 +73,7 @@ class AwsRequestManager(private val project: Project) : Disposable {
             Request.Builder().post(requestBody).url(requestUri.toURL())
         }
         signedRequest.headers().forEach { (name: String?, values: List<String>) ->
-            if (name != null && !values.isEmpty()) {
+            if (name != null && values.isNotEmpty()) {
                 okhttpRequestBuilder.header(name, values[0])
             }
         }
