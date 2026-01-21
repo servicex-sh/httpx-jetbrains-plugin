@@ -52,7 +52,7 @@ class XJsonSchemaProviderFactory : ContentAwareJsonSchemaFileProvider {
         val client = OkHttpClient()
         client.newCall(Request.Builder().url(jsonSchemaUrl).build())
             .execute()
-            .use { response -> return response.body()!!.string() }
+            .use { response -> return response.body!!.string() }
     }
 
 }
